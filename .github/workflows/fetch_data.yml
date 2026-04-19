@@ -1,0 +1,51 @@
+name: Auto Fetch Race Data
+
+on:
+  schedule:
+    # JST 6:00 → UTC 21:00 (前日)
+    - cron: '0 21 * * *'
+    # JST 9:00 → UTC 0:00
+    - cron: '0 0 * * *'
+    # JST 12:00 → UTC 3:00
+    - cron: '0 3 * * *'
+    # JST 15:00 → UTC 6:00
+    - cron: '0 6 * * *'
+    # JST 18:00 → UTC 9:00
+    - cron: '0 9 * * *'
+    # JST 20:30 → UTC 11:30 (最終取得)
+    - cron: '30 11 * * *'
+  workflow_dispatch:  # GitHub画面から手動実行も可能
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Fetch race data
+        run: python scripts/fetch_races.py
+
+      - name: Commit and push data
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No new data to commit"
+          else
+            TZ='Asia/Tokyo' DATE=$(date +'%Y-%m-%d %H:%M JST')
+            git commit -m "Auto-fetch: ${DATE}"
+            git push
+          fi
