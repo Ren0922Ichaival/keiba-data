@@ -104,57 +104,62 @@ def parse_entries(soup):
     return horses
 
 
-def parse_results(soup):
-    """レース結果ページから 馬番→着順 マップを返す"""
-    pos_map = {}
-    for row in soup.find_all('tr'):
-        cells = row.find_all('td')
-        if len(cells) < 2:
-            continue
-        hn_cell = row.find('td', class_='horseNum')
-        if not hn_cell:
-            continue
-        try:
-            hn = int(hn_cell.get_text(strip=True))
-        except (ValueError, TypeError):
-            continue
-        if not (1 <= hn <= 16):
-            continue
-        # 先頭セルが着順のケースが多い
-        for cell in cells[:3]:
-            if cell is hn_cell:
-                continue
-            text = cell.get_text(strip=True).replace('着', '')
-            try:
-                pos = int(text)
-                if 1 <= pos <= 20:
-                    pos_map[hn] = pos
-                    break
-            except (ValueError, TypeError):
-                pass
-    return pos_map
+def fetch_all_results(date_str, code):
+    """
+    RefundMoneyList ページから全レースの着順を一括取得する。
+    戻り値: {raceNo: {馬番: 着順}} の辞書
+    構造: <p>1R</p> の直後のテーブル 1行目=ヘッダ, 2行目以降=着順|枠|馬番|...
+    """
+    try:
+        soup = get_soup(
+            f'{BASE}/RefundMoneyList',
+            params={'k_raceDate': date_str, 'k_babaCode': code}
+        )
+    except Exception:
+        return {}
+
+    results = {}  # {raceNo: {hn: pos}}
+    current_race = None
+
+    for elem in soup.find_all(['p', 'table']):
+        if elem.name == 'p':
+            txt = elem.get_text(strip=True)
+            m = re.match(r'^(\d+)R$', txt)
+            if m:
+                current_race = int(m.group(1))
+        elif elem.name == 'table' and current_race and current_race not in results:
+            pos_map = {}
+            for row in elem.find_all('tr'):
+                cells = row.find_all(['td', 'th'])
+                if len(cells) < 3:
+                    continue
+                # cells[0]=着順, cells[1]=枠, cells[2]=馬番
+                try:
+                    pos = int(cells[0].get_text(strip=True))
+                    hn  = int(cells[2].get_text(strip=True))
+                    if 1 <= pos <= 20 and 1 <= hn <= 16:
+                        pos_map[hn] = pos
+                except (ValueError, TypeError):
+                    continue
+            if pos_map:
+                results[current_race] = pos_map
+            current_race = None  # 最初のテーブル（着順表）だけ見る
+
+    return results
 
 
-def fetch_race_data(date_str, code, race_no):
-    """1レース分：エントリー取得 → 結果ページも試みる"""
+def fetch_race_data(date_str, code, race_no, pos_map=None):
+    """1レース分：エントリー取得 → 着順を反映"""
     params = {'k_raceDate': date_str, 'k_babaCode': code, 'k_raceNo': race_no}
 
-    # 出走表
     entry_soup = get_soup(f'{BASE}/DebaTable', params=params)
     horses = parse_entries(entry_soup)
     if not horses:
         return None
 
-    # 結果ページ（失敗しても無視）
-    try:
-        time.sleep(0.5)  # サーバー負荷軽減
-        result_soup = get_soup(f'{BASE}/RaceResult', params=params)
-        pos_map = parse_results(result_soup)
-        if pos_map:
-            for h in horses:
-                h['pos'] = pos_map.get(h['hn'])
-    except Exception:
-        pass
+    if pos_map:
+        for h in horses:
+            h['pos'] = pos_map.get(h['hn'])
 
     return horses
 
@@ -202,10 +207,16 @@ def main():
                 result_venues.append(old_venue)
             continue
 
+        # 全レース結果を一括取得（RefundMoneyList）
+        print('  結果ページ取得中...')
+        all_results = fetch_all_results(date_str, code)
+        print(f'  結果あり: {sorted(all_results.keys())}R')
+
         races = []
         for rno in race_nos:
-            # 既に結果が揃っているレースはスキップ
             old_race = old_races.get(rno)
+
+            # 既に全馬の着順が揃っているレースはスキップ
             if old_race:
                 already_done = all(
                     e.get('pos') is not None
@@ -213,12 +224,13 @@ def main():
                 )
                 if already_done:
                     races.append(old_race)
-                    print(f'  {rno}R: スキップ（結果取得済み）')
+                    print(f'  {rno}R: スキップ（取得済み）')
                     continue
 
             try:
-                time.sleep(0.8)  # サーバー負荷軽減
-                horses = fetch_race_data(date_str, code, rno)
+                time.sleep(0.6)
+                pos_map = all_results.get(rno)
+                horses = fetch_race_data(date_str, code, rno, pos_map)
                 if horses:
                     races.append({'raceNo': rno, 'entries': horses})
                     finished = [h for h in horses if h.get('pos') is not None]
