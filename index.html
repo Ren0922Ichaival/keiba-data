@@ -829,14 +829,15 @@
               <select class="form-select form-select-sm" id="bot-strategy">
                 <option value="ai_win">AI◎単勝 — AI最有力馬を単勝</option>
                 <option value="ai_place">AI◎複勝 — AI最有力馬を複勝（推定オッズ）</option>
+                <option value="kelly_win">Kelly単勝 — 期待値に応じて賭け金を自動調整</option>
                 <option value="pop1_win">1人気単勝 — 常に1番人気を単勝</option>
-                <option value="value_win">バリュー単勝 — AI確率＞オッズ逆数の時のみ</option>
+                <option value="value_win">バリュー単勝 — AI確率＞市場確率の時のみ</option>
                 <option value="dark_horse">穴狙い — AI上位3頭から最高オッズを単勝</option>
-                <option value="trio_box">三連複BOX — AI上位3頭が3着以内に入れば的中</option>
-                <option value="trifecta">三連単 — AI予想1-2-3着が完全一致で的中</option>
+                <option value="trio_box">三連複BOX — Harville式で確率推定・3着以内</option>
+                <option value="trifecta">三連単 — Harville式で確率推定・完全一致</option>
               </select>
             </div>
-            <div class="row g-2 mb-3">
+            <div class="row g-2 mb-2">
               <div class="col-6">
                 <label class="form-label">最低オッズ</label>
                 <input type="number" class="form-control form-control-sm" id="bot-min-odds" value="1.5" min="1.0" step="0.1">
@@ -845,6 +846,18 @@
                 <label class="form-label">最高オッズ上限</label>
                 <input type="number" class="form-control form-control-sm" id="bot-max-odds" value="99" min="1" step="1">
               </div>
+            </div>
+            <div class="row g-2 mb-3" id="kelly-row" style="display:none">
+              <div class="col-12">
+                <label class="form-label">Kelly係数 <small style="color:var(--text-muted)">(0.1〜1.0 推奨: 0.25)</small></label>
+                <input type="number" class="form-control form-control-sm" id="bot-kelly-fraction" value="0.25" min="0.05" max="1.0" step="0.05">
+              </div>
+            </div>
+            <div class="form-check form-switch mb-3" style="padding-left:2.5rem">
+              <input class="form-check-input" type="checkbox" id="bot-use-kelly" onchange="document.getElementById('kelly-row').style.display=this.checked?'flex':'none'">
+              <label class="form-check-label" for="bot-use-kelly" style="color:var(--text-secondary);font-size:0.82rem">
+                Kelly基準で賭け金を自動調整（全戦略に適用）
+              </label>
             </div>
             <div class="d-flex gap-2">
               <button class="btn-bot flex-grow-1" onclick="runBacktest()">
@@ -1628,86 +1641,134 @@ function addPredRow() {
 }
 
 // --- 統計データ構築 ---
-function buildHistStats(allEntries, venue) {
-  // 会場フィルタ（対象会場のデータが十分あれば優先）
+// refDate: 基準日（ISO文字列）。指定時は直近データを重み付け優先する
+function buildHistStats(allEntries, venue, refDate = null) {
   const vEntries = venue ? allEntries.filter(e => e._venue === venue) : [];
   const useVenue = vEntries.length >= 30;
   const base = useVenue ? vEntries : allEntries;
+
+  // 直近データ重み付け: 指数減衰（90日半減）
+  const getW = e => {
+    if (!refDate || !e._date) return 1.0;
+    const days = Math.max(0, (new Date(refDate) - new Date(e._date)) / 86400000);
+    return Math.exp(-days / 90);
+  };
+  const wSum   = (arr, pred) => arr.reduce((s, e) => s + (pred(e) ? getW(e) : 0), 0);
+  const wTotal = arr => arr.reduce((s, e) => s + getW(e), 0);
 
   const popStats = {}, hnStats = {};
   for (let p = 1; p <= 16; p++) {
     const es = base.filter(e => e.pop === p);
     if (es.length >= 4) {
-      const wr = es.filter(e => e.pos === 1).length / es.length;
-      const w = Math.min(1, es.length / 40);   // データ量による信頼係数
-      popStats[p] = { wr: w * wr + (1-w) * (DEFAULT_POP_WIN[p]||0.01), raw: wr, n: es.length };
+      const tot  = wTotal(es) || 1;
+      const wr   = wSum(es, e => e.pos === 1) / tot;
+      const pr   = wSum(es, e => e.pos != null && e.pos <= 3) / tot;
+      const w    = Math.min(1, es.length / 40);
+      const dflt = DEFAULT_POP_WIN[p] || 0.01;
+      popStats[p] = { wr: w * wr + (1-w) * dflt, pr: w * pr + (1-w) * dflt * 3, raw: wr, n: es.length };
     }
   }
   for (let h = 1; h <= 16; h++) {
     const es = base.filter(e => e.hn === h);
     if (es.length >= 4) {
-      const wr = es.filter(e => e.pos === 1).length / es.length;
-      const w = Math.min(1, es.length / 30);
-      hnStats[h] = { wr: w * wr + (1-w) * (1/8), raw: wr, n: es.length };
+      const tot = wTotal(es) || 1;
+      const wr  = wSum(es, e => e.pos === 1) / tot;
+      const pr  = wSum(es, e => e.pos != null && e.pos <= 3) / tot;
+      const w   = Math.min(1, es.length / 30);
+      hnStats[h] = { wr: w * wr + (1-w) * (1/8), pr: w * pr + (1-w) * (3/8), raw: wr, n: es.length };
     }
   }
   return { popStats, hnStats, useVenue, baseName: useVenue ? venue : '全競馬場', baseN: base.length };
+}
+
+// --- Harville式（三連複/三連単の正確な確率計算）---
+function harvilleP(probMap, a, b, c) {
+  const pa = probMap[a] || 0, pb = probMap[b] || 0, pc = probMap[c] || 0;
+  const pb2 = (1 - pa) > 1e-9 ? pb / (1 - pa) : 0;
+  const pc3 = (1 - pa - pb) > 1e-9 ? pc / (1 - pa - pb) : 0;
+  return pa * pb2 * pc3;
+}
+function trioHarvilleP(probMap, hn1, hn2, hn3) {
+  const perms = [
+    [hn1,hn2,hn3],[hn1,hn3,hn2],
+    [hn2,hn1,hn3],[hn2,hn3,hn1],
+    [hn3,hn1,hn2],[hn3,hn2,hn1],
+  ];
+  return Math.max(1e-9, perms.reduce((s, [a,b,c]) => s + harvilleP(probMap,a,b,c), 0));
 }
 
 // --- スコアリング ---
 function scoreHorses(horses, histStats) {
   const { popStats, hnStats } = histStats;
   const fieldSize = horses.length;
+  const hasOdds   = horses.some(h => h.odds);
 
-  // オッズが一つもない場合: 人気順で仮オッズを推定
-  const hasOdds = horses.some(h => h.odds);
+  // ① オーバーラウンド除去（地方競馬の控除率は約25%）
+  //    sum(1/odds) ≈ 1.25 → 各市場確率をこれで割って正規化
+  const overround = hasOdds
+    ? (horses.reduce((s, h) => s + (h.odds ? 1 / h.odds : 0), 0) || 1)
+    : 1;
 
   const raw = horses.map(h => {
-    // 1. 市場確率 (オッズの逆数)
+    // 1. 市場確率（オーバーラウンド除去済み）
     let mktProb;
     if (h.odds) {
-      mktProb = 1 / h.odds;
+      mktProb = (1 / h.odds) / overround;
     } else if (h.pop) {
       mktProb = DEFAULT_POP_WIN[h.pop] || (1 / fieldSize);
     } else {
       mktProb = 1 / fieldSize;
     }
 
-    // 2. 人気別歴史スコア
-    let popScore;
+    // 2. 人気別歴史スコア（勝率 + 複勝率）
+    let popScore, popPlace;
     if (h.pop && popStats[h.pop]) {
       popScore = popStats[h.pop].wr;
+      popPlace = popStats[h.pop].pr || popScore * 3;
     } else if (h.pop) {
       popScore = DEFAULT_POP_WIN[h.pop] || (1 / fieldSize);
+      popPlace = popScore * 3;
     } else {
       popScore = 1 / fieldSize;
+      popPlace = 3 / fieldSize;
     }
 
-    // 3. 馬番別歴史スコア
-    let hnScore;
+    // 3. 馬番別歴史スコア（勝率 + 複勝率）
+    let hnScore, hnPlace;
     if (hnStats[h.hn]) {
       hnScore = hnStats[h.hn].wr;
+      hnPlace = hnStats[h.hn].pr || hnScore * 3;
     } else {
       hnScore = 1 / fieldSize;
+      hnPlace = 3 / fieldSize;
     }
 
     // 重み: オッズあり=市場50%/人気30%/馬番20%、オッズなし=人気60%/馬番40%
     const composite = hasOdds
       ? 0.50 * mktProb + 0.30 * popScore + 0.20 * hnScore
       : 0.60 * popScore + 0.40 * hnScore;
+    // 複勝スコア（三連複/複勝に使用）
+    const compositePlace = hasOdds
+      ? 0.45 * Math.min(mktProb * 3, 1) + 0.30 * popPlace + 0.25 * hnPlace
+      : 0.55 * popPlace + 0.45 * hnPlace;
 
-    return { ...h, mktProb, popScore, hnScore, composite };
+    return { ...h, mktProb, popScore, hnScore, popPlace, hnPlace, composite, compositePlace };
   });
 
   // 正規化
-  const total = raw.reduce((s, h) => s + h.composite, 0);
+  const total   = raw.reduce((s, h) => s + h.composite, 0) || 1;
+  const totPl   = raw.reduce((s, h) => s + h.compositePlace, 0) || 1;
+  const mktTot  = raw.reduce((s, h) => s + h.mktProb, 0) || 1;
+  const popTot  = raw.reduce((s, h) => s + h.popScore, 0) || 1;
+  const hnTot   = raw.reduce((s, h) => s + h.hnScore, 0) || 1;
   return raw
     .map(h => ({
       ...h,
-      prob: h.composite / total,
-      mktPct:  h.mktProb  / raw.reduce((s,x)=>s+x.mktProb,0),
-      popPct:  h.popScore / raw.reduce((s,x)=>s+x.popScore,0),
-      hnPct:   h.hnScore  / raw.reduce((s,x)=>s+x.hnScore,0),
+      prob:   h.composite      / total,  // 勝つ確率（AI推定）
+      probPl: h.compositePlace / totPl,  // 3着以内確率（AI推定）
+      mktPct: h.mktProb  / mktTot,       // 正規化済み市場確率
+      popPct: h.popScore / popTot,
+      hnPct:  h.hnScore  / hnTot,
     }))
     .sort((a, b) => b.prob - a.prob);
 }
@@ -1761,11 +1822,11 @@ function runPrediction() {
 
   if (horses.length < 2) { toast('2頭以上入力してください', 'danger'); return; }
 
-  // 全エントリに競馬場情報を付加
+  // 全エントリに競馬場・日付情報を付加
   const d = getData();
-  const allEntries = d.races.flatMap(r => r.entries.map(e => ({ ...e, _venue: r.venue })));
+  const allEntries = d.races.flatMap(r => r.entries.map(e => ({ ...e, _venue: r.venue, _date: r.date })));
 
-  const histStats = buildHistStats(allEntries, venue);
+  const histStats = buildHistStats(allEntries, venue, date || getTodayJST());
   const ranked    = scoreHorses(horses, histStats);
   const comments  = genComments(ranked, histStats, venue, raceNo);
 
@@ -1929,6 +1990,11 @@ function initBotTab() {
     document.getElementById('bot-strategy').value        = s.strategy;
     document.getElementById('bot-min-odds').value        = s.minOdds;
     document.getElementById('bot-max-odds').value        = s.maxOdds;
+    if (s.useKelly) {
+      document.getElementById('bot-use-kelly').checked = true;
+      document.getElementById('kelly-row').style.display = 'flex';
+    }
+    if (s.kellyFraction) document.getElementById('bot-kelly-fraction').value = s.kellyFraction;
     if (s.venueFilter) sel.value = s.venueFilter;
     renderBotStats(store.lastResult);
     renderBetHistory(store.lastResult.bets);
@@ -1937,15 +2003,17 @@ function initBotTab() {
 }
 
 function readBotSettings() {
-  const initialBalance = parseInt(document.getElementById('bot-initial-balance').value);
-  const betAmount      = parseInt(document.getElementById('bot-bet-amount').value);
-  const strategy       = document.getElementById('bot-strategy').value;
-  const minOdds        = parseFloat(document.getElementById('bot-min-odds').value) || 1.0;
-  const maxOdds        = parseFloat(document.getElementById('bot-max-odds').value) || 999;
-  const venueFilter    = document.getElementById('bot-venue-filter').value;
+  const initialBalance  = parseInt(document.getElementById('bot-initial-balance').value);
+  const betAmount       = parseInt(document.getElementById('bot-bet-amount').value);
+  const strategy        = document.getElementById('bot-strategy').value;
+  const minOdds         = parseFloat(document.getElementById('bot-min-odds').value) || 1.0;
+  const maxOdds         = parseFloat(document.getElementById('bot-max-odds').value) || 999;
+  const venueFilter     = document.getElementById('bot-venue-filter').value;
+  const useKelly        = document.getElementById('bot-use-kelly')?.checked || false;
+  const kellyFraction   = parseFloat(document.getElementById('bot-kelly-fraction')?.value) || 0.25;
   if (!initialBalance || initialBalance < 100) { toast('初期資金を正しく入力してください', 'danger'); return null; }
   if (!betAmount || betAmount < 100)           { toast('賭け金を正しく入力してください', 'danger');  return null; }
-  return { initialBalance, betAmount, strategy, minOdds, maxOdds, venueFilter };
+  return { initialBalance, betAmount, strategy, minOdds, maxOdds, venueFilter, useKelly, kellyFraction };
 }
 
 function runBacktest() {
@@ -1974,8 +2042,8 @@ function runBacktest() {
     // そのレースより前のデータのみで統計を構築（データ漏洩を防ぐ）
     const pastEntries = allRacesSorted
       .filter(r => r.date < race.date || (r.date === race.date && r.raceNo < race.raceNo))
-      .flatMap(r => r.entries.map(e => ({ ...e, _venue: r.venue })));
-    const histStats = buildHistStats(pastEntries, race.venue);
+      .flatMap(r => r.entries.map(e => ({ ...e, _venue: r.venue, _date: r.date })));
+    const histStats = buildHistStats(pastEntries, race.venue, race.date);
     const ranked    = scoreHorses(horses, histStats);
     const decision  = botDecide(ranked, s, balance);
     if (!decision) continue;
@@ -2038,51 +2106,65 @@ function runBacktest() {
 }
 
 function botDecide(ranked, settings, currentBalance) {
-  const { strategy, betAmount, minOdds, maxOdds } = settings;
-  const amount = Math.min(betAmount, currentBalance);
+  const { strategy, betAmount, minOdds, maxOdds, useKelly, kellyFraction: kf = 0.25 } = settings;
+  let amount = Math.min(betAmount, currentBalance);
   if (amount <= 0) return null;
 
-  // ── 三連複・三連単（複数馬指定） ──
+  // ── 三連複・三連単（Harville式オッズ推定） ──
   if (strategy === 'trio_box' || strategy === 'trifecta') {
     if (ranked.length < 3) return null;
-    const top3 = ranked.slice(0, 3);
-    const w = top3.map(h => h.odds);
+    // 複勝スコアで再ランク → 3着以内に入りやすい馬を優先
+    const byPlace = ranked.slice().sort((a, b) => b.probPl - a.probPl);
+    const top3 = byPlace.slice(0, 3);
+    const probMap = Object.fromEntries(ranked.map(h => [h.hn, h.prob]));
+
     let estimatedOdds = null;
-    if (w[0] && w[1] && w[2]) {
-      const base = w[0] * w[1] * w[2];
-      estimatedOdds = strategy === 'trio_box'
-        ? Math.max(3.0,  Math.round(base * 0.10 * 10) / 10)  // 三連複: 積の約10%
-        : Math.max(6.0,  Math.round(base * 0.65 * 10) / 10); // 三連単: 積の約65%
+    if (strategy === 'trio_box') {
+      const p = trioHarvilleP(probMap, top3[0].hn, top3[1].hn, top3[2].hn);
+      estimatedOdds = Math.max(3.0, Math.round(0.75 / p * 10) / 10);  // 控除率75%
+    } else {
+      const p = harvilleP(probMap, top3[0].hn, top3[1].hn, top3[2].hn);
+      estimatedOdds = Math.max(6.0, Math.round(0.75 / p * 10) / 10);
     }
     return {
       hn: top3[0].hn,
       horses: top3.map(h => h.hn),
       pop: top3[0].pop,
       betType: strategy === 'trio_box' ? 'trio' : 'trifecta',
-      winOdds: null,
-      estimatedOdds,
-      amount,
+      winOdds: null, estimatedOdds, amount,
     };
   }
 
   // ── 単勝・複勝系（単一馬） ──
-  let target = null;
-  let betType = 'win';
+  let target = null, betType = 'win';
 
   switch (strategy) {
-    case 'ai_win':
-      target = ranked[0]; betType = 'win'; break;
-    case 'ai_place':
-      target = ranked[0]; betType = 'place'; break;
-    case 'pop1_win':
-      target = ranked.find(h => h.pop === 1) || ranked[0]; betType = 'win'; break;
+    case 'ai_win':    target = ranked[0]; betType = 'win';   break;
+    case 'ai_place':  target = ranked[0]; betType = 'place'; break;
+    case 'pop1_win':  target = ranked.find(h => h.pop === 1) || ranked[0]; betType = 'win'; break;
     case 'value_win':
-      target = ranked.find(h => h.odds && h.prob > 1 / h.odds) || null; betType = 'win'; break;
+      // AI確率 > 正規化済み市場確率×1.05 → バリューあり
+      target = ranked.find(h => h.odds && h.mktPct && h.prob > h.mktPct * 1.05) || null;
+      betType = 'win'; break;
     case 'dark_horse': {
-      const top3 = ranked.slice(0, 3).filter(h => h.odds);
-      target = top3.length ? top3.reduce((best, h) => h.odds > best.odds ? h : best) : null;
+      const t3 = ranked.slice(0, 3).filter(h => h.odds);
+      target = t3.length ? t3.reduce((b, h) => h.odds > b.odds ? h : b) : null;
       betType = 'win'; break;
     }
+    case 'kelly_win':
+      // Kelly基準で自動ベット額を算出
+      target = ranked[0]; betType = 'win';
+      if (target?.odds && target.prob > 0) {
+        const b = target.odds - 1;
+        const f = Math.max(0, (target.prob * (b + 1) - 1) / b);
+        if (f <= 0) return null;
+        amount = Math.max(100, Math.min(
+          Math.floor(currentBalance * f * (kf || 0.25)),
+          Math.floor(currentBalance * 0.15)
+        ));
+        if (amount > currentBalance) return null;
+      }
+      break;
   }
 
   if (!target) return null;
@@ -2090,6 +2172,18 @@ function botDecide(ranked, settings, currentBalance) {
   // オッズフィルター（単勝のみ）
   if (betType === 'win' && target.odds) {
     if (target.odds < minOdds || target.odds > maxOdds) return null;
+  }
+
+  // 通常戦略 + useKelly フラグ有効時はKelly額で上書き
+  if (useKelly && strategy !== 'kelly_win' && betType === 'win' && target.odds && target.prob > 0) {
+    const b = target.odds - 1;
+    const f = Math.max(0, (target.prob * (b + 1) - 1) / b);
+    if (f <= 0) return null;
+    amount = Math.max(100, Math.min(
+      Math.floor(currentBalance * f * (kf || 0.25)),
+      Math.floor(currentBalance * 0.15)
+    ));
+    if (amount > currentBalance) return null;
   }
 
   return { hn: target.hn, horses: null, pop: target.pop, betType, winOdds: target.odds || null, estimatedOdds: null, amount };
@@ -2411,7 +2505,7 @@ async function autoPoll() {
   addAutoLog(st, `開催場: ${venues.map(v=>v.name).join(' ')}`, 'inf');
 
   const d = getData();
-  const allEntries = d.races.flatMap(r => r.entries.map(e => ({...e, _venue: r.venue})));
+  const allEntries = d.races.flatMap(r => r.entries.map(e => ({...e, _venue: r.venue, _date: r.date})));
   const processedKeys = new Set([...st.pending, ...st.history].map(t=>t.tradeKey));
 
   for (const venue of venues) {
@@ -2444,7 +2538,7 @@ async function autoPoll() {
         const er = await fetch(`${API}/api/entries?venue=${encodeURIComponent(venue.name)}&date=${dateStr}&race=${race.no}`).then(r=>r.json());
         if (!er.horses || !er.horses.length) continue;
 
-        const histStats = buildHistStats(allEntries, venue.name);
+        const histStats = buildHistStats(allEntries, venue.name, dateStr);
         const ranked = scoreHorses(er.horses, histStats);
         const decision = botDecide(ranked, s, st.balance);
         if (!decision) continue;
