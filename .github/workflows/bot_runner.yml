@@ -1,0 +1,62 @@
+name: Cloud Bot Runner
+
+on:
+  schedule:
+    # JST 6:30  → UTC 21:30 (前日)
+    - cron: '30 21 * * *'
+    # JST 9:00  → UTC 0:00
+    - cron: '0 0 * * *'
+    # JST 10:30 → UTC 1:30
+    - cron: '30 1 * * *'
+    # JST 12:00 → UTC 3:00
+    - cron: '0 3 * * *'
+    # JST 13:30 → UTC 4:30
+    - cron: '30 4 * * *'
+    # JST 15:00 → UTC 6:00
+    - cron: '0 6 * * *'
+    # JST 16:30 → UTC 7:30
+    - cron: '30 7 * * *'
+    # JST 18:00 → UTC 9:00
+    - cron: '0 9 * * *'
+    # JST 19:30 → UTC 10:30
+    - cron: '30 10 * * *'
+    # JST 21:00 → UTC 12:00 (最終)
+    - cron: '0 12 * * *'
+  workflow_dispatch:  # GitHub画面から手動実行も可能
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 最新コミットを取得（他のワークフローの変更を含む）
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Run cloud bot
+        run: python scripts/bot_runner.py
+
+      - name: Commit and push bot state
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/bot_state.json
+          if git diff --staged --quiet; then
+            echo "No bot state changes to commit"
+          else
+            TZ='Asia/Tokyo' DATE=$(date +'%Y-%m-%d %H:%M JST')
+            git commit -m "Bot: ${DATE}"
+            git push
+          fi

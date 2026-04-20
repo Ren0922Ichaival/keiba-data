@@ -9,270 +9,368 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg-dark: #0d1117;
-      --bg-card: #161b22;
-      --bg-input: #21262d;
-      --accent-green: #2ea043;
-      --accent-yellow: #d4a017;
-      --accent-red: #da3633;
-      --accent-blue: #58a6ff;
-      --text-primary: #c9d1d9;
-      --text-muted: #8b949e;
-      --border: #30363d;
+      --bg-dark:    #070c18;
+      --bg-card:    #0d1526;
+      --bg-card2:   #111d32;
+      --bg-input:   #19253a;
+      --accent-green:  #22c55e;
+      --accent-yellow: #f59e0b;
+      --accent-red:    #f43f5e;
+      --accent-blue:   #3b82f6;
+      --accent-blue-lt:#60a5fa;
+      --text-primary:  #e2e8f0;
+      --text-secondary:#94a3b8;
+      --text-muted:    #4e6070;
+      --border:     #1a2d47;
+      --border-lt:  #243d5c;
+      --radius:     10px;
     }
     * { box-sizing: border-box; }
     body {
-      background-color: var(--bg-dark);
+      background: var(--bg-dark);
+      background-image: radial-gradient(ellipse at 20% 0%, rgba(59,130,246,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 100%, rgba(139,92,246,0.04) 0%, transparent 60%);
+      background-attachment: fixed;
       color: var(--text-primary);
       font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Meiryo', sans-serif;
       min-height: 100vh;
+      font-size: 14px;
     }
+
+    /* ── Navbar ── */
     .navbar {
-      background: linear-gradient(135deg, #0a1628, #152342) !important;
-      border-bottom: 2px solid var(--accent-yellow);
-      padding: 0.6rem 1rem;
+      background: linear-gradient(135deg, #040a18 0%, #0a162e 100%) !important;
+      border-bottom: 1px solid var(--border-lt);
+      padding: 0.65rem 1.2rem;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.5);
     }
     .navbar-brand {
       color: var(--accent-yellow) !important;
-      font-weight: 700;
-      font-size: 1.2rem;
-      letter-spacing: 0.02em;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      display: flex; align-items: center; gap: 8px;
     }
+    .navbar-brand i { font-size: 1.25rem; filter: drop-shadow(0 0 6px rgba(245,158,11,0.6)); }
+
+    /* ── Cards ── */
     .card {
-      background-color: var(--bg-card);
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      transition: border-color 0.2s;
     }
     .card-header {
-      background-color: rgba(88,166,255,0.08);
+      background: linear-gradient(90deg, rgba(59,130,246,0.14), rgba(59,130,246,0.03));
       border-bottom: 1px solid var(--border);
-      color: var(--accent-blue);
-      font-weight: 600;
-      font-size: 0.92rem;
+      color: var(--accent-blue-lt);
+      font-weight: 700;
+      font-size: 0.86rem;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius) var(--radius) 0 0 !important;
+      letter-spacing: 0.03em;
     }
+
+    /* ── Forms ── */
     .form-control, .form-select {
-      background-color: var(--bg-input);
-      border-color: var(--border);
+      background: var(--bg-input);
+      border: 1px solid var(--border-lt);
       color: var(--text-primary);
-      font-size: 0.85rem;
+      font-size: 0.88rem;
+      padding: 0.42rem 0.75rem;
+      border-radius: 7px;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
     .form-control:focus, .form-select:focus {
-      background-color: var(--bg-input);
+      background: var(--bg-input);
       border-color: var(--accent-blue);
       color: var(--text-primary);
-      box-shadow: 0 0 0 0.15rem rgba(88,166,255,0.2);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
+      outline: none;
     }
     .form-control::placeholder { color: var(--text-muted); }
-    .form-label { color: var(--text-muted); font-size: 0.78rem; margin-bottom: 3px; }
-    .btn-primary { background-color: var(--accent-green); border-color: var(--accent-green); font-size: 0.85rem; }
-    .btn-primary:hover { background-color: #3fb950; border-color: #3fb950; }
-    .btn-outline-secondary { border-color: var(--border); color: var(--text-muted); font-size: 0.82rem; }
-    .btn-outline-secondary:hover { background-color: var(--bg-input); color: var(--text-primary); border-color: var(--text-muted); }
-    .btn-outline-danger { font-size: 0.82rem; }
-    .nav-tabs { border-bottom: 1px solid var(--border); }
+    .form-select option { background: #1a2540; color: var(--text-primary); }
+    .form-label {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      border: none; color: #fff;
+      font-size: 0.88rem; font-weight: 700;
+      border-radius: 7px; padding: 0.44rem 1.1rem;
+      box-shadow: 0 2px 10px rgba(34,197,94,0.35);
+      transition: all 0.15s;
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, #22c55e, #4ade80); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(34,197,94,0.45); }
+    .btn-outline-secondary {
+      border: 1px solid var(--border-lt);
+      color: var(--text-secondary);
+      font-size: 0.86rem; border-radius: 7px; background: transparent;
+      transition: all 0.15s;
+    }
+    .btn-outline-secondary:hover { background: var(--bg-input); color: var(--text-primary); border-color: var(--accent-blue-lt); }
+    .btn-outline-danger { font-size: 0.86rem; border-radius: 7px; }
+
+    /* ── Tabs ── */
+    .nav-tabs {
+      border-bottom: 1px solid var(--border);
+      gap: 2px; padding: 0 2px;
+      background: rgba(0,0,0,0.2);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
     .nav-tabs .nav-link {
-      color: var(--text-muted);
+      color: var(--text-secondary);
       border: none;
-      border-bottom: 2px solid transparent;
-      padding: 0.5rem 0.9rem;
-      font-size: 0.88rem;
+      border-radius: 8px 8px 0 0;
+      padding: 0.55rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.15s;
+      margin-bottom: -1px;
+      letter-spacing: 0.01em;
     }
     .nav-tabs .nav-link.active {
-      color: var(--accent-blue);
-      background: none;
+      color: #fff !important;
+      background: linear-gradient(180deg, rgba(59,130,246,0.25) 0%, rgba(59,130,246,0.1) 100%);
       border-bottom: 2px solid var(--accent-blue);
+      text-shadow: 0 0 12px rgba(96,165,250,0.6);
     }
-    .nav-tabs .nav-link:hover { color: var(--text-primary); border-bottom-color: var(--border); }
-    .table { color: var(--text-primary); font-size: 0.84rem; }
-    .table thead tr { background-color: rgba(88,166,255,0.08); }
-    .table thead th { color: var(--accent-blue); font-weight: 600; border-color: var(--border); white-space: nowrap; }
-    .table td, .table th { border-color: var(--border); vertical-align: middle; }
-    .table tbody tr:hover { background-color: rgba(88,166,255,0.04); }
-    .badge-pos-1 { background-color: #d4af37 !important; color: #000 !important; font-weight: 700; }
-    .badge-pos-2 { background-color: #a8a9ad !important; color: #000 !important; font-weight: 700; }
-    .badge-pos-3 { background-color: #cd7f32 !important; color: #fff !important; font-weight: 700; }
-    .badge-pos-n { background-color: #30363d !important; color: var(--text-muted) !important; }
-    .pop-1 { color: #ff4d4f; font-weight: 700; }
-    .pop-2 { color: #ff7a00; font-weight: 700; }
-    .pop-3 { color: #52c41a; font-weight: 600; }
+    .nav-tabs .nav-link:hover:not(.active) {
+      color: var(--text-primary) !important;
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* ── Tables ── */
+    .table { color: var(--text-primary); font-size: 0.88rem; }
+    .table thead tr { background: linear-gradient(90deg, rgba(59,130,246,0.18), rgba(59,130,246,0.04)); }
+    .table thead th {
+      color: var(--accent-blue-lt); font-weight: 700;
+      border-color: var(--border); white-space: nowrap;
+      font-size: 0.8rem; letter-spacing: 0.04em;
+      padding: 0.6rem 0.8rem; text-transform: uppercase;
+    }
+    .table td, .table th { border-color: var(--border); vertical-align: middle; padding: 0.5rem 0.8rem; }
+    .table tbody tr { transition: background 0.1s; }
+    .table tbody tr:nth-child(even) { background: rgba(255,255,255,0.018); }
+    .table tbody tr:hover { background: rgba(59,130,246,0.1) !important; }
+
+    /* ── Badges ── */
+    .badge-pos-1 { background: linear-gradient(135deg,#b8860b,#ffd700) !important; color:#000 !important; font-weight:800; }
+    .badge-pos-2 { background: linear-gradient(135deg,#808080,#c0c0c0) !important; color:#000 !important; font-weight:800; }
+    .badge-pos-3 { background: linear-gradient(135deg,#8b4513,#cd853f) !important; color:#fff !important; font-weight:800; }
+    .badge-pos-n { background: rgba(255,255,255,0.07) !important; color: var(--text-secondary) !important; }
+    .pop-1 { color: #fb7185; font-weight: 800; }
+    .pop-2 { color: #fb923c; font-weight: 700; }
+    .pop-3 { color: #4ade80; font-weight: 700; }
+
+    /* ── Stat Cards ── */
     .stat-card {
-      background: linear-gradient(135deg, var(--bg-card), #1c2333);
-      border-radius: 10px;
-      padding: 1rem 0.8rem;
-      text-align: center;
-      border: 1px solid var(--border);
-      height: 100%;
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-card2));
+      border-radius: var(--radius); padding: 1rem 0.9rem;
+      text-align: center; border: 1px solid var(--border); height: 100%;
+      transition: border-color 0.2s, transform 0.2s;
     }
-    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--accent-yellow); line-height: 1.1; }
-    .stat-label { color: var(--text-muted); font-size: 0.78rem; margin-top: 4px; }
-    .stat-icon { color: var(--text-muted); font-size: 1rem; margin-bottom: 4px; }
+    .stat-card:hover { border-color: rgba(59,130,246,0.45); transform: translateY(-2px); }
+    .stat-value { font-size: 1.9rem; font-weight: 800; color: var(--accent-yellow); line-height: 1.1; letter-spacing: -0.02em; }
+    .stat-label { color: var(--text-secondary); font-size: 0.76rem; margin-top: 5px; font-weight: 600; letter-spacing: 0.03em; }
+    .stat-icon  { color: var(--accent-blue-lt); font-size: 1.05rem; margin-bottom: 4px; }
     .analysis-table th { white-space: nowrap; }
-    .rate-high { color: #ff4d4f; font-weight: 700; }
+    .rate-high { color: #fb7185; font-weight: 700; }
     .rate-mid  { color: var(--accent-yellow); font-weight: 600; }
-    .rate-low  { color: var(--text-muted); }
-    .roi-pos   { color: #ff4d4f; font-weight: 700; }
+    .rate-low  { color: var(--text-secondary); }
+    .roi-pos   { color: #fb7185; font-weight: 700; }
     .roi-mid   { color: var(--accent-yellow); }
-    .roi-neg   { color: var(--text-muted); }
-    .progress-bg {
-      background-color: var(--bg-input);
-      height: 5px;
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 3px;
-      width: 80px;
-    }
-    .progress-fill {
-      height: 100%;
-      border-radius: 3px;
-      background: linear-gradient(90deg, #2ea043, #58a6ff);
-      transition: width 0.4s ease;
-    }
+    .roi-neg   { color: var(--text-secondary); }
+    .progress-bg { background:var(--bg-input); height:5px; border-radius:3px; overflow:hidden; margin-top:3px; width:80px; }
+    .progress-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#22c55e,#3b82f6); transition:width 0.4s ease; }
+
+    /* ── Venue Tag ── */
     .venue-tag {
-      display: inline-block;
-      padding: 1px 7px;
-      border-radius: 10px;
-      font-size: 0.74rem;
-      background-color: rgba(88,166,255,0.12);
-      color: var(--accent-blue);
-      border: 1px solid rgba(88,166,255,0.25);
+      display: inline-block; padding: 2px 9px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+      background: rgba(59,130,246,0.15); color: var(--accent-blue-lt);
+      border: 1px solid rgba(59,130,246,0.3); letter-spacing: 0.04em;
     }
     canvas { max-height: 280px; }
 
-    /* ===== AI予想 ===== */
+    /* ── AI予想 ── */
     .btn-predict {
-      background: linear-gradient(135deg, #1677ff, #7c3aed);
-      border: none; color: #fff; font-size: 0.85rem; font-weight: 600;
-      padding: 0.35rem 0.9rem; border-radius: 6px;
-      transition: opacity 0.15s;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border: none; color: #fff; font-size: 0.88rem; font-weight: 700;
+      padding: 0.44rem 1.1rem; border-radius: 7px;
+      box-shadow: 0 2px 12px rgba(124,58,237,0.4);
+      transition: all 0.15s;
     }
-    .btn-predict:hover { opacity: 0.88; color: #fff; }
+    .btn-predict:hover { opacity: 0.9; color: #fff; transform: translateY(-1px); }
     .mark { font-size: 1.05rem; font-weight: 800; }
-    .mark-◎ { color: #ff4d4f; }
-    .mark-○ { color: #1677ff; }
-    .mark-▲ { color: #52c41a; }
-    .mark-△ { color: #d4a017; }
-    .mark-× { color: var(--text-muted); }
-    .prob-bar-wrap { display: flex; align-items: center; gap: 6px; min-width: 130px; }
-    .prob-bar-bg { background: var(--bg-input); height: 9px; border-radius: 5px; flex:1; overflow:hidden; }
-    .prob-bar-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
-    .factor-bars { display: flex; gap: 3px; align-items: flex-end; height: 18px; }
-    .factor-bar { width: 7px; border-radius: 2px 2px 0 0; }
-    .pred-row-1 { background: rgba(212,175,55,0.1) !important; }
-    .pred-row-2 { background: rgba(168,169,173,0.07) !important; }
-    .pred-row-3 { background: rgba(205,127,50,0.07) !important; }
-    .bet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .mark-◎ { color: #fb7185; }
+    .mark-○ { color: var(--accent-blue-lt); }
+    .mark-▲ { color: #4ade80; }
+    .mark-△ { color: var(--accent-yellow); }
+    .mark-× { color: var(--text-secondary); }
+    .prob-bar-wrap { display:flex; align-items:center; gap:6px; min-width:130px; }
+    .prob-bar-bg { background:var(--bg-input); height:9px; border-radius:5px; flex:1; overflow:hidden; }
+    .prob-bar-fill { height:100%; border-radius:5px; transition:width 0.5s ease; }
+    .factor-bars { display:flex; gap:3px; align-items:flex-end; height:18px; }
+    .factor-bar { width:7px; border-radius:2px 2px 0 0; }
+    .pred-row-1 { background:rgba(212,175,55,0.12) !important; }
+    .pred-row-2 { background:rgba(168,169,173,0.08) !important; }
+    .pred-row-3 { background:rgba(205,127,50,0.08) !important; }
+    .bet-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     .bet-card {
-      background: rgba(88,166,255,0.06);
-      border: 1px solid rgba(88,166,255,0.18);
-      border-radius: 8px; padding: 8px 12px;
+      background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.22);
+      border-radius: 8px; padding: 9px 13px; transition: border-color 0.15s;
     }
-    .bet-card .bet-type { color: var(--text-muted); font-size: 0.72rem; margin-bottom: 3px; }
-    .bet-card .bet-val  { color: var(--accent-blue); font-weight: 700; font-size: 0.92rem; }
+    .bet-card:hover { border-color: rgba(59,130,246,0.45); }
+    .bet-card .bet-type { color: var(--text-secondary); font-size: 0.72rem; margin-bottom: 3px; font-weight: 600; }
+    .bet-card .bet-val  { color: var(--accent-blue-lt); font-weight: 700; font-size: 0.93rem; }
     .ai-box {
-      background: rgba(46,160,67,0.05);
-      border: 1px solid rgba(46,160,67,0.2);
-      border-radius: 8px; padding: 0.85rem 1rem;
-      font-size: 0.83rem; line-height: 1.85;
+      background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.22);
+      border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.84rem; line-height: 1.85;
     }
-    .ai-box-title { color: var(--accent-green); font-weight: 700; font-size: 0.84rem; margin-bottom: 5px; }
-    .quality-badge { padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
-    .quality-high   { background: rgba(46,160,67,0.2);  color: #3fb950; }
-    .quality-mid    { background: rgba(212,160,23,0.2); color: #d4a017; }
-    .quality-low    { background: rgba(218,54,51,0.2);  color: #f85149; }
-    .pred-empty { text-align:center; color: var(--text-muted); padding: 3rem; }
-    .pred-empty i { font-size: 2.5rem; color: var(--accent-blue); display:block; margin-bottom: 0.6rem; }
+    .ai-box-title { color: var(--accent-green); font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; }
+    .quality-badge { padding: 2px 9px; border-radius: 20px; font-size: 0.71rem; font-weight: 700; letter-spacing: 0.02em; }
+    .quality-high { background:rgba(34,197,94,0.2);  color:#4ade80; }
+    .quality-mid  { background:rgba(245,158,11,0.2); color:var(--accent-yellow); }
+    .quality-low  { background:rgba(244,63,94,0.2);  color:#fb7185; }
+    .pred-empty { text-align:center; color:var(--text-secondary); padding:3rem; }
+    .pred-empty i { font-size:2.5rem; color:var(--accent-blue-lt); display:block; margin-bottom:0.6rem; }
 
-    /* ===== API 自動取得 ===== */
+    /* ── API Fetch ── */
     .btn-fetch {
-      background: linear-gradient(135deg, #0f4c81, #1a6fa8);
-      border: none; color: #fff; font-size: 0.82rem; font-weight: 600;
-      padding: 0.3rem 0.8rem; border-radius: 6px; transition: opacity 0.15s;
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      border: none; color: #fff; font-size: 0.86rem; font-weight: 700;
+      padding: 0.4rem 0.95rem; border-radius: 7px;
+      box-shadow: 0 2px 10px rgba(37,99,235,0.35);
+      transition: all 0.15s;
     }
-    .btn-fetch:hover { opacity: 0.85; color: #fff; }
-    .btn-fetch:disabled { opacity: 0.5; }
+    .btn-fetch:hover { opacity: 0.9; color: #fff; transform: translateY(-1px); }
+    .btn-fetch:disabled { opacity: 0.4; transform: none; box-shadow: none; }
     .api-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 2px 9px; border-radius: 10px; font-size: 0.72rem; font-weight: 600;
-      cursor: pointer; transition: opacity 0.15s;
+      display:inline-flex; align-items:center; gap:4px;
+      padding:3px 10px; border-radius:20px; font-size:0.73rem; font-weight:700;
+      cursor:pointer; transition:opacity 0.15s;
     }
     .api-badge:hover { opacity: 0.8; }
-    .api-online  { background: rgba(46,160,67,0.18);  color: #3fb950; border: 1px solid rgba(46,160,67,0.35); }
-    .api-offline { background: rgba(218,54,51,0.18);  color: #f85149; border: 1px solid rgba(218,54,51,0.35); }
-    .api-pending { background: rgba(88,166,255,0.15); color: var(--accent-blue); border: 1px solid rgba(88,166,255,0.3); }
+    .api-online  { background:rgba(34,197,94,0.18);  color:#4ade80; border:1px solid rgba(34,197,94,0.4); }
+    .api-offline { background:rgba(244,63,94,0.18);  color:#fb7185; border:1px solid rgba(244,63,94,0.4); }
+    .api-pending { background:rgba(59,130,246,0.15); color:var(--accent-blue-lt); border:1px solid rgba(59,130,246,0.35); }
     .fetch-divider {
-      display: flex; align-items: center; gap: 8px;
-      margin: 8px 0; font-size: 0.75rem; color: var(--text-muted);
+      display:flex; align-items:center; gap:8px;
+      margin:8px 0; font-size:0.75rem; color:var(--text-muted);
     }
-    .fetch-divider::before, .fetch-divider::after {
-      content:''; flex:1; border-top: 1px solid var(--border);
-    }
+    .fetch-divider::before, .fetch-divider::after { content:''; flex:1; border-top:1px solid var(--border); }
     .server-hint {
-      background: rgba(88,166,255,0.06);
-      border: 1px solid rgba(88,166,255,0.18);
-      border-radius: 8px; padding: 10px 12px;
-      font-size: 0.78rem; color: var(--text-muted); line-height: 1.7;
+      background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.2);
+      border-radius:8px; padding:10px 14px; font-size:0.81rem; color:var(--text-secondary); line-height:1.75;
     }
     .server-hint code {
-      background: var(--bg-input); padding: 1px 5px;
-      border-radius: 3px; color: var(--accent-yellow); font-size: 0.8em;
+      background:var(--bg-input); padding:2px 6px; border-radius:4px;
+      color:var(--accent-yellow); font-size:0.82em; border:1px solid var(--border-lt);
     }
-    .score-legend { display:flex; gap:10px; font-size:0.73rem; color:var(--text-muted); flex-wrap:wrap; }
+    .score-legend { display:flex; gap:10px; font-size:0.73rem; color:var(--text-secondary); flex-wrap:wrap; }
     .score-legend span { display:flex; align-items:center; gap:3px; }
     .dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
 
-    #toast-container { position: fixed; bottom: 1rem; right: 1rem; z-index: 9999; pointer-events: none; }
+    /* ── Toast ── */
+    #toast-container { position:fixed; bottom:1.2rem; right:1.2rem; z-index:9999; pointer-events:none; }
     .toast-msg {
-      background: #1f2937;
+      background: var(--bg-card2);
       border-left: 3px solid var(--accent-green);
       color: var(--text-primary);
-      padding: 0.55rem 1rem;
-      border-radius: 6px;
-      margin-top: 0.4rem;
-      font-size: 0.85rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px; margin-top: 0.5rem;
+      font-size: 0.87rem; font-weight: 500;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.55);
       animation: slideIn 0.2s ease;
     }
     .toast-msg.danger  { border-left-color: var(--accent-red); }
     .toast-msg.warning { border-left-color: var(--accent-yellow); }
-    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    .delete-btn { opacity: 0.45; transition: opacity 0.15s; }
-    .delete-btn:hover { opacity: 1; }
-    .chart-wrapper { position: relative; padding: 0.5rem 0; }
-    .no-data-msg { text-align: center; color: var(--text-muted); padding: 2.5rem; font-size: 0.9rem; }
-    @media (max-width: 576px) {
-      .nav-tabs .nav-link { padding: 0.4rem 0.5rem; font-size: 0.8rem; }
-      .stat-value { font-size: 1.4rem; }
+    @keyframes slideIn { from { transform:translateX(20px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+    .delete-btn { opacity:0.35; transition:opacity 0.15s; }
+    .delete-btn:hover { opacity:1; }
+    .chart-wrapper { position:relative; padding:0.5rem 0; }
+    .no-data-msg { text-align:center; color:var(--text-secondary); padding:2.5rem; font-size:0.9rem; }
+    @media (max-width:576px) {
+      .nav-tabs .nav-link { padding:0.4rem 0.55rem; font-size:0.78rem; }
+      .stat-value { font-size:1.5rem; }
     }
 
-    /* ===== 仮想ボット ===== */
-    .bot-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .bot-stat { background: rgba(88,166,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 10px 8px; text-align: center; }
-    .bot-stat .bval { font-size: 1.3rem; font-weight: 700; line-height: 1.1; }
-    .bot-stat .blbl { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; }
-    .green-val { color: #52c41a; }
-    .red-val   { color: #ff4d4f; }
+    /* ── 仮想ボット ── */
+    .bot-stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .bot-stat {
+      background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(59,130,246,0.03));
+      border: 1px solid var(--border-lt); border-radius:9px;
+      padding:11px 8px; text-align:center; transition:border-color 0.15s;
+    }
+    .bot-stat:hover { border-color:rgba(59,130,246,0.45); }
+    .bot-stat .bval { font-size:1.3rem; font-weight:800; line-height:1.1; }
+    .bot-stat .blbl { font-size:0.7rem; color:var(--text-secondary); margin-top:4px; font-weight:600; }
+    .green-val { color:#4ade80; }
+    .red-val   { color:#fb7185; }
     .btn-bot {
-      background: linear-gradient(135deg, #d46b08, #fa8c16);
-      border: none; color: #fff; font-size: 0.85rem; font-weight: 600;
-      padding: 0.35rem 0.9rem; border-radius: 6px; transition: opacity 0.15s; cursor: pointer;
+      background: linear-gradient(135deg, #c2410c, #f97316);
+      border: none; color: #fff; font-size: 0.88rem; font-weight: 700;
+      padding: 0.44rem 1.1rem; border-radius: 7px;
+      box-shadow: 0 2px 10px rgba(249,115,22,0.4);
+      transition: all 0.15s; cursor: pointer;
     }
-    .btn-bot:hover { opacity: 0.88; color: #fff; }
-    .bet-win  { color: #52c41a; }
-    .bet-lose { color: #ff4d4f; }
+    .btn-bot:hover { opacity: 0.9; color: #fff; transform: translateY(-1px); }
+    .bet-win  { color:#4ade80; font-weight:600; }
+    .bet-lose { color:#fb7185; }
 
-    /* ===== クラウド同期 ===== */
+    /* ── クラウド同期 ── */
     .btn-cloud {
-      background: linear-gradient(135deg, #0e4a6e, #1a6fa0);
-      border: none; color: #fff; font-size: 0.78rem; font-weight: 600;
-      padding: 0.28rem 0.75rem; border-radius: 5px; transition: opacity 0.15s; cursor: pointer;
+      background: linear-gradient(135deg, #075985, #0284c7);
+      border: none; color: #fff; font-size: 0.8rem; font-weight: 700;
+      padding: 0.34rem 0.9rem; border-radius: 7px;
+      box-shadow: 0 2px 8px rgba(2,132,199,0.35);
+      transition: all 0.15s; cursor: pointer;
     }
-    .btn-cloud:hover { opacity: 0.88; color: #fff; }
-    .sync-log { background: #0d1117; border: 1px solid var(--border); border-radius: 6px;
-                font-size: 0.75rem; color: var(--text-muted); padding: 8px 10px;
-                height: 140px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; }
-    .sync-log .log-ok  { color: #52c41a; }
-    .sync-log .log-err { color: #ff4d4f; }
-    .sync-log .log-inf { color: var(--accent-blue); }
+    .btn-cloud:hover { opacity: 0.9; color: #fff; transform: translateY(-1px); }
+    .sync-log {
+      background: #03060f; border: 1px solid var(--border); border-radius: 7px;
+      font-size: 0.76rem; color: var(--text-secondary);
+      padding: 9px 12px; height: 150px; overflow-y: auto;
+      font-family: 'Consolas', 'Courier New', monospace; white-space: pre-wrap; line-height: 1.65;
+    }
+    .sync-log .log-ok  { color:#4ade80; }
+    .sync-log .log-err { color:#fb7185; }
+    .sync-log .log-inf { color:var(--accent-blue-lt); }
+
+    /* ── リアルタイム自動取引 ── */
+    .auto-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .auto-stat {
+      background: linear-gradient(135deg,rgba(34,197,94,0.09),rgba(34,197,94,0.02));
+      border:1px solid rgba(34,197,94,0.22); border-radius:9px;
+      padding:10px 6px; text-align:center;
+    }
+    .auto-stat .bval { font-size:1.05rem; font-weight:800; line-height:1.2; color:var(--accent-green); }
+    .auto-stat .blbl { font-size:0.68rem; color:var(--text-secondary); margin-top:3px; font-weight:600; }
+    .auto-badge { padding:3px 10px; border-radius:20px; font-size:0.73rem; font-weight:700; }
+    .auto-on  { background:rgba(34,197,94,0.2); color:#4ade80; border:1px solid rgba(34,197,94,0.4); animation:pulse 2s infinite; }
+    .auto-off { background:rgba(100,116,139,0.15); color:var(--text-secondary); border:1px solid rgba(100,116,139,0.25); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+    .btn-auto-start {
+      background:linear-gradient(135deg,#15803d,#22c55e); border:none; color:#fff;
+      font-size:0.88rem; font-weight:700; padding:0.44rem 1rem; border-radius:7px;
+      box-shadow:0 2px 10px rgba(34,197,94,0.4); transition:all 0.15s; cursor:pointer;
+    }
+    .btn-auto-start:hover { opacity:0.9; transform:translateY(-1px); }
+    .btn-auto-stop {
+      background:linear-gradient(135deg,#991b1b,#dc2626); border:none; color:#fff;
+      font-size:0.88rem; font-weight:700; padding:0.44rem 1rem; border-radius:7px;
+      box-shadow:0 2px 10px rgba(220,38,38,0.4); transition:all 0.15s; cursor:pointer;
+    }
+    .btn-auto-stop:hover { opacity:0.9; transform:translateY(-1px); }
+    @media(max-width:576px){ .auto-stats-row{grid-template-columns:1fr 1fr;} }
   </style>
 </head>
 <body>
@@ -606,6 +704,105 @@
 
   <!-- ===== 仮想ボットタブ ===== -->
   <div id="tab-bot" class="d-none">
+
+    <!-- リアルタイム自動取引 -->
+    <div class="row g-3 mb-3">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-activity me-2"></i>リアルタイム自動取引 <small style="color:var(--text-muted);font-weight:400;font-size:0.76rem">（3分ごとに自動チェック・実際の購入なし）</small></span>
+            <span id="auto-status-badge" class="auto-badge auto-off">停止中</span>
+          </div>
+          <div class="card-body">
+            <div class="auto-stats-row mb-3">
+              <div class="auto-stat"><div class="bval" id="auto-balance-val">¥-</div><div class="blbl">仮想残高</div></div>
+              <div class="auto-stat"><div class="bval" id="auto-pending-val">0件</div><div class="blbl">待機中</div></div>
+              <div class="auto-stat"><div class="bval" id="auto-pl-val">¥0</div><div class="blbl">本日損益</div></div>
+              <div class="auto-stat"><div class="bval" id="auto-next-val">-</div><div class="blbl">次回チェック</div></div>
+            </div>
+            <div class="d-flex gap-2 mb-2">
+              <button class="btn-auto-start flex-grow-1" id="auto-start-btn" onclick="startAutoTrade()">
+                <i class="bi bi-play-fill me-1"></i>自動取引 開始
+              </button>
+              <button class="btn-auto-stop flex-grow-1 d-none" id="auto-stop-btn" onclick="stopAutoTrade()">
+                <i class="bi bi-stop-fill me-1"></i>停止
+              </button>
+              <button class="btn btn-sm btn-outline-danger" onclick="resetAutoTrade()" title="履歴リセット">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            <div class="sync-log" id="auto-log" style="height:110px">待機中...</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header"><i class="bi bi-lightning-fill me-2"></i>本日の取引履歴</div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-sm mb-0">
+                <thead>
+                  <tr><th>時刻</th><th>競馬場</th><th>R</th><th>式別</th><th>対象馬</th><th>賭け金</th><th>状態</th><th>損益</th></tr>
+                </thead>
+                <tbody id="auto-history-tbody">
+                  <tr><td colspan="8" class="no-data-msg">取引なし</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== クラウドBot ===== -->
+    <div class="row g-3 mb-3">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-cloud-fill me-2"></i>クラウドBot <small style="color:var(--text-muted);font-weight:400;font-size:0.76rem">（GitHub Actionsで自動稼働・PC不要・90分ごと）</small></span>
+          </div>
+          <div class="card-body">
+            <div class="auto-stats-row mb-3">
+              <div class="auto-stat"><div class="bval" id="cbot-balance-val">¥-</div><div class="blbl">仮想残高</div></div>
+              <div class="auto-stat"><div class="bval" id="cbot-pending-val">-</div><div class="blbl">未決済</div></div>
+              <div class="auto-stat"><div class="bval" id="cbot-bets-val">-</div><div class="blbl">総ベット</div></div>
+              <div class="auto-stat"><div class="bval" id="cbot-winrate-val">-</div><div class="blbl">的中率</div></div>
+              <div class="auto-stat"><div class="bval" id="cbot-roi-val">-</div><div class="blbl">回収率</div></div>
+            </div>
+            <div class="d-flex gap-2 mb-2">
+              <button class="btn-cloud flex-grow-1" onclick="syncCloudBot()">
+                <i class="bi bi-cloud-download me-1"></i>GitHub から最新データ取得
+              </button>
+              <button class="btn btn-sm btn-outline-secondary" onclick="openCloudModal()" title="GitHub Pages URL設定">
+                <i class="bi bi-gear"></i>
+              </button>
+            </div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:8px">
+              右上の雲アイコンまたは歯車アイコンでGitHub Pages URLを設定後、取得ボタンを押してください
+            </div>
+            <div class="sync-log" id="cbot-log" style="height:80px">「GitHub から最新データ取得」ボタンを押してください</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header"><i class="bi bi-list-ul me-2"></i>クラウドBotの取引履歴</div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-sm mb-0">
+                <thead>
+                  <tr><th>日付</th><th>競馬場</th><th>R</th><th>式別</th><th>対象馬</th><th>賭け金</th><th>状態</th><th>損益</th><th>残高</th></tr>
+                </thead>
+                <tbody id="cbot-history-tbody">
+                  <tr><td colspan="9" class="no-data-msg">データ未取得</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row g-3">
       <div class="col-xl-4 col-lg-5">
         <div class="card mb-3">
@@ -620,6 +817,12 @@
                 <label class="form-label">1レース賭け金 (¥)</label>
                 <input type="number" class="form-control form-control-sm" id="bot-bet-amount" value="500" min="100" step="100">
               </div>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">競馬場フィルター</label>
+              <select class="form-select form-select-sm" id="bot-venue-filter">
+                <option value="">全競馬場</option>
+              </select>
             </div>
             <div class="mb-2">
               <label class="form-label">戦略</label>
@@ -983,7 +1186,7 @@ function switchTab(tab) {
   if (tab === 'horseno')    renderHorseNo();
   if (tab === 'odds')       renderOdds();
   if (tab === 'predict')    initPredTab();
-  if (tab === 'bot')        initBotTab();
+  if (tab === 'bot')        { initBotTab(); initAutoTradeTab(); }
 }
 
 // =============================================
@@ -1133,8 +1336,8 @@ function refreshSummary() {
     type:'doughnut',
     data: { labels:vLabels, datasets:[{ data:vData, backgroundColor:PALETTE }]},
     options: { responsive:true, plugins:{
-      legend:{ labels:{color:'#8b949e',font:{size:11}} },
-      title:{ display:true, text:'競馬場別レース数', color:'#8b949e' }
+      legend:{ labels:{color:'#94a3b8',font:{size:11}} },
+      title:{ display:true, text:'競馬場別レース数', color:'#94a3b8' }
     }}
   });
 }
@@ -1236,7 +1439,7 @@ function renderPopularity() {
   charts['pop-dist'] = new Chart(document.getElementById('chart-pop-dist'),{
     type:'doughnut',
     data:{labels, datasets:[{data:stats.map(s=>s.w), backgroundColor:PALETTE}]},
-    options:{responsive:true,plugins:{legend:{labels:{color:'#8b949e',font:{size:11}}},title:{display:true,text:'1着馬の人気分布',color:'#8b949e'}}}
+    options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},title:{display:true,text:'1着馬の人気分布',color:'#94a3b8'}}}
   });
 }
 
@@ -1343,12 +1546,12 @@ function chartOpts(title=null, legend=true, yPct=false, suffix='') {
   return {
     responsive:true,
     plugins:{
-      legend: legend ? {labels:{color:'#8b949e',font:{size:11}}} : {display:false},
-      title: title ? {display:true, text:title, color:'#8b949e'} : {display:false}
+      legend: legend ? {labels:{color:'#94a3b8',font:{size:11}}} : {display:false},
+      title: title ? {display:true, text:title, color:'#94a3b8'} : {display:false}
     },
     scales:{
-      x:{ticks:{color:'#8b949e',maxRotation:30,font:{size:11}},grid:{color:'#21262d'}},
-      y:{ticks:{color:'#8b949e',callback:v=>v+suffix,font:{size:11}},grid:{color:'#21262d'}}
+      x:{ticks:{color:'#94a3b8',maxRotation:30,font:{size:11}},grid:{color:'#1a2d47'}},
+      y:{ticks:{color:'#94a3b8',callback:v=>v+suffix,font:{size:11}},grid:{color:'#1a2d47'}}
     }
   };
 }
@@ -1693,8 +1896,8 @@ function renderPredResult(ranked, histStats, comments, info) {
       responsive: true,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color:'#8b949e', callback: v=>v+'%' }, grid: { color:'#21262d' } },
-        y: { ticks: { color:'#c9d1d9', font:{size:11} }, grid: { color:'#21262d' } }
+        x: { ticks: { color:'#94a3b8', callback: v=>v+'%' }, grid: { color:'#1a2d47' } },
+        y: { ticks: { color:'#e2e8f0', font:{size:11} }, grid: { color:'#1a2d47' } }
       }
     }
   });
@@ -1711,6 +1914,13 @@ const getBotStore = () => {
 const setBotStore = d => localStorage.setItem(BOT_KEY, JSON.stringify(d));
 
 function initBotTab() {
+  // 競馬場セレクトをデータから動的生成
+  const venues = [...new Set(getData().races.map(r => r.venue))].sort();
+  const sel = document.getElementById('bot-venue-filter');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">全競馬場</option>' +
+    venues.map(v => `<option value="${v}" ${v === cur ? 'selected' : ''}>${v}</option>`).join('');
+
   const store = getBotStore();
   if (store.lastResult && store.lastResult.settings) {
     const s = store.lastResult.settings;
@@ -1719,6 +1929,7 @@ function initBotTab() {
     document.getElementById('bot-strategy').value        = s.strategy;
     document.getElementById('bot-min-odds').value        = s.minOdds;
     document.getElementById('bot-max-odds').value        = s.maxOdds;
+    if (s.venueFilter) sel.value = s.venueFilter;
     renderBotStats(store.lastResult);
     renderBetHistory(store.lastResult.bets);
     renderBalanceChart(store.lastResult.bets, s.initialBalance);
@@ -1731,9 +1942,10 @@ function readBotSettings() {
   const strategy       = document.getElementById('bot-strategy').value;
   const minOdds        = parseFloat(document.getElementById('bot-min-odds').value) || 1.0;
   const maxOdds        = parseFloat(document.getElementById('bot-max-odds').value) || 999;
+  const venueFilter    = document.getElementById('bot-venue-filter').value;
   if (!initialBalance || initialBalance < 100) { toast('初期資金を正しく入力してください', 'danger'); return null; }
   if (!betAmount || betAmount < 100)           { toast('賭け金を正しく入力してください', 'danger');  return null; }
-  return { initialBalance, betAmount, strategy, minOdds, maxOdds };
+  return { initialBalance, betAmount, strategy, minOdds, maxOdds, venueFilter };
 }
 
 function runBacktest() {
@@ -1741,13 +1953,16 @@ function runBacktest() {
   if (!s) return;
 
   const d = getData();
-  const races = d.races.slice().sort((a, b) => a.date.localeCompare(b.date) || a.raceNo - b.raceNo);
+  const allRaces = d.races.slice().sort((a, b) => a.date.localeCompare(b.date) || a.raceNo - b.raceNo);
+  const races = s.venueFilter ? allRaces.filter(r => r.venue === s.venueFilter) : allRaces;
   if (!races.length) {
-    toast('レースデータがありません。サンプルを追加するか、レース結果を入力してください。', 'danger');
+    const msg = s.venueFilter ? `「${s.venueFilter}」のレースデータがありません。` : 'レースデータがありません。サンプルを追加するか、レース結果を入力してください。';
+    toast(msg, 'danger');
     return;
   }
 
-  const allEntries = d.races.flatMap(r => r.entries.map(e => ({ ...e, _venue: r.venue })));
+  // 全レースを日付・R番号順にソート（過去データ参照用）
+  const allRacesSorted = d.races.slice().sort((a, b) => a.date.localeCompare(b.date) || a.raceNo - b.raceNo);
   let balance = s.initialBalance;
   const bets = [];
 
@@ -1756,7 +1971,11 @@ function runBacktest() {
     const horses = race.entries.map(e => ({ hn: e.hn, pop: e.pop, odds: e.odds }));
     if (horses.length < 2) continue;
 
-    const histStats = buildHistStats(allEntries, race.venue);
+    // そのレースより前のデータのみで統計を構築（データ漏洩を防ぐ）
+    const pastEntries = allRacesSorted
+      .filter(r => r.date < race.date || (r.date === race.date && r.raceNo < race.raceNo))
+      .flatMap(r => r.entries.map(e => ({ ...e, _venue: r.venue })));
+    const histStats = buildHistStats(pastEntries, race.venue);
     const ranked    = scoreHorses(horses, histStats);
     const decision  = botDecide(ranked, s, balance);
     if (!decision) continue;
@@ -1773,18 +1992,21 @@ function runBacktest() {
     } else if (decision.betType === 'place') {
       const te = race.entries.find(e => e.hn === decision.hn);
       if (!te) continue;
-      won = te.pos <= maxPlace;
+      won = te.pos != null && te.pos <= maxPlace;
       effectiveOdds = Math.max(1.1, Math.round((decision.winOdds || 3) * 0.28 * 10) / 10);
     } else if (decision.betType === 'trio') {
       if (race.entries.length < 3) continue;
-      const actualTop3 = race.entries.filter(e => e.pos <= 3).map(e => e.hn);
+      const actualTop3 = race.entries.filter(e => e.pos != null && e.pos <= 3).map(e => e.hn);
+      if (actualTop3.length < 3) continue; // 結果未確定レースはスキップ
       won = decision.horses.every(hn => actualTop3.includes(hn));
       effectiveOdds = decision.estimatedOdds;
     } else if (decision.betType === 'trifecta') {
       if (race.entries.length < 3) continue;
+      const hasResults = race.entries.some(e => e.pos != null);
+      if (!hasResults) continue; // 結果未確定レースはスキップ
       won = decision.horses.every((hn, i) => {
         const e = race.entries.find(entry => entry.hn === hn);
-        return e && e.pos === i + 1;
+        return e && e.pos != null && e.pos === i + 1;
       });
       effectiveOdds = decision.estimatedOdds;
     }
@@ -1804,13 +2026,15 @@ function runBacktest() {
     });
   }
 
-  const result = { settings: s, bets, finalBalance: balance };
+  const result = { settings: s, bets, finalBalance: balance, raceCount: races.length };
   setBotStore({ lastResult: result });
 
   renderBotStats(result);
   renderBetHistory(bets);
   renderBalanceChart(bets, s.initialBalance);
-  toast(`バックテスト完了: ${bets.length}回ベット（${bets.filter(b => b.result === 'win').length}回的中）`);
+  const hitCount = bets.filter(b => b.result === 'win').length;
+  const warn = races.length < 30 ? `（⚠ データ${races.length}レースは統計的に不十分）` : '';
+  toast(`バックテスト完了: ${bets.length}回ベット（${hitCount}回的中）${warn}`);
 }
 
 function botDecide(ranked, settings, currentBalance) {
@@ -1884,6 +2108,12 @@ function renderBotStats(result) {
   const plCls  = pl >= 0 ? 'green-val' : 'red-val';
   const plSign = pl >= 0 ? '+' : '';
 
+  const raceCount = result.raceCount || n;
+  const dataWarn = raceCount < 30
+    ? `<div style="font-size:0.72rem;color:var(--accent-yellow);margin-top:8px;padding:6px 8px;background:rgba(212,160,23,0.1);border-radius:6px;border:1px solid rgba(212,160,23,0.3)">
+        ⚠ データ${raceCount}レース — 統計的信頼性が低い可能性があります（目安: 30レース以上）
+       </div>` : '';
+
   document.getElementById('bot-stats').innerHTML = `
     <div class="bot-stat-grid">
       <div class="bot-stat"><div class="bval" style="color:var(--accent-blue)">¥${init.toLocaleString()}</div><div class="blbl">初期資金</div></div>
@@ -1892,7 +2122,7 @@ function renderBotStats(result) {
       <div class="bot-stat"><div class="bval" style="color:var(--accent-yellow)">${roi.toFixed(1)}%</div><div class="blbl">回収率</div></div>
       <div class="bot-stat"><div class="bval">${n}回</div><div class="blbl">ベット数</div></div>
       <div class="bot-stat"><div class="bval ${winRate >= 0.25 ? 'green-val' : 'red-val'}">${(winRate * 100).toFixed(1)}%</div><div class="blbl">的中率</div></div>
-    </div>`;
+    </div>${dataWarn}`;
 }
 
 function renderBetHistory(bets) {
@@ -1958,8 +2188,8 @@ function renderBalanceChart(bets, initialBalance) {
         tooltip: { callbacks: { label: c => '¥' + c.raw.toLocaleString() } }
       },
       scales: {
-        x: { ticks: { color:'#8b949e', maxRotation:45, maxTicksLimit:20, font:{size:10} }, grid:{ color:'#21262d' } },
-        y: { ticks: { color:'#8b949e', callback: v => '¥' + v.toLocaleString(), font:{size:10} }, grid:{ color:'#21262d' } }
+        x: { ticks: { color:'#94a3b8', maxRotation:45, maxTicksLimit:20, font:{size:10} }, grid:{ color:'#1a2d47' } },
+        y: { ticks: { color:'#94a3b8', callback: v => '¥' + v.toLocaleString(), font:{size:10} }, grid:{ color:'#1a2d47' } }
       }
     }
   });
@@ -2009,8 +2239,10 @@ async function syncFromCloud() {
   }
 
   const store = getData();
+  // 日付を YYYY-MM-DD に正規化して重複チェック
+  const normDate = d => d ? d.replace(/\//g, '-') : d;
   const existingKeys = new Set(
-    store.races.map(r => `${r.date}_${r.venue}_${r.raceNo}`)
+    store.races.map(r => `${normDate(r.date)}_${r.venue}_${r.raceNo}`)
   );
 
   let imported = 0, skipped = 0, errors = 0;
@@ -2055,7 +2287,7 @@ async function syncFromCloud() {
     }
   }
 
-  saveData(store);
+  setData(store);
   renderAll();
 
   const summary = `\n完了: ${imported}レース追加, ${skipped}件スキップ, ${errors}件失敗`;
@@ -2073,6 +2305,345 @@ function resetBotData() {
     '<tr><td colspan="10" class="no-data-msg">ベット履歴なし</td></tr>';
   destroyChart('bot-balance');
   toast('リセットしました', 'warning');
+}
+
+// =============================================
+//  リアルタイム自動取引
+// =============================================
+const AUTO_KEY = 'keiba_auto_v1';
+let autoTimer = null;
+let autoCountdown = 0;
+let autoCountdownTimer = null;
+
+function loadAutoState() {
+  try { return JSON.parse(localStorage.getItem(AUTO_KEY)) || { active:false, balance:null, pending:[], history:[], log:[] }; }
+  catch { return { active:false, balance:null, pending:[], history:[], log:[] }; }
+}
+function saveAutoState(st) { localStorage.setItem(AUTO_KEY, JSON.stringify(st)); }
+
+function getTodayJST() {
+  const jst = new Date(Date.now() + 9*3600*1000);
+  return jst.toISOString().slice(0,10); // YYYY-MM-DD
+}
+
+function startAutoTrade() {
+  const s = readBotSettings();
+  if (!s) return;
+  const st = loadAutoState();
+  if (st.balance === null) st.balance = s.initialBalance;
+  st.active = true;
+  saveAutoState(st);
+  renderAutoUI(st);
+  autoPoll();
+  autoTimer = setInterval(autoPoll, 3 * 60 * 1000);
+  startCountdown(3 * 60);
+  toast('自動取引モード開始');
+}
+
+function stopAutoTrade() {
+  clearInterval(autoTimer); autoTimer = null;
+  clearInterval(autoCountdownTimer); autoCountdownTimer = null;
+  const st = loadAutoState();
+  st.active = false;
+  saveAutoState(st);
+  renderAutoUI(st);
+  document.getElementById('auto-next-val').textContent = '-';
+  toast('自動取引モード停止', 'warning');
+}
+
+function resetAutoTrade() {
+  if (!confirm('自動取引の履歴をリセットしますか？')) return;
+  clearInterval(autoTimer); autoTimer = null;
+  clearInterval(autoCountdownTimer); autoCountdownTimer = null;
+  const fresh = { active:false, balance:null, pending:[], history:[], log:[] };
+  saveAutoState(fresh);
+  renderAutoUI(fresh);
+  toast('リセットしました', 'warning');
+}
+
+function startCountdown(secs) {
+  clearInterval(autoCountdownTimer);
+  autoCountdown = secs;
+  const el = document.getElementById('auto-next-val');
+  autoCountdownTimer = setInterval(() => {
+    autoCountdown--;
+    if (!el) return;
+    if (autoCountdown <= 0) { el.textContent = 'チェック中...'; return; }
+    const m = Math.floor(autoCountdown / 60), s = autoCountdown % 60;
+    el.textContent = m + ':' + String(s).padStart(2,'0');
+  }, 1000);
+}
+
+function addAutoLog(st, msg, type='inf') {
+  const time = new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+  st.log.unshift({ time, msg, type });
+  if (st.log.length > 60) st.log.pop();
+  const el = document.getElementById('auto-log');
+  if (el) el.innerHTML = st.log.map(l=>`<span class="log-${l.type}">[${l.time}] ${l.msg}</span>`).join('\n');
+}
+
+async function autoPoll() {
+  const s = readBotSettings();
+  if (!s) return;
+  const st = loadAutoState();
+  if (!st.active) return;
+
+  const dateStr = getTodayJST();
+  addAutoLog(st, `チェック開始 (${dateStr})`, 'inf');
+
+  // APIサーバー確認
+  try {
+    const ping = await fetch(`${API}/api/ping`).then(r=>r.json());
+    if (ping.status !== 'ok') throw new Error();
+  } catch {
+    addAutoLog(st, 'APIサーバーに接続できません。start.bat を起動してください。', 'err');
+    saveAutoState(st); renderAutoUI(st); return;
+  }
+
+  // スケジュール取得
+  let venues = [];
+  try {
+    const sc = await fetch(`${API}/api/schedule?date=${dateStr}`).then(r=>r.json());
+    venues = sc.venues || [];
+  } catch { addAutoLog(st, 'スケジュール取得失敗', 'err'); saveAutoState(st); renderAutoUI(st); return; }
+
+  if (!venues.length) { addAutoLog(st, '本日の開催場なし', 'inf'); saveAutoState(st); renderAutoUI(st); return; }
+  addAutoLog(st, `開催場: ${venues.map(v=>v.name).join(' ')}`, 'inf');
+
+  const d = getData();
+  const allEntries = d.races.flatMap(r => r.entries.map(e => ({...e, _venue: r.venue})));
+  const processedKeys = new Set([...st.pending, ...st.history].map(t=>t.tradeKey));
+
+  for (const venue of venues) {
+    // ① 決済チェック（pending → 結果確認）
+    const pendingHere = st.pending.filter(t => t.venue === venue.name && t.date === dateStr);
+    if (pendingHere.length) {
+      try {
+        const res = await fetch(`${API}/api/results?venue=${encodeURIComponent(venue.name)}&date=${dateStr}`).then(r=>r.json());
+        if (res.results) {
+          for (const trade of pendingHere) {
+            const rr = res.results[trade.raceNo] || res.results[String(trade.raceNo)];
+            if (rr) settleAutoTrade(st, trade, rr);
+          }
+        }
+      } catch {}
+    }
+
+    // ② 新規ベット
+    let raceList = [];
+    try {
+      const rl = await fetch(`${API}/api/races?venue=${encodeURIComponent(venue.name)}&date=${dateStr}`).then(r=>r.json());
+      raceList = rl.races || [];
+    } catch { continue; }
+
+    for (const race of raceList) {
+      const key = `${dateStr}_${venue.name}_${race.no}`;
+      if (processedKeys.has(key)) continue;
+
+      try {
+        const er = await fetch(`${API}/api/entries?venue=${encodeURIComponent(venue.name)}&date=${dateStr}&race=${race.no}`).then(r=>r.json());
+        if (!er.horses || !er.horses.length) continue;
+
+        const histStats = buildHistStats(allEntries, venue.name);
+        const ranked = scoreHorses(er.horses, histStats);
+        const decision = botDecide(ranked, s, st.balance);
+        if (!decision) continue;
+
+        st.balance -= decision.amount;
+        const trade = { tradeKey:key, date:dateStr, venue:venue.name, raceNo:race.no, decision, status:'pending', placedAt:new Date().toISOString() };
+        st.pending.push(trade);
+        processedKeys.add(key);
+
+        const tl = {win:'単勝',place:'複勝',trio:'三連複',trifecta:'三連単'}[decision.betType]||decision.betType;
+        const tgt = decision.horses ? decision.horses.join('-')+'番' : `${decision.hn}番`;
+        addAutoLog(st, `${venue.name}${race.no}R → ${tl} ${tgt} ¥${decision.amount.toLocaleString()} ベット`, 'ok');
+      } catch {}
+    }
+  }
+
+  saveAutoState(st);
+  renderAutoUI(st);
+  startCountdown(3 * 60);
+}
+
+function settleAutoTrade(st, trade, rr) {
+  // rr: {hn: pos, ...} (keys may be string or int)
+  const getPosOf = hn => rr[hn] ?? rr[String(hn)] ?? null;
+  let won = false;
+
+  if (trade.decision.betType === 'win') {
+    won = getPosOf(trade.decision.hn) === 1;
+  } else if (trade.decision.betType === 'place') {
+    const p = getPosOf(trade.decision.hn);
+    won = p != null && p <= 3;
+  } else if (trade.decision.betType === 'trio') {
+    const top3 = Object.entries(rr).filter(([,p])=>parseInt(p)<=3).map(([h])=>parseInt(h));
+    won = top3.length >= 3 && trade.decision.horses.every(hn=>top3.includes(hn));
+  } else if (trade.decision.betType === 'trifecta') {
+    won = trade.decision.horses.every((hn,i) => getPosOf(hn) === i+1);
+  }
+
+  const eff = trade.decision.betType === 'place'
+    ? Math.max(1.1, Math.round((trade.decision.winOdds||3)*0.28*10)/10)
+    : (trade.decision.winOdds || trade.decision.estimatedOdds || 1);
+  const payout = won ? Math.floor(trade.decision.amount * eff) : 0;
+  const profit = payout - trade.decision.amount;
+  st.balance += payout;
+
+  const settled = {...trade, status: won?'won':'lost', payout, profit, settledAt:new Date().toISOString()};
+  st.pending = st.pending.filter(t=>t.tradeKey !== trade.tradeKey);
+  st.history.unshift(settled);
+  if (st.history.length > 200) st.history.pop();
+
+  const tl = {win:'単勝',place:'複勝',trio:'三連複',trifecta:'三連単'}[trade.decision.betType];
+  const rl = won ? `的中! +¥${profit.toLocaleString()}` : `外れ -¥${trade.decision.amount.toLocaleString()}`;
+  addAutoLog(st, `${trade.venue}${trade.raceNo}R ${tl} → ${rl} (残高 ¥${st.balance.toLocaleString()})`, won?'ok':'err');
+}
+
+function renderAutoUI(st) {
+  const badge = document.getElementById('auto-status-badge');
+  if (badge) { badge.className = 'auto-badge ' + (st.active?'auto-on':'auto-off'); badge.textContent = st.active?'稼働中':'停止中'; }
+
+  const balEl = document.getElementById('auto-balance-val');
+  if (balEl) balEl.textContent = st.balance != null ? '¥'+st.balance.toLocaleString() : '¥-';
+
+  const pendEl = document.getElementById('auto-pending-val');
+  if (pendEl) pendEl.textContent = st.pending.length + '件';
+
+  const todayStr = getTodayJST();
+  const todayHistory = st.history.filter(t=>t.date===todayStr);
+  const pl = todayHistory.reduce((s,t)=>s+t.profit,0);
+  const plEl = document.getElementById('auto-pl-val');
+  if (plEl) { plEl.textContent = (pl>=0?'+':'')+'¥'+pl.toLocaleString(); plEl.style.color = pl>=0?'#4ade80':'#fb7185'; }
+
+  const startBtn = document.getElementById('auto-start-btn');
+  const stopBtn  = document.getElementById('auto-stop-btn');
+  if (startBtn) startBtn.classList.toggle('d-none', st.active);
+  if (stopBtn)  stopBtn.classList.toggle('d-none', !st.active);
+
+  // ログ復元
+  const logEl = document.getElementById('auto-log');
+  if (logEl && st.log.length) logEl.innerHTML = st.log.map(l=>`<span class="log-${l.type}">[${l.time}] ${l.msg}</span>`).join('\n');
+
+  // 取引履歴テーブル
+  const tbody = document.getElementById('auto-history-tbody');
+  if (!tbody) return;
+  const all = [...st.pending.map(t=>({...t,_live:true})), ...st.history.filter(t=>t.date===todayStr)];
+  if (!all.length) { tbody.innerHTML='<tr><td colspan="8" class="no-data-msg">取引なし</td></tr>'; return; }
+
+  tbody.innerHTML = all.map(t => {
+    const tl = {win:'単勝',place:'複勝',trio:'三連複',trifecta:'三連単'}[t.decision.betType]||t.decision.betType;
+    const tgt = t.decision.horses ? t.decision.horses.join('-')+'番' : `${t.decision.hn}番${t.decision.pop?' '+t.decision.pop+'人気':''}`;
+    const statusHtml = t.status==='pending'
+      ? '<span style="background:rgba(245,158,11,0.2);color:#f59e0b;padding:1px 7px;border-radius:10px;font-size:0.7rem;font-weight:700">待機中</span>'
+      : t.status==='won'
+      ? '<span style="background:rgba(34,197,94,0.2);color:#4ade80;padding:1px 7px;border-radius:10px;font-size:0.7rem;font-weight:700">的中</span>'
+      : '<span style="background:rgba(244,63,94,0.2);color:#fb7185;padding:1px 7px;border-radius:10px;font-size:0.7rem;font-weight:700">外れ</span>';
+    const profitHtml = t.status==='pending' ? '-'
+      : `<span class="${t.profit>=0?'bet-win':'bet-lose'}">${t.profit>=0?'+':''}¥${t.profit.toLocaleString()}</span>`;
+    const timeStr = new Date(t.status==='pending'?t.placedAt:t.settledAt).toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    return `<tr><td>${timeStr}</td><td><span class="venue-tag">${t.venue}</span></td><td>${t.raceNo}R</td><td>${tl}</td><td>${tgt}</td><td>¥${t.decision.amount.toLocaleString()}</td><td>${statusHtml}</td><td>${profitHtml}</td></tr>`;
+  }).join('');
+}
+
+// タブ切替時に自動取引UIを復元
+function initAutoTradeTab() {
+  const st = loadAutoState();
+  renderAutoUI(st);
+  if (st.active) {
+    if (!autoTimer) autoTimer = setInterval(autoPoll, 3*60*1000);
+    startCountdown(3*60);
+  }
+}
+
+// =============================================
+//  クラウドBot同期
+// =============================================
+async function syncCloudBot() {
+  const baseUrl = (localStorage.getItem(CLOUD_URL_KEY) || '').replace(/\/$/, '');
+  if (!baseUrl) {
+    toast('GitHub Pages URLを設定してください（歯車アイコンから設定）', 'danger');
+    openCloudModal();
+    return;
+  }
+  const logEl = document.getElementById('cbot-log');
+  logEl.innerHTML = '';
+  cbotLog('同期中... ' + baseUrl, 'inf');
+  try {
+    const url = `${baseUrl}/data/bot_state.json`;
+    const res = await fetch(url, { cache: 'no-store' });
+    if (res.status === 404) { cbotLog('bot_state.json がまだ生成されていません。GitHub Actions が初回実行されるまでお待ちください。', 'err'); return; }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const state = await res.json();
+    cbotLog(`取得完了: 残高¥${(state.balance||0).toLocaleString()} / 履歴${(state.history||[]).length}件`, 'ok');
+    renderCloudBotUI(state);
+  } catch (e) {
+    cbotLog('取得失敗: ' + e.message, 'err');
+    cbotLog('GitHub Pages URL と Pages設定（Settings → Pages）を確認してください', 'inf');
+  }
+}
+
+function cbotLog(msg, type = '') {
+  const el = document.getElementById('cbot-log');
+  if (!el) return;
+  const cls = type === 'ok' ? 'log-ok' : type === 'err' ? 'log-err' : type === 'inf' ? 'log-inf' : '';
+  el.innerHTML += `<span class="${cls}">${msg}</span>\n`;
+  el.scrollTop = el.scrollHeight;
+}
+
+function renderCloudBotUI(state) {
+  const balance = state.balance ?? 0;
+  const pending = state.pending || [];
+  const history = state.history || [];
+
+  const el = v => document.getElementById(v);
+  el('cbot-balance-val').textContent = '¥' + balance.toLocaleString();
+  el('cbot-pending-val').textContent = pending.length + '件';
+
+  const settled  = history.filter(t => t.status === 'won' || t.status === 'lost');
+  const wins     = settled.filter(t => t.status === 'won').length;
+  const n        = settled.length;
+  el('cbot-bets-val').textContent = n + '回';
+
+  const wrEl = el('cbot-winrate-val');
+  const wr = n ? wins / n : null;
+  wrEl.textContent = wr != null ? (wr * 100).toFixed(1) + '%' : '-';
+  wrEl.style.color = wr != null ? (wr >= 0.25 ? 'var(--accent-green)' : 'var(--accent-red)') : '';
+
+  const invested = settled.reduce((s, t) => s + (t.decision?.amount || 0), 0);
+  const paid     = settled.reduce((s, t) => s + (t.payout || 0), 0);
+  const roiEl    = el('cbot-roi-val');
+  const roi = invested ? paid / invested * 100 : null;
+  roiEl.textContent = roi != null ? roi.toFixed(1) + '%' : '-';
+  roiEl.style.color = roi != null ? (roi >= 100 ? 'var(--accent-green)' : 'var(--accent-red)') : '';
+
+  // history table
+  const tbody = document.getElementById('cbot-history-tbody');
+  const rows  = [...pending.map(t => ({...t, _p: true})), ...history].slice(0, 100);
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="9" class="no-data-msg">取引なし</td></tr>'; return; }
+
+  const typeMap = { win:'単勝', place:'複勝', trio:'三連複', trifecta:'三連単' };
+  tbody.innerHTML = rows.map(t => {
+    const d   = t.decision || {};
+    const tl  = typeMap[d.betType] || d.betType || '-';
+    const tgt = d.horses ? d.horses.join('-') + '番' : `${d.hn || '-'}番`;
+    const stHtml = t.status === 'pending'
+      ? '<span style="background:rgba(245,158,11,0.2);color:#f59e0b;padding:1px 7px;border-radius:10px;font-size:0.7rem;font-weight:700">待機中</span>'
+      : t.status === 'won'
+      ? '<span style="background:rgba(34,197,94,0.2);color:#4ade80;padding:1px 7px;border-radius:10px;font-size:0.7rem;font-weight:700">的中</span>'
+      : '<span style="background:rgba(244,63,94,0.2);color:#fb7185;padding:1px 7px;border-radius:10px;font-size:0.7rem;font-weight:700">外れ</span>';
+    const plHtml = t.status === 'pending' ? '-'
+      : `<span class="${(t.profit||0) >= 0 ? 'bet-win' : 'bet-lose'}">${(t.profit||0) >= 0 ? '+' : ''}¥${(t.profit||0).toLocaleString()}</span>`;
+    const balAfter = t.balanceAfter != null ? '¥' + t.balanceAfter.toLocaleString() : '-';
+    return `<tr>
+      <td>${t.date || '-'}</td>
+      <td><span class="venue-tag">${t.venue || '-'}</span></td>
+      <td>${t.raceNo || '-'}R</td>
+      <td>${tl}</td><td>${tgt}</td>
+      <td>¥${(d.amount || 0).toLocaleString()}</td>
+      <td>${stHtml}</td><td>${plHtml}</td><td>${balAfter}</td>
+    </tr>`;
+  }).join('');
 }
 </script>
 
