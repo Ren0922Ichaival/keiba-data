@@ -1,5 +1,5 @@
 {
-  "balance": 5100,
+  "balance": 0,
   "pending": [
     {
       "tradeKey": "2026-04-20_水沢_10",
@@ -51,6 +51,108 @@
       },
       "status": "pending",
       "placedAt": "2026-04-20T18:20:04.304235+09:00"
+    },
+    {
+      "tradeKey": "2026-04-23_浦和_1",
+      "date": "2026-04-23",
+      "venue": "浦和",
+      "raceNo": 1,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "pending",
+      "placedAt": "2026-04-23T00:10:06.889233+09:00"
+    },
+    {
+      "tradeKey": "2026-04-23_浦和_2",
+      "date": "2026-04-23",
+      "venue": "浦和",
+      "raceNo": 2,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "pending",
+      "placedAt": "2026-04-23T00:10:06.889233+09:00"
+    },
+    {
+      "tradeKey": "2026-04-23_浦和_3",
+      "date": "2026-04-23",
+      "venue": "浦和",
+      "raceNo": 3,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "pending",
+      "placedAt": "2026-04-23T00:10:06.889233+09:00"
+    },
+    {
+      "tradeKey": "2026-04-23_浦和_4",
+      "date": "2026-04-23",
+      "venue": "浦和",
+      "raceNo": 4,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "pending",
+      "placedAt": "2026-04-23T00:10:06.889233+09:00"
+    },
+    {
+      "tradeKey": "2026-04-23_浦和_5",
+      "date": "2026-04-23",
+      "venue": "浦和",
+      "raceNo": 5,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "pending",
+      "placedAt": "2026-04-23T00:10:06.889233+09:00"
+    },
+    {
+      "tradeKey": "2026-04-23_浦和_6",
+      "date": "2026-04-23",
+      "venue": "浦和",
+      "raceNo": 6,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 100
+      },
+      "status": "pending",
+      "placedAt": "2026-04-23T00:10:06.889233+09:00"
     }
   ],
   "history": [
@@ -2857,6 +2959,51 @@
   ],
   "log": [
     {
+      "time": "00:10",
+      "msg": "完了: 未決済9件 / 履歴140件 / 的中29件 残高¥0",
+      "type": "inf"
+    },
+    {
+      "time": "00:10",
+      "msg": "浦和6R → 単勝 2番 ¥100 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "00:10",
+      "msg": "浦和5R → 単勝 2番 ¥1,000 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "00:10",
+      "msg": "浦和4R → 単勝 2番 ¥1,000 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "00:10",
+      "msg": "浦和3R → 単勝 2番 ¥1,000 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "00:10",
+      "msg": "浦和2R → 単勝 2番 ¥1,000 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "00:10",
+      "msg": "浦和1R → 単勝 2番 ¥1,000 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "00:10",
+      "msg": "開催場: 浦和 名古屋 園田 金沢 高知",
+      "type": "inf"
+    },
+    {
+      "time": "00:10",
+      "msg": "実行開始 2026/04/23 残高¥5,100",
+      "type": "inf"
+    },
+    {
       "time": "21:10",
       "msg": "完了: 未決済3件 / 履歴140件 / 的中29件 残高¥5,100",
       "type": "inf"
@@ -3809,51 +3956,6 @@
     {
       "time": "00:08",
       "msg": "園田2R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:08",
-      "msg": "園田1R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:08",
-      "msg": "金沢12R → 単勝 4番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:08",
-      "msg": "金沢11R → 単勝 8番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:08",
-      "msg": "金沢10R → 単勝 8番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:08",
-      "msg": "金沢9R → 単勝 4番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:08",
-      "msg": "金沢8R → 単勝 8番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:08",
-      "msg": "金沢7R → 単勝 8番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "金沢6R → 単勝 8番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "金沢5R → 単勝 8番 ¥1,000 ベット",
       "type": "ok"
     }
   ]
