@@ -1,5 +1,5 @@
 {
-  "balance": 0,
+  "balance": 600,
   "pending": [
     {
       "tradeKey": "2026-04-20_水沢_10",
@@ -155,38 +155,77 @@
       "placedAt": "2026-04-22T00:02:42.393584+09:00"
     },
     {
-      "tradeKey": "2026-04-22_園田_6",
+      "tradeKey": "2026-04-22_園田_10",
       "date": "2026-04-22",
       "venue": "園田",
-      "raceNo": 6,
+      "raceNo": 10,
       "decision": {
-        "hn": 2,
+        "hn": 11,
         "horses": null,
         "pop": 1,
         "betType": "win",
-        "winOdds": 1.5,
+        "winOdds": 2.6,
         "estimatedOdds": null,
         "amount": 1000
       },
       "status": "pending",
-      "placedAt": "2026-04-22T18:00:32.720236+09:00"
+      "placedAt": "2026-04-22T18:08:44.692181+09:00"
     },
     {
-      "tradeKey": "2026-04-22_園田_7",
+      "tradeKey": "2026-04-22_園田_11",
       "date": "2026-04-22",
       "venue": "園田",
-      "raceNo": 7,
+      "raceNo": 11,
       "decision": {
-        "hn": 4,
+        "hn": 12,
         "horses": null,
         "pop": 1,
         "betType": "win",
-        "winOdds": 2.0,
+        "winOdds": 1.7,
         "estimatedOdds": null,
         "amount": 1000
       },
       "status": "pending",
-      "placedAt": "2026-04-22T18:00:32.720236+09:00"
+      "placedAt": "2026-04-22T18:08:44.692181+09:00"
+    },
+    {
+      "tradeKey": "2026-04-22_園田_12",
+      "date": "2026-04-22",
+      "venue": "園田",
+      "raceNo": 12,
+      "decision": {
+        "hn": 3,
+        "horses": null,
+        "pop": 1,
+        "betType": "win",
+        "winOdds": 1.8,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "pending",
+      "placedAt": "2026-04-22T18:08:44.692181+09:00"
+    }
+  ],
+  "history": [
+    {
+      "tradeKey": "2026-04-22_園田_9",
+      "date": "2026-04-22",
+      "venue": "園田",
+      "raceNo": 9,
+      "decision": {
+        "hn": 5,
+        "horses": null,
+        "pop": 1,
+        "betType": "win",
+        "winOdds": 2.1,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "won",
+      "placedAt": "2026-04-22T18:00:32.720236+09:00",
+      "payout": 2100,
+      "profit": 1100,
+      "settledAt": "2026-04-22T18:08:50.526387+09:00"
     },
     {
       "tradeKey": "2026-04-22_園田_8",
@@ -202,28 +241,52 @@
         "estimatedOdds": null,
         "amount": 1000
       },
-      "status": "pending",
-      "placedAt": "2026-04-22T18:00:32.720236+09:00"
+      "status": "lost",
+      "placedAt": "2026-04-22T18:00:32.720236+09:00",
+      "payout": 0,
+      "profit": -1000,
+      "settledAt": "2026-04-22T18:08:50.526374+09:00"
     },
     {
-      "tradeKey": "2026-04-22_園田_9",
+      "tradeKey": "2026-04-22_園田_7",
       "date": "2026-04-22",
       "venue": "園田",
-      "raceNo": 9,
+      "raceNo": 7,
       "decision": {
-        "hn": 5,
+        "hn": 4,
         "horses": null,
         "pop": 1,
         "betType": "win",
-        "winOdds": 2.1,
+        "winOdds": 2.0,
         "estimatedOdds": null,
         "amount": 1000
       },
-      "status": "pending",
-      "placedAt": "2026-04-22T18:00:32.720236+09:00"
-    }
-  ],
-  "history": [
+      "status": "lost",
+      "placedAt": "2026-04-22T18:00:32.720236+09:00",
+      "payout": 0,
+      "profit": -1000,
+      "settledAt": "2026-04-22T18:08:50.526355+09:00"
+    },
+    {
+      "tradeKey": "2026-04-22_園田_6",
+      "date": "2026-04-22",
+      "venue": "園田",
+      "raceNo": 6,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": 1,
+        "betType": "win",
+        "winOdds": 1.5,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "won",
+      "placedAt": "2026-04-22T18:00:32.720236+09:00",
+      "payout": 1500,
+      "profit": 500,
+      "settledAt": "2026-04-22T18:08:50.526292+09:00"
+    },
     {
       "tradeKey": "2026-04-22_園田_5",
       "date": "2026-04-22",
@@ -2767,6 +2830,56 @@
   ],
   "log": [
     {
+      "time": "18:08",
+      "msg": "完了: 未決済12件 / 履歴131件 / 的中26件 残高¥600",
+      "type": "inf"
+    },
+    {
+      "time": "18:08",
+      "msg": "園田12R → 単勝 3番 ¥1,000 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "18:08",
+      "msg": "園田11R → 単勝 12番 ¥1,000 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "18:08",
+      "msg": "園田10R → 単勝 11番 ¥1,000 ベット",
+      "type": "ok"
+    },
+    {
+      "time": "18:08",
+      "msg": "園田9R 単勝 → 的中! +¥1,100 (残高 ¥3,600)",
+      "type": "ok"
+    },
+    {
+      "time": "18:08",
+      "msg": "園田8R 単勝 → 外れ -¥1,000 (残高 ¥1,500)",
+      "type": "err"
+    },
+    {
+      "time": "18:08",
+      "msg": "園田7R 単勝 → 外れ -¥1,000 (残高 ¥1,500)",
+      "type": "err"
+    },
+    {
+      "time": "18:08",
+      "msg": "園田6R 単勝 → 的中! +¥500 (残高 ¥1,500)",
+      "type": "ok"
+    },
+    {
+      "time": "18:08",
+      "msg": "開催場: 浦和 名古屋 園田 帯広 水沢 金沢 高知",
+      "type": "inf"
+    },
+    {
+      "time": "18:08",
+      "msg": "実行開始 2026/04/22 残高¥0",
+      "type": "inf"
+    },
+    {
       "time": "18:00",
       "msg": "完了: 未決済13件 / 履歴127件 / 的中24件 残高¥0",
       "type": "inf"
@@ -3714,56 +3827,6 @@
     {
       "time": "00:07",
       "msg": "浦和2R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和1R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢12R → 単勝 3番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢11R → 単勝 3番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢10R → 単勝 3番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢9R → 単勝 3番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢8R → 単勝 3番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢7R → 単勝 3番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢6R → 単勝 3番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢5R → 単勝 3番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "水沢4R → 単勝 3番 ¥1,000 ベット",
       "type": "ok"
     }
   ]
