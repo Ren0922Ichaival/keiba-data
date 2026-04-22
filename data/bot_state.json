@@ -1,5 +1,5 @@
 {
-  "balance": 600,
+  "balance": 5100,
   "pending": [
     {
       "tradeKey": "2026-04-20_水沢_10",
@@ -53,91 +53,6 @@
       "placedAt": "2026-04-20T18:20:04.304235+09:00"
     },
     {
-      "tradeKey": "2026-04-22_浦和_12",
-      "date": "2026-04-22",
-      "venue": "浦和",
-      "raceNo": 12,
-      "decision": {
-        "hn": 2,
-        "horses": null,
-        "pop": null,
-        "betType": "win",
-        "winOdds": null,
-        "estimatedOdds": null,
-        "amount": 1000
-      },
-      "status": "pending",
-      "placedAt": "2026-04-22T00:02:42.393584+09:00"
-    },
-    {
-      "tradeKey": "2026-04-22_名古屋_8",
-      "date": "2026-04-22",
-      "venue": "名古屋",
-      "raceNo": 8,
-      "decision": {
-        "hn": 12,
-        "horses": null,
-        "pop": null,
-        "betType": "win",
-        "winOdds": null,
-        "estimatedOdds": null,
-        "amount": 1000
-      },
-      "status": "pending",
-      "placedAt": "2026-04-22T00:02:42.393584+09:00"
-    },
-    {
-      "tradeKey": "2026-04-22_名古屋_9",
-      "date": "2026-04-22",
-      "venue": "名古屋",
-      "raceNo": 9,
-      "decision": {
-        "hn": 2,
-        "horses": null,
-        "pop": null,
-        "betType": "win",
-        "winOdds": null,
-        "estimatedOdds": null,
-        "amount": 1000
-      },
-      "status": "pending",
-      "placedAt": "2026-04-22T00:02:42.393584+09:00"
-    },
-    {
-      "tradeKey": "2026-04-22_名古屋_10",
-      "date": "2026-04-22",
-      "venue": "名古屋",
-      "raceNo": 10,
-      "decision": {
-        "hn": 12,
-        "horses": null,
-        "pop": null,
-        "betType": "win",
-        "winOdds": null,
-        "estimatedOdds": null,
-        "amount": 1000
-      },
-      "status": "pending",
-      "placedAt": "2026-04-22T00:02:42.393584+09:00"
-    },
-    {
-      "tradeKey": "2026-04-22_名古屋_11",
-      "date": "2026-04-22",
-      "venue": "名古屋",
-      "raceNo": 11,
-      "decision": {
-        "hn": 12,
-        "horses": null,
-        "pop": null,
-        "betType": "win",
-        "winOdds": null,
-        "estimatedOdds": null,
-        "amount": 1000
-      },
-      "status": "pending",
-      "placedAt": "2026-04-22T00:02:42.393584+09:00"
-    },
-    {
       "tradeKey": "2026-04-22_名古屋_12",
       "date": "2026-04-22",
       "venue": "名古屋",
@@ -153,23 +68,28 @@
       },
       "status": "pending",
       "placedAt": "2026-04-22T00:02:42.393584+09:00"
-    },
+    }
+  ],
+  "history": [
     {
-      "tradeKey": "2026-04-22_園田_10",
+      "tradeKey": "2026-04-22_園田_12",
       "date": "2026-04-22",
       "venue": "園田",
-      "raceNo": 10,
+      "raceNo": 12,
       "decision": {
-        "hn": 11,
+        "hn": 3,
         "horses": null,
         "pop": 1,
         "betType": "win",
-        "winOdds": 2.6,
+        "winOdds": 1.8,
         "estimatedOdds": null,
         "amount": 1000
       },
-      "status": "pending",
-      "placedAt": "2026-04-22T18:08:44.692181+09:00"
+      "status": "won",
+      "placedAt": "2026-04-22T18:08:44.692181+09:00",
+      "payout": 1800,
+      "profit": 800,
+      "settledAt": "2026-04-22T20:37:45.652436+09:00"
     },
     {
       "tradeKey": "2026-04-22_園田_11",
@@ -185,28 +105,132 @@
         "estimatedOdds": null,
         "amount": 1000
       },
-      "status": "pending",
-      "placedAt": "2026-04-22T18:08:44.692181+09:00"
+      "status": "won",
+      "placedAt": "2026-04-22T18:08:44.692181+09:00",
+      "payout": 1700,
+      "profit": 700,
+      "settledAt": "2026-04-22T20:37:45.652413+09:00"
     },
     {
-      "tradeKey": "2026-04-22_園田_12",
+      "tradeKey": "2026-04-22_園田_10",
       "date": "2026-04-22",
       "venue": "園田",
-      "raceNo": 12,
+      "raceNo": 10,
       "decision": {
-        "hn": 3,
+        "hn": 11,
         "horses": null,
         "pop": 1,
         "betType": "win",
-        "winOdds": 1.8,
+        "winOdds": 2.6,
         "estimatedOdds": null,
         "amount": 1000
       },
-      "status": "pending",
-      "placedAt": "2026-04-22T18:08:44.692181+09:00"
-    }
-  ],
-  "history": [
+      "status": "lost",
+      "placedAt": "2026-04-22T18:08:44.692181+09:00",
+      "payout": 0,
+      "profit": -1000,
+      "settledAt": "2026-04-22T20:37:45.652367+09:00"
+    },
+    {
+      "tradeKey": "2026-04-22_名古屋_11",
+      "date": "2026-04-22",
+      "venue": "名古屋",
+      "raceNo": 11,
+      "decision": {
+        "hn": 12,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "lost",
+      "placedAt": "2026-04-22T00:02:42.393584+09:00",
+      "payout": 0,
+      "profit": -1000,
+      "settledAt": "2026-04-22T20:37:43.842304+09:00"
+    },
+    {
+      "tradeKey": "2026-04-22_名古屋_10",
+      "date": "2026-04-22",
+      "venue": "名古屋",
+      "raceNo": 10,
+      "decision": {
+        "hn": 12,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "lost",
+      "placedAt": "2026-04-22T00:02:42.393584+09:00",
+      "payout": 0,
+      "profit": -1000,
+      "settledAt": "2026-04-22T20:37:43.842291+09:00"
+    },
+    {
+      "tradeKey": "2026-04-22_名古屋_9",
+      "date": "2026-04-22",
+      "venue": "名古屋",
+      "raceNo": 9,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "lost",
+      "placedAt": "2026-04-22T00:02:42.393584+09:00",
+      "payout": 0,
+      "profit": -1000,
+      "settledAt": "2026-04-22T20:37:43.842272+09:00"
+    },
+    {
+      "tradeKey": "2026-04-22_名古屋_8",
+      "date": "2026-04-22",
+      "venue": "名古屋",
+      "raceNo": 8,
+      "decision": {
+        "hn": 12,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "lost",
+      "placedAt": "2026-04-22T00:02:42.393584+09:00",
+      "payout": 0,
+      "profit": -1000,
+      "settledAt": "2026-04-22T20:37:43.842233+09:00"
+    },
+    {
+      "tradeKey": "2026-04-22_浦和_12",
+      "date": "2026-04-22",
+      "venue": "浦和",
+      "raceNo": 12,
+      "decision": {
+        "hn": 2,
+        "horses": null,
+        "pop": null,
+        "betType": "win",
+        "winOdds": null,
+        "estimatedOdds": null,
+        "amount": 1000
+      },
+      "status": "won",
+      "placedAt": "2026-04-22T00:02:42.393584+09:00",
+      "payout": 1000,
+      "profit": 0,
+      "settledAt": "2026-04-22T20:37:42.229128+09:00"
+    },
     {
       "tradeKey": "2026-04-22_園田_9",
       "date": "2026-04-22",
@@ -2830,6 +2854,61 @@
   ],
   "log": [
     {
+      "time": "20:37",
+      "msg": "完了: 未決済4件 / 履歴139件 / 的中29件 残高¥5,100",
+      "type": "inf"
+    },
+    {
+      "time": "20:37",
+      "msg": "園田12R 単勝 → 的中! +¥800 (残高 ¥5,100)",
+      "type": "ok"
+    },
+    {
+      "time": "20:37",
+      "msg": "園田11R 単勝 → 的中! +¥700 (残高 ¥3,300)",
+      "type": "ok"
+    },
+    {
+      "time": "20:37",
+      "msg": "園田10R 単勝 → 外れ -¥1,000 (残高 ¥1,600)",
+      "type": "err"
+    },
+    {
+      "time": "20:37",
+      "msg": "名古屋11R 単勝 → 外れ -¥1,000 (残高 ¥1,600)",
+      "type": "err"
+    },
+    {
+      "time": "20:37",
+      "msg": "名古屋10R 単勝 → 外れ -¥1,000 (残高 ¥1,600)",
+      "type": "err"
+    },
+    {
+      "time": "20:37",
+      "msg": "名古屋9R 単勝 → 外れ -¥1,000 (残高 ¥1,600)",
+      "type": "err"
+    },
+    {
+      "time": "20:37",
+      "msg": "名古屋8R 単勝 → 外れ -¥1,000 (残高 ¥1,600)",
+      "type": "err"
+    },
+    {
+      "time": "20:37",
+      "msg": "浦和12R 単勝 → 的中! +¥0 (残高 ¥1,600)",
+      "type": "ok"
+    },
+    {
+      "time": "20:37",
+      "msg": "開催場: 浦和 名古屋 園田 帯広 水沢 金沢 高知",
+      "type": "inf"
+    },
+    {
+      "time": "20:37",
+      "msg": "実行開始 2026/04/22 残高¥600",
+      "type": "inf"
+    },
+    {
       "time": "18:08",
       "msg": "完了: 未決済12件 / 履歴131件 / 的中26件 残高¥600",
       "type": "inf"
@@ -3772,61 +3851,6 @@
     {
       "time": "00:07",
       "msg": "金沢1R → 単勝 8番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和12R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和11R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和10R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和9R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和8R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和7R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和6R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和5R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和4R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和3R → 単勝 2番 ¥1,000 ベット",
-      "type": "ok"
-    },
-    {
-      "time": "00:07",
-      "msg": "浦和2R → 単勝 2番 ¥1,000 ベット",
       "type": "ok"
     }
   ]
