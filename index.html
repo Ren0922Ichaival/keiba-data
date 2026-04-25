@@ -2013,11 +2013,22 @@ function scoreHorses(horses, histStats, raceInfo = {}, venue = '') {
       venue
     );
 
+    // ── 馬体重変動補正 ──
+    let weightMult = 1.0;
+    if (h.weightDiff != null) {
+      const wd = h.weightDiff;
+      if      (wd <= -10) weightMult = 0.95;  // -10kg以上の大幅減: 消耗・調子不良の可能性
+      else if (wd <= -6)  weightMult = 0.98;  // -6〜-9kg
+      else if (wd >= 10)  weightMult = 0.96;  // +10kg以上の大幅増
+      else if (wd >= 6)   weightMult = 0.98;  // +6〜+9kg: 体重増加で動きが重い
+    }
+
     return {
       ...h, mktProb, popScore, hnScore, popPlace, hnPlace,
-      composite:      composite      * condMult,
-      compositePlace: compositePlace * condMult,
+      composite:      composite      * condMult * weightMult,
+      compositePlace: compositePlace * condMult * weightMult,
       condMult,  // 表示用
+      weightMult,  // 表示用
     };
   });
 

@@ -38,10 +38,23 @@ def get_soup(url, params=None):
 
 
 def get_schedule(date_str):
-    """本日の開催場コードリストを返す"""
+    """本日の開催場コードリストを返す（未知コードも discovered_codes.json に保存）"""
     soup = get_soup(f'{BASE}/TodayRaceInfoTop')
+
+    # 既存の discovered_codes を読み込む
+    data_dir = Path('data')
+    discovered_path = data_dir / 'discovered_codes.json'
+    discovered: dict = {}
+    if discovered_path.exists():
+        try:
+            discovered = json.loads(discovered_path.read_text(encoding='utf-8'))
+        except Exception:
+            pass
+
     venues = []
     seen = set()
+    new_discovered = False
+
     for a in soup.find_all('a', href=True):
         if 'RaceList' not in a['href']:
             continue
@@ -55,6 +68,26 @@ def get_schedule(date_str):
         name = CODE_TO_VENUE.get(code)
         if name:
             venues.append({'code': code, 'name': name})
+        else:
+            # 未知コード: リンクテキストから競馬場名を推定
+            link_text = a.get_text(strip=True)
+            code_str = str(code)
+            if not link_text:
+                link_text = f'不明(code={code})'
+            if code_str not in discovered:
+                discovered[code_str] = link_text
+                new_discovered = True
+                print(f'  [新規コード発見] code={code}, name={link_text}')
+            venues.append({'code': code, 'name': discovered.get(code_str, link_text)})
+
+    # 新しい未知コードがあれば保存
+    if new_discovered:
+        data_dir.mkdir(exist_ok=True)
+        discovered_path.write_text(
+            json.dumps(discovered, ensure_ascii=False, indent=2),
+            encoding='utf-8'
+        )
+
     return venues
 
 
@@ -77,18 +110,28 @@ def get_race_list(date_str, code):
 
 
 def parse_entries(soup):
-    """出走馬データ（馬番・人気・単勝オッズ）を抽出"""
+    """出走馬データ（馬番・人気・単勝オッズ・馬体重）を抽出
+    各馬について2行のtrがある:
+      1行目（horseNumセル有り）: odds_weightセルに "4.7 (3人気)" 形式
+      2行目（horseNumセル無し）: odds_weightセルに "506 (+12)" 形式（体重と増減）
+    """
     horses = []
     seen = set()
-    for row in soup.find_all('tr'):
+    all_rows = soup.find_all('tr')
+    i = 0
+    while i < len(all_rows):
+        row = all_rows[i]
         hn_cell = row.find('td', class_='horseNum')
         if not hn_cell:
+            i += 1
             continue
         try:
             hn = int(hn_cell.get_text(strip=True))
             if not (1 <= hn <= 16) or hn in seen:
+                i += 1
                 continue
         except (ValueError, TypeError):
+            i += 1
             continue
         odds_val, pop_val = None, None
         odds_cell = row.find('td', class_='odds_weight')
@@ -98,8 +141,26 @@ def parse_entries(soup):
             if m:
                 odds_val = float(m.group(1))
                 pop_val = int(m.group(2))
+        # 次の行から体重を取得
+        weight = None
+        weight_diff = None
+        if i + 1 < len(all_rows):
+            next_row = all_rows[i + 1]
+            if not next_row.find('td', class_='horseNum'):
+                wc = next_row.find('td', class_='odds_weight')
+                if wc:
+                    wt = wc.get_text(' ', strip=True)
+                    wm = re.search(r'(\d{3,4})\s*(?:\(([+-]\d+)\))?', wt)
+                    if wm:
+                        weight = int(wm.group(1))
+                        if wm.group(2):
+                            weight_diff = int(wm.group(2))
         seen.add(hn)
-        horses.append({'hn': hn, 'pop': pop_val, 'odds': odds_val, 'pos': None})
+        horses.append({
+            'hn': hn, 'pop': pop_val, 'odds': odds_val,
+            'weight': weight, 'weightDiff': weight_diff, 'pos': None,
+        })
+        i += 1
     horses.sort(key=lambda h: h['hn'])
     return horses
 
@@ -283,6 +344,7 @@ def main():
             result_venues.append({'name': name, 'code': code, 'races': races})
 
     # 保存
+    total = sum(len(v['races']) for v in result_venues)
     output = {
         'date': date_key,
         'updated': now.isoformat(),
@@ -290,8 +352,33 @@ def main():
     }
     out_path.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf-8')
     print(f'\n保存完了: {out_path}')
-    total = sum(len(v['races']) for v in result_venues)
     print(f'合計 {total} レース')
+
+    # ヘルスチェック: data/status.json に実行状態を保存
+    warnings = []
+    for v in result_venues:
+        for r in v['races']:
+            if not r.get('entries'):
+                warnings.append(f"{v['name']}{r['raceNo']}R: エントリーなし")
+
+    status = {
+        'last_run': now.isoformat(),
+        'date': date_key,
+        'venues_found': len(venues),
+        'venues_ok': len(result_venues),
+        'total_races': total,
+        'total_entries': sum(
+            len(r['entries']) for v in result_venues for r in v['races']
+        ),
+        'warnings': warnings,
+    }
+    status_path = data_dir / 'status.json'
+    status_path.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(f'ステータス保存: {status_path}')
+    if warnings:
+        print(f'警告 {len(warnings)} 件:')
+        for w in warnings:
+            print(f'  - {w}')
 
 
 if __name__ == '__main__':

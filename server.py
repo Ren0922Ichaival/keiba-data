@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request, send_from_directory
 import requests
 from bs4 import BeautifulSoup
 import re
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -101,26 +102,36 @@ def parse_race_info(soup: BeautifulSoup) -> dict:
 
 def parse_horses(soup: BeautifulSoup) -> list:
     """
-    出馬表HTML から馬番・人気・単勝オッズを抽出する。
+    出馬表HTML から馬番・人気・単勝オッズ・馬体重を抽出する。
     keiba.go.jp の実際のHTML構造（class='horseNum', class='odds_weight'）に対応。
+    各馬について2行のtrがある:
+      1行目（horseNumセル有り）: odds_weightセルに "4.7 (3人気)" 形式
+      2行目（horseNumセル無し）: odds_weightセルに "506 (+12)" 形式（体重と増減）
     """
     horses = []
     seen = set()
 
-    for row in soup.find_all('tr'):
+    all_rows = soup.find_all('tr')
+    i = 0
+    while i < len(all_rows):
+        row = all_rows[i]
         # class='horseNum' セルから馬番を取得
         hn_cell = row.find('td', class_='horseNum')
         if not hn_cell:
+            i += 1
             continue
 
         try:
             hn = int(hn_cell.get_text(strip=True))
             if not (1 <= hn <= 16):
+                i += 1
                 continue
         except (ValueError, TypeError):
+            i += 1
             continue
 
         if hn in seen:
+            i += 1
             continue
 
         odds_val = None
@@ -143,12 +154,30 @@ def parse_horses(soup: BeautifulSoup) -> list:
                 odds_val = float(m.group(1))
                 pop_val = int(m.group(2))
 
+        # 次の行から体重を取得（2行目: horseNumセルなし・odds_weightセルに "506 (+12)" 形式）
+        weight = None
+        weight_diff = None
+        if i + 1 < len(all_rows):
+            next_row = all_rows[i + 1]
+            if not next_row.find('td', class_='horseNum'):
+                wc = next_row.find('td', class_='odds_weight')
+                if wc:
+                    wt = wc.get_text(' ', strip=True)
+                    wm = re.search(r'(\d{3,4})\s*(?:\(([+-]\d+)\))?', wt)
+                    if wm:
+                        weight = int(wm.group(1))
+                        if wm.group(2):
+                            weight_diff = int(wm.group(2))
+
         seen.add(hn)
         horses.append({
             'hn': hn,
             'pop': pop_val,
             'odds': odds_val,
+            'weight': weight,
+            'weightDiff': weight_diff,
         })
+        i += 1
 
     horses.sort(key=lambda h: h['hn'])
     return horses
@@ -166,7 +195,7 @@ def ping():
 
 @app.route('/api/schedule')
 def schedule():
-    """本日の開催競馬場一覧"""
+    """本日の開催競馬場一覧（未知コードも返す）"""
     date = fmt_date(request.args.get('date', ''))
     try:
         res = requests.get(
@@ -175,8 +204,20 @@ def schedule():
         )
         soup = BeautifulSoup(res.content, 'lxml', from_encoding='utf-8')
 
+        # 既存の discovered_codes を読み込む
+        data_dir = Path(__file__).parent / 'data'
+        discovered_path = data_dir / 'discovered_codes.json'
+        discovered: dict = {}
+        if discovered_path.exists():
+            try:
+                discovered = json.loads(discovered_path.read_text(encoding='utf-8'))
+            except Exception:
+                pass
+
         venues = []
         seen_codes = set()
+        new_discovered = False
+
         for a in soup.find_all('a', href=True):
             href = a['href']
             if 'RaceList' not in href:
@@ -191,6 +232,24 @@ def schedule():
             name = CODE_TO_VENUE.get(code)
             if name:
                 venues.append({'code': code, 'name': name})
+            else:
+                # 未知コード: リンクテキストから競馬場名を推定
+                link_text = a.get_text(strip=True)
+                code_str = str(code)
+                if not link_text:
+                    link_text = f'不明(code={code})'
+                if code_str not in discovered:
+                    discovered[code_str] = link_text
+                    new_discovered = True
+                venues.append({'code': code, 'name': discovered[code_str], 'unknown': True})
+
+        # 新しい未知コードがあれば保存
+        if new_discovered:
+            data_dir.mkdir(exist_ok=True)
+            discovered_path.write_text(
+                json.dumps(discovered, ensure_ascii=False, indent=2),
+                encoding='utf-8'
+            )
 
         return jsonify({'date': date, 'venues': venues})
 
