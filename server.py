@@ -2,11 +2,12 @@
 地方競馬 データ取得サーバー
 keiba.go.jp の出馬表から馬番・人気・単勝オッズを取得して返す Flask API
 """
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 import requests
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
+from pathlib import Path
 
 app = Flask(__name__)
 
@@ -329,6 +330,17 @@ def results():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/localdata/<date_key>')
+def local_data(date_key):
+    """data/YYYY-MM-DD.json をクライアントに返す（条件補完用）"""
+    data_dir = Path(__file__).parent / 'data'
+    filepath = data_dir / f'{date_key}.json'
+    if not filepath.exists():
+        return jsonify({'error': 'not found'}), 404
+    return send_from_directory(str(data_dir), f'{date_key}.json',
+                               mimetype='application/json')
 
 
 if __name__ == '__main__':

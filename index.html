@@ -1519,13 +1519,19 @@ async function repairConditions(btn) {
 
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm" style="width:.8rem;height:.8rem"></span> 補完中...'; }
 
-  // 必要な日付を一括取得
+  // 必要な日付を一括取得（APIサーバー → ローカルファイル の順に試みる）
   const dates = [...new Set(missing.map(r => r.date))];
   const cache = {};
   for (const date of dates) {
+    // ① APIサーバー経由（server.py が起動している場合）
     try {
-      const res = await fetch(`data/${date}.json`);
-      if (res.ok) cache[date] = await res.json();
+      const res = await fetch(`${API}/api/localdata/${date}`, { signal: AbortSignal.timeout(4000) });
+      if (res.ok) { cache[date] = await res.json(); continue; }
+    } catch {}
+    // ② 静的ファイル直接取得（Python http.server / GitHub Pages など）
+    try {
+      const res = await fetch(`data/${date}.json`, { signal: AbortSignal.timeout(4000) });
+      if (res.ok) { cache[date] = await res.json(); continue; }
     } catch {}
   }
 
