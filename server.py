@@ -412,6 +412,75 @@ def results():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/payouts')
+def payouts():
+    """指定競馬場の全レース払戻金を返す（RefundMoneyListから単勝・複勝・馬連等）
+    戻り値: {raceNo: {単勝: [{hn, payout}], 複勝: [...], ...}}
+    """
+    date  = fmt_date(request.args.get('date', ''))
+    venue = request.args.get('venue', '')
+    code  = VENUE_CODES.get(venue)
+
+    if not code:
+        return jsonify({'error': f'競馬場「{venue}」は未対応です'}), 400
+
+    try:
+        res = requests.get(
+            f'{BASE}/RefundMoneyList',
+            params={'k_raceDate': date, 'k_babaCode': code},
+            headers=HEADERS, timeout=10
+        )
+        soup = BeautifulSoup(res.content, 'lxml', from_encoding='utf-8')
+
+        all_payouts = {}
+        current_race = None
+        table_idx = 0  # 同一レース内のテーブル順（0=着順, 1=払戻）
+
+        for elem in soup.find_all(['p', 'table']):
+            if elem.name == 'p':
+                m = re.match(r'^(\d+)R$', elem.get_text(strip=True))
+                if m:
+                    current_race = int(m.group(1))
+                    table_idx = 0
+            elif elem.name == 'table' and current_race is not None:
+                table_idx += 1
+                if table_idx == 2:  # 2番目テーブル = 払戻金テーブル
+                    race_payouts = {}
+                    current_bet_type = None
+                    for row in elem.find_all('tr'):
+                        cells = row.find_all(['td', 'th'])
+                        if not cells:
+                            continue
+                        # 式別セルを検出（rowspan があることが多い）
+                        type_cell = cells[0]
+                        type_text = type_cell.get_text(strip=True)
+                        if type_text in ('単勝', '複勝', '馬連', '枠連', '馬単',
+                                         'ワイド', '三連複', '三連単'):
+                            current_bet_type = type_text
+                        if current_bet_type and len(cells) >= 2:
+                            # 馬番と払戻金を取得
+                            try:
+                                horse_txt = cells[-2].get_text(strip=True) if len(cells) >= 3 else ''
+                                payout_txt = cells[-1].get_text(strip=True)
+                                payout_val = int(re.sub(r'[^\d]', '', payout_txt))
+                                if payout_val > 0:
+                                    if current_bet_type not in race_payouts:
+                                        race_payouts[current_bet_type] = []
+                                    race_payouts[current_bet_type].append({
+                                        'horses': horse_txt,
+                                        'payout': payout_val,
+                                    })
+                            except (ValueError, IndexError):
+                                pass
+                    if race_payouts:
+                        all_payouts[current_race] = race_payouts
+
+        return jsonify({'venue': venue, 'date': date, 'payouts': all_payouts})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/localdata/<date_key>')
 def local_data(date_key):
     """data/YYYY-MM-DD.json をクライアントに返す（条件補完用）"""

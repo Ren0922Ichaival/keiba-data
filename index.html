@@ -927,6 +927,45 @@
             <div class="chart-wrapper"><canvas id="chart-bot-balance" style="max-height:240px"></canvas></div>
           </div>
         </div>
+        <!-- ===== パフォーマンス分析カード ===== -->
+        <div class="card mb-3 d-none" id="analytics-card">
+          <div class="card-header"><i class="bi bi-graph-up-arrow me-2"></i>パフォーマンス分析</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">20ベット移動平均 回収率推移</div>
+                <div class="chart-wrapper"><canvas id="chart-rolling-roi" style="max-height:160px"></canvas></div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">競馬場別 成績</div>
+                <div class="table-responsive" style="max-height:180px;overflow-y:auto">
+                  <table class="table table-sm mb-0">
+                    <thead><tr><th>競馬場</th><th>ベット</th><th>的中</th><th>回収率</th><th>損益</th></tr></thead>
+                    <tbody id="venue-breakdown-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">馬場状態別 成績</div>
+                <div class="table-responsive">
+                  <table class="table table-sm mb-0">
+                    <thead><tr><th>馬場</th><th>ベット</th><th>的中</th><th>的中率</th><th>回収率</th></tr></thead>
+                    <tbody id="track-breakdown-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">直近10ベット</div>
+                <div class="table-responsive">
+                  <table class="table table-sm mb-0">
+                    <thead><tr><th>日付</th><th>場</th><th>R</th><th>結果</th><th>損益</th></tr></thead>
+                    <tbody id="recent-bets-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="card">
           <div class="card-header"><i class="bi bi-list-ul me-2"></i>ベット履歴</div>
           <div class="card-body p-0">
@@ -2396,6 +2435,7 @@ function initBotTab() {
     renderBotStats(store.lastResult);
     renderBetHistory(store.lastResult.bets);
     renderBalanceChart(store.lastResult.bets, s.initialBalance);
+    renderAnalytics(store.lastResult.bets);
   }
 }
 
@@ -2459,13 +2499,29 @@ function runBacktest() {
       const te = race.entries.find(e => e.hn === decision.hn);
       if (!te) continue;
       won = te.pos != null && te.pos <= maxPlace;
-      effectiveOdds = Math.max(1.1, Math.round((decision.winOdds || 3) * 0.28 * 10) / 10);
+      // 実払戻金がある場合はそれを使用（/100 で倍率換算）、なければ推定
+      if (won && race.payouts?.複勝) {
+        // 複勝払戻テーブルから当該馬番の払戻金を検索
+        const hnStr = String(decision.hn);
+        const placeEntry = race.payouts.複勝.find(p => p.horses && p.horses.includes(hnStr));
+        if (placeEntry) {
+          effectiveOdds = +(placeEntry.payout / 100).toFixed(1);
+        }
+      }
+      if (!effectiveOdds) {
+        effectiveOdds = Math.max(1.1, Math.round((decision.winOdds || 3) * 0.28 * 10) / 10);
+      }
     } else if (decision.betType === 'trio') {
       if (race.entries.length < 3) continue;
       const actualTop3 = race.entries.filter(e => e.pos != null && e.pos <= 3).map(e => e.hn);
       if (actualTop3.length < 3) continue; // 結果未確定レースはスキップ
       won = decision.horses.every(hn => actualTop3.includes(hn));
-      effectiveOdds = decision.estimatedOdds;
+      // 実払戻金がある場合はそれを使用
+      if (won && race.payouts?.三連複) {
+        const trio = race.payouts.三連複[0];
+        if (trio) effectiveOdds = +(trio.payout / 100).toFixed(1);
+      }
+      if (!effectiveOdds) effectiveOdds = decision.estimatedOdds;
     } else if (decision.betType === 'trifecta') {
       if (race.entries.length < 3) continue;
       const hasResults = race.entries.some(e => e.pos != null);
@@ -2474,7 +2530,12 @@ function runBacktest() {
         const e = race.entries.find(entry => entry.hn === hn);
         return e && e.pos != null && e.pos === i + 1;
       });
-      effectiveOdds = decision.estimatedOdds;
+      // 実払戻金がある場合はそれを使用
+      if (won && race.payouts?.三連単) {
+        const tri = race.payouts.三連単[0];
+        if (tri) effectiveOdds = +(tri.payout / 100).toFixed(1);
+      }
+      if (!effectiveOdds) effectiveOdds = decision.estimatedOdds;
     }
 
     const payout = won ? Math.floor(decision.amount * (effectiveOdds || 1)) : 0;
@@ -2489,6 +2550,8 @@ function runBacktest() {
       amount: decision.amount,
       result: won ? 'win' : 'lose',
       payout, profit, balanceAfter: balance,
+      track: race.track || null,      // 馬場状態（分析用）
+      distance: race.distance || null, // 距離（分析用）
     });
   }
 
@@ -2498,6 +2561,7 @@ function runBacktest() {
   renderBotStats(result);
   renderBetHistory(bets);
   renderBalanceChart(bets, s.initialBalance);
+  renderAnalytics(bets);
   const hitCount = bets.filter(b => b.result === 'win').length;
   const warn = races.length < 30 ? `（⚠ データ${races.length}レースは統計的に不十分）` : '';
   toast(`バックテスト完了: ${bets.length}回ベット（${hitCount}回的中）${warn}`);
@@ -2685,6 +2749,130 @@ function renderBalanceChart(bets, initialBalance) {
       }
     }
   });
+}
+
+// =============================================
+//  パフォーマンス分析（回収率推移・競馬場別・馬場別）
+// =============================================
+function renderAnalytics(bets) {
+  if (!bets || bets.length < 3) return;
+  const card = document.getElementById('analytics-card');
+  if (card) card.classList.remove('d-none');
+
+  const WIN = 20; // 移動平均ウィンドウ
+
+  // ── 移動平均回収率チャート ──
+  destroyChart('rolling-roi');
+  const ctx = document.getElementById('chart-rolling-roi');
+  if (ctx && bets.length >= WIN) {
+    const roiData = bets.slice(WIN - 1).map((_, i) => {
+      const window = bets.slice(i, i + WIN);
+      const invested = window.reduce((s, b) => s + b.amount, 0) || 1;
+      const paid     = window.reduce((s, b) => s + b.payout, 0);
+      return +(paid / invested * 100).toFixed(1);
+    });
+    const roiLabels = bets.slice(WIN - 1).map((b, i) => `${i + WIN}ベット目`);
+    charts['rolling-roi'] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: roiLabels,
+        datasets: [
+          {
+            label: `移動平均回収率(%)`,
+            data: roiData,
+            borderColor: roiData.map(v => v >= 100 ? '#22c55e' : '#f43f5e'),
+            backgroundColor: 'transparent',
+            tension: 0.3,
+            pointRadius: roiData.length <= 30 ? 3 : 0,
+          },
+          {
+            label: '損益分岐点(100%)',
+            data: Array(roiData.length).fill(100),
+            borderColor: 'rgba(148,163,184,0.4)',
+            borderDash: [4, 4],
+            pointRadius: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color:'#94a3b8', maxTicksLimit:8, font:{size:10} }, grid:{ color:'#1a2d47' } },
+          y: { ticks: { color:'#94a3b8', callback: v => v + '%', font:{size:10} }, grid:{ color:'#1a2d47' } }
+        }
+      }
+    });
+  }
+
+  // ── 競馬場別集計 ──
+  const venueMap = {};
+  for (const b of bets) {
+    if (!venueMap[b.venue]) venueMap[b.venue] = { n:0, wins:0, invested:0, paid:0, profit:0 };
+    const v = venueMap[b.venue];
+    v.n++; v.invested += b.amount; v.paid += b.payout; v.profit += b.profit;
+    if (b.result === 'win') v.wins++;
+  }
+  const venueTbody = document.getElementById('venue-breakdown-tbody');
+  if (venueTbody) {
+    const sorted = Object.entries(venueMap).sort((a, b) => b[1].n - a[1].n);
+    venueTbody.innerHTML = sorted.map(([name, v]) => {
+      const roi = v.invested ? v.paid / v.invested * 100 : 0;
+      const plSign = v.profit >= 0 ? '+' : '';
+      const roiCls = roi >= 100 ? 'roi-pos' : roi >= 80 ? 'roi-mid' : 'roi-neg';
+      return `<tr>
+        <td><span class="venue-tag">${name}</span></td>
+        <td>${v.n}</td>
+        <td>${v.wins}</td>
+        <td class="${roiCls} fw-bold">${roi.toFixed(0)}%</td>
+        <td class="${v.profit>=0?'green-val':'red-val'}">${plSign}¥${v.profit.toLocaleString()}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── 馬場状態別集計 ──
+  const trackMap = {};
+  for (const b of bets) {
+    const key = b.track || '不明';
+    if (!trackMap[key]) trackMap[key] = { n:0, wins:0, invested:0, paid:0 };
+    const t = trackMap[key];
+    t.n++; t.invested += b.amount; t.paid += b.payout;
+    if (b.result === 'win') t.wins++;
+  }
+  const trackTbody = document.getElementById('track-breakdown-tbody');
+  if (trackTbody) {
+    const ORDER = ['良', '稍重', '重', '不良', '直線', '不明'];
+    const sorted = Object.entries(trackMap).sort((a, b) =>
+      (ORDER.indexOf(a[0]) + 10) - (ORDER.indexOf(b[0]) + 10));
+    trackTbody.innerHTML = sorted.map(([name, t]) => {
+      const wr  = t.n ? t.wins / t.n * 100 : 0;
+      const roi = t.invested ? t.paid / t.invested * 100 : 0;
+      const roiCls = roi >= 100 ? 'roi-pos' : roi >= 80 ? 'roi-mid' : 'roi-neg';
+      const badge = { '良':'良','稍重':'稍','重':'重','不良':'不良','直線':'直','不明':'?' }[name] || name;
+      return `<tr>
+        <td><span class="track-${name}" style="padding:1px 5px;border-radius:3px;font-size:0.8rem">${badge}</span></td>
+        <td>${t.n}</td><td>${t.wins}</td>
+        <td>${wr.toFixed(0)}%</td>
+        <td class="${roiCls} fw-bold">${roi.toFixed(0)}%</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── 直近10ベット ──
+  const recentTbody = document.getElementById('recent-bets-tbody');
+  if (recentTbody) {
+    recentTbody.innerHTML = bets.slice(-10).reverse().map(b => {
+      const resCls = b.result === 'win' ? 'bet-win' : 'bet-lose';
+      const plSign = b.profit >= 0 ? '+' : '';
+      return `<tr>
+        <td style="font-size:0.78rem">${b.date.slice(5)}</td>
+        <td><span class="venue-tag" style="font-size:0.72rem">${b.venue}</span></td>
+        <td>${b.raceNo}R</td>
+        <td class="${resCls} fw-bold">${b.result==='win'?'◯':'✕'}</td>
+        <td class="${b.profit>=0?'green-val':'red-val'}" style="font-size:0.82rem">${plSign}¥${b.profit.toLocaleString()}</td>
+      </tr>`;
+    }).join('');
+  }
 }
 
 // =============================================

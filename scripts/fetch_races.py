@@ -180,9 +180,10 @@ def parse_entries(soup):
 
 def fetch_all_results(date_str, code):
     """
-    RefundMoneyList ページから全レースの着順を一括取得する。
-    戻り値: {raceNo: {馬番: 着順}} の辞書
-    構造: <p>1R</p> の直後のテーブル 1行目=ヘッダ, 2行目以降=着順|枠|馬番|...
+    RefundMoneyList ページから全レースの着順と払戻金を一括取得する。
+    戻り値: (results, payouts)
+      results : {raceNo: {馬番: 着順}}
+      payouts : {raceNo: {単勝: [{horses,payout}], 複勝: [...], ...}}
     """
     try:
         soup = get_soup(
@@ -190,10 +191,12 @@ def fetch_all_results(date_str, code):
             params={'k_raceDate': date_str, 'k_babaCode': code}
         )
     except Exception:
-        return {}
+        return {}, {}
 
-    results = {}  # {raceNo: {hn: pos}}
+    results = {}   # {raceNo: {hn: pos}}
+    payouts = {}   # {raceNo: {式別: [{horses,payout}]}}
     current_race = None
+    table_idx = 0  # 各レース内のテーブル順（1=着順, 2=払戻）
 
     for elem in soup.find_all(['p', 'table']):
         if elem.name == 'p':
@@ -201,25 +204,56 @@ def fetch_all_results(date_str, code):
             m = re.match(r'^(\d+)R$', txt)
             if m:
                 current_race = int(m.group(1))
-        elif elem.name == 'table' and current_race and current_race not in results:
-            pos_map = {}
-            for row in elem.find_all('tr'):
-                cells = row.find_all(['td', 'th'])
-                if len(cells) < 3:
-                    continue
-                # cells[0]=着順, cells[1]=枠, cells[2]=馬番
-                try:
-                    pos = int(cells[0].get_text(strip=True))
-                    hn  = int(cells[2].get_text(strip=True))
-                    if 1 <= pos <= 20 and 1 <= hn <= 16:
-                        pos_map[hn] = pos
-                except (ValueError, TypeError):
-                    continue
-            if pos_map:
-                results[current_race] = pos_map
-            current_race = None  # 最初のテーブル（着順表）だけ見る
+                table_idx = 0
+        elif elem.name == 'table' and current_race is not None:
+            table_idx += 1
+            if table_idx == 1 and current_race not in results:
+                # 着順テーブル: cells[0]=着順, cells[1]=枠, cells[2]=馬番
+                pos_map = {}
+                for row in elem.find_all('tr'):
+                    cells = row.find_all(['td', 'th'])
+                    if len(cells) < 3:
+                        continue
+                    try:
+                        pos = int(cells[0].get_text(strip=True))
+                        hn  = int(cells[2].get_text(strip=True))
+                        if 1 <= pos <= 20 and 1 <= hn <= 16:
+                            pos_map[hn] = pos
+                    except (ValueError, TypeError):
+                        continue
+                if pos_map:
+                    results[current_race] = pos_map
+            elif table_idx == 2 and current_race not in payouts:
+                # 払戻テーブル: 単勝/複勝/馬連 etc. と払戻金
+                BET_TYPES = {'単勝', '複勝', '馬連', '枠連', '馬単',
+                             'ワイド', '三連複', '三連単'}
+                race_payouts = {}
+                current_bet_type = None
+                for row in elem.find_all('tr'):
+                    cells = row.find_all(['td', 'th'])
+                    if not cells:
+                        continue
+                    type_text = cells[0].get_text(strip=True)
+                    if type_text in BET_TYPES:
+                        current_bet_type = type_text
+                    if current_bet_type and len(cells) >= 2:
+                        try:
+                            horse_txt  = cells[-2].get_text(strip=True) if len(cells) >= 3 else ''
+                            payout_txt = cells[-1].get_text(strip=True)
+                            payout_val = int(re.sub(r'[^\d]', '', payout_txt))
+                            if payout_val > 0:
+                                if current_bet_type not in race_payouts:
+                                    race_payouts[current_bet_type] = []
+                                race_payouts[current_bet_type].append({
+                                    'horses': horse_txt,
+                                    'payout': payout_val,
+                                })
+                        except (ValueError, IndexError):
+                            pass
+                if race_payouts:
+                    payouts[current_race] = race_payouts
 
-    return results
+    return results, payouts
 
 
 def parse_race_info(soup, venue: str = ''):
@@ -322,9 +356,9 @@ def main():
                 result_venues.append(old_venue)
             continue
 
-        # 全レース結果を一括取得（RefundMoneyList）
+        # 全レース結果・払戻金を一括取得（RefundMoneyList）
         print('  結果ページ取得中...')
-        all_results = fetch_all_results(date_str, code)
+        all_results, all_payouts = fetch_all_results(date_str, code)
         print(f'  結果あり: {sorted(all_results.keys())}R')
 
         races = []
@@ -355,6 +389,9 @@ def main():
                     if race_info.get('surface'):  race_entry['surface']  = race_info['surface']
                     # 発走直前オッズ取得のため、最終オッズ更新日時を記録
                     race_entry['oddsUpdatedAt'] = now.isoformat()
+                    # 払戻金（単勝・複勝等）が取得できた場合は保存
+                    if rno in all_payouts:
+                        race_entry['payouts'] = all_payouts[rno]
                     # 前回取得時と比べてオッズが大きく変動した馬をログ
                     if old_race:
                         old_odds = {e['hn']: e.get('odds') for e in old_race.get('entries', []) if e.get('odds')}
