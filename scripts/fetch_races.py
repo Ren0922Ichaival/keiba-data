@@ -164,7 +164,7 @@ def parse_race_info(soup):
         info['weather'] = '曇' if '曇' in m.group(1) else m.group(1)
 
     # 距離・コース種別
-    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*m', text, re.IGNORECASE)
+    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*[mｍ]', text, re.IGNORECASE)
     if m:
         surf = m.group(1)
         info['distance'] = int(m.group(2))
