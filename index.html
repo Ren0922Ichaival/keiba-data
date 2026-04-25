@@ -160,6 +160,23 @@
     .table tbody tr { transition: background 0.1s; }
     .table tbody tr:nth-child(even) { background: rgba(255,255,255,0.018); }
     .table tbody tr:hover { background: rgba(59,130,246,0.1) !important; }
+    /* ── Sortable headers ── */
+    .sort-th { cursor: pointer; user-select: none; }
+    .sort-th:hover { background: rgba(59,130,246,0.15) !important; }
+    .sort-icon { display: inline-block; width: 1em; text-align: center; font-size: 0.75em; opacity: 0.35; margin-left: 2px; }
+    .sort-icon.asc::after  { content: '▲'; }
+    .sort-icon.desc::after { content: '▼'; }
+    .sort-icon.active { opacity: 1; color: #60a5fa; }
+    /* ── Track badges ── */
+    .track-良    { color: #52c41a; }
+    .track-稍重  { color: #fa8c16; }
+    .track-重    { color: #ff7a00; }
+    .track-不良  { color: #ff4d4f; }
+    .weather-晴  { color: #ffd666; }
+    .weather-曇  { color: #8c8c8c; }
+    .weather-雨  { color: #1677ff; }
+    .weather-小雨 { color: #69b1ff; }
+    .weather-雪  { color: #b5f5ec; }
 
     /* ── Badges ── */
     .badge-pos-1 { background: linear-gradient(135deg,#b8860b,#ffd700) !important; color:#000 !important; font-weight:800; }
@@ -504,13 +521,7 @@
         <div class="table-responsive">
           <table class="table table-sm mb-0">
             <thead>
-              <tr>
-                <th>日付</th><th>競馬場</th><th>R</th>
-                <th>1着馬番</th><th>1着人気</th><th>1着オッズ</th>
-                <th>2着馬番</th><th>2着人気</th>
-                <th>3着馬番</th><th>3着人気</th>
-                <th>頭数</th><th></th>
-              </tr>
+              <tr id="list-thead"></tr>
             </thead>
             <tbody id="list-tbody"></tbody>
           </table>
@@ -1251,6 +1262,7 @@ function switchTab(tab) {
 //  ENTRY FORM
 // =============================================
 let rowIndex = 0;
+let listSort = { col: 'date', dir: -1 };  // 一覧ソート状態
 
 function addRow() {
   rowIndex++;
@@ -1403,27 +1415,70 @@ function refreshSummary() {
 // =============================================
 //  LIST TAB
 // =============================================
+// ── ソート用ヘルパー ──
+const LIST_COLS = [
+  { key: 'date',     label: '日付',     cmp: (a,b) => a.date.localeCompare(b.date) },
+  { key: 'venue',    label: '競馬場',   cmp: (a,b) => a.venue.localeCompare(b.venue, 'ja') },
+  { key: 'raceNo',   label: 'R',        cmp: (a,b) => a.raceNo - b.raceNo },
+  { key: 'track',    label: '馬場',     cmp: (a,b) => (a.track||'').localeCompare(b.track||'', 'ja') },
+  { key: 'weather',  label: '天候',     cmp: (a,b) => (a.weather||'').localeCompare(b.weather||'', 'ja') },
+  { key: 'distance', label: '距離',     cmp: (a,b) => (a.distance||0) - (b.distance||0) },
+  { key: 'surface',  label: 'コース',   cmp: (a,b) => (a.surface||'').localeCompare(b.surface||'', 'ja') },
+  { key: 'p1hn',     label: '1着馬番',  cmp: (a,b) => (a.entries.find(e=>e.pos===1)?.hn||99) - (b.entries.find(e=>e.pos===1)?.hn||99) },
+  { key: 'p1pop',    label: '1着人気',  cmp: (a,b) => (a.entries.find(e=>e.pos===1)?.pop||99) - (b.entries.find(e=>e.pos===1)?.pop||99) },
+  { key: 'p1odds',   label: '1着オッズ', cmp: (a,b) => (a.entries.find(e=>e.pos===1)?.odds||999) - (b.entries.find(e=>e.pos===1)?.odds||999) },
+  { key: 'p2hn',     label: '2着馬番',  cmp: (a,b) => (a.entries.find(e=>e.pos===2)?.hn||99) - (b.entries.find(e=>e.pos===2)?.hn||99) },
+  { key: 'p2pop',    label: '2着人気',  cmp: (a,b) => (a.entries.find(e=>e.pos===2)?.pop||99) - (b.entries.find(e=>e.pos===2)?.pop||99) },
+  { key: 'p3hn',     label: '3着馬番',  cmp: (a,b) => (a.entries.find(e=>e.pos===3)?.hn||99) - (b.entries.find(e=>e.pos===3)?.hn||99) },
+  { key: 'p3pop',    label: '3着人気',  cmp: (a,b) => (a.entries.find(e=>e.pos===3)?.pop||99) - (b.entries.find(e=>e.pos===3)?.pop||99) },
+  { key: 'total',    label: '頭数',     cmp: (a,b) => a.entries.length - b.entries.length },
+];
+
+function sortTh(col) {
+  if (listSort.col === col) listSort.dir *= -1;
+  else { listSort.col = col; listSort.dir = 1; }
+  renderList();
+}
+
 function renderList() {
   const d = getData();
   const fv = document.getElementById('filter-venue').value;
 
-  // Rebuild filter
+  // 競馬場フィルター再構築
   const venues = [...new Set(d.races.map(r=>r.venue))].sort();
   document.getElementById('filter-venue').innerHTML =
     '<option value="">全競馬場</option>' +
     venues.map(v=>`<option value="${v}" ${v===fv?'selected':''}>${v}</option>`).join('');
 
+  // ソート
+  const colDef = LIST_COLS.find(c=>c.key===listSort.col) || LIST_COLS[0];
   const races = (fv ? d.races.filter(r=>r.venue===fv) : d.races)
-    .slice().sort((a,b)=>b.date.localeCompare(a.date)||b.raceNo-a.raceNo);
+    .slice().sort((a,b) => colDef.cmp(a,b) * listSort.dir ||
+      b.date.localeCompare(a.date) || b.raceNo - a.raceNo);
 
+  // ヘッダー生成（ソートアイコン付き）
+  document.getElementById('list-thead').innerHTML = LIST_COLS.map(c => {
+    const isSel = listSort.col === c.key;
+    const iconCls = isSel ? (listSort.dir === 1 ? 'asc active' : 'desc active') : 'asc';
+    return `<th class="sort-th" onclick="sortTh('${c.key}')">${c.label}<span class="sort-icon ${iconCls}"></span></th>`;
+  }).join('') + '<th></th>';
+
+  // 馬場・天候のカラー付き表示
+  const trackBadge  = t => t ? `<span class="track-${t}">${t}</span>` : '<span class="text-muted">-</span>';
+  const weatherBadge= w => w ? `<span class="weather-${w}">${w}</span>` : '<span class="text-muted">-</span>';
+
+  const popCls = p => p<=3?`pop-${p}`:'';
   document.getElementById('list-tbody').innerHTML = races.length ? races.map(race => {
     const g = pos => race.entries.find(e=>e.pos===pos);
     const e1=g(1), e2=g(2), e3=g(3);
-    const popCls = p => p<=3?`pop-${p}`:'';
     return `<tr>
       <td>${race.date}</td>
       <td><span class="venue-tag">${race.venue}</span></td>
       <td class="fw-bold">${race.raceNo}R</td>
+      <td>${trackBadge(race.track)}</td>
+      <td>${weatherBadge(race.weather)}</td>
+      <td>${race.distance ? race.distance+'m' : '<span class="text-muted">-</span>'}</td>
+      <td>${race.surface || '<span class="text-muted">-</span>'}</td>
       <td>${e1?e1.hn+'番':'-'}</td>
       <td class="${e1?popCls(e1.pop):''}">${e1?e1.pop+'人気':'-'}</td>
       <td>${e1&&e1.odds?e1.odds+'倍':'-'}</td>
@@ -1434,7 +1489,7 @@ function renderList() {
       <td>${race.entries.length}頭</td>
       <td><button class="btn btn-sm btn-link text-danger delete-btn p-0" onclick="deleteRace('${race.id}')"><i class="bi bi-trash"></i></button></td>
     </tr>`;
-  }).join('') : '<tr><td colspan="12" class="no-data-msg"><i class="bi bi-inbox me-2"></i>データがありません</td></tr>';
+  }).join('') : `<tr><td colspan="${LIST_COLS.length+1}" class="no-data-msg"><i class="bi bi-inbox me-2"></i>データがありません</td></tr>`;
 }
 
 function deleteRace(id) {
@@ -1447,9 +1502,9 @@ function clearAll() {
 }
 function exportCSV() {
   const d = getData();
-  const rows=[['日付','競馬場','レース番号','着順','馬番','人気','オッズ']];
+  const rows=[['日付','競馬場','レース番号','馬場','天候','距離','コース','着順','馬番','人気','オッズ']];
   d.races.forEach(r => r.entries.forEach(e =>
-    rows.push([r.date,r.venue,r.raceNo,e.pos,e.hn,e.pop,e.odds??''])
+    rows.push([r.date,r.venue,r.raceNo,r.track??'',r.weather??'',r.distance??'',r.surface??'',e.pos,e.hn,e.pop,e.odds??''])
   ));
   const csv = rows.map(r=>r.join(',')).join('\n');
   const a = document.createElement('a');
