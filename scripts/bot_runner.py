@@ -159,8 +159,25 @@ def get_race_list(date_str: str, code: int) -> list:
         return []
 
 
-def get_entries(date_str: str, code: int, race_no: int) -> list:
-    """出走馬データ [{hn, pop, odds}]"""
+def parse_race_info_soup(soup) -> dict:
+    """出馬表HTMLからレース条件を抽出"""
+    info = {'track': None, 'weather': None, 'distance': None, 'surface': None}
+    text = soup.get_text(' ', strip=True)
+    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良)', text)
+    if m: info['track'] = m.group(1)
+    m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', text)
+    if m: info['weather'] = '曇' if '曇' in m.group(1) else m.group(1)
+    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*m', text, re.IGNORECASE)
+    if m:
+        info['distance'] = int(m.group(2))
+        surf = m.group(1)
+        info['surface'] = ('芝' if '芝' in surf else '障害' if '障' in surf
+                           else '直線' if '直' in surf else 'ダート')
+    return info
+
+
+def get_entries(date_str: str, code: int, race_no: int) -> tuple:
+    """出走馬データ ([{hn, pop, odds}], race_info)"""
     try:
         soup = get_soup(f'{BASE}/DebaTable',
                         params={'k_raceDate': date_str, 'k_babaCode': code, 'k_raceNo': race_no})
@@ -186,10 +203,11 @@ def get_entries(date_str: str, code: int, race_no: int) -> list:
             seen.add(hn)
             horses.append({'hn': hn, 'pop': pop_val, 'odds': odds_val})
         horses.sort(key=lambda h: h['hn'])
-        return horses
+        race_info = parse_race_info_soup(soup)
+        return horses, race_info
     except Exception as e:
         print(f'  エントリー取得失敗: {e}')
-        return []
+        return [], {}
 
 
 def get_results(date_str: str, code: int) -> dict:
@@ -298,11 +316,95 @@ def trio_harville_p(prob_map: dict, hn1, hn2, hn3) -> float:
     return max(1e-9, sum(harville_p(prob_map, a, b, c) for a, b, c in perms))
 
 
-def score_horses(horses: list, hist_stats: dict) -> list:
+STRAIGHT_VENUES = {'帯広'}  # ばんえい競馬（直線走路）は馬番補正なし
+
+
+def get_race_cond_mult(h: dict, race_info: dict, venue: str) -> float:
+    """レース条件（馬場・天候・距離・頭数・レース番号）による補正倍率"""
+    mult       = 1.0
+    track      = race_info.get('track')
+    weather    = race_info.get('weather')
+    distance   = race_info.get('distance')
+    field_size = race_info.get('fieldSize', 8)
+    race_no    = race_info.get('raceNo', 99)
+    hn         = h.get('hn', 8)
+    pop        = h.get('pop', 8)
+    is_straight = venue in STRAIGHT_VENUES
+
+    is_heavy  = track in ('重', '不良')
+    is_slight = track == '稍重'
+
+    # 馬場状態（内枠有利、荒れやすい）
+    if not is_straight:
+        if is_heavy:
+            hn_m = (1.07 if hn <= 2 else 1.04 if hn <= 4 else 1.01 if hn <= 7
+                    else 0.99 if hn <= 10 else 0.96 if hn <= 13 else 0.93)
+            mult *= hn_m
+        elif is_slight:
+            hn_m = (1.03 if hn <= 2 else 1.02 if hn <= 4 else 1.00 if hn <= 7
+                    else 0.99 if hn <= 10 else 0.97)
+            mult *= hn_m
+
+    if is_heavy:
+        if   pop == 1: mult *= 0.94
+        elif pop == 2: mult *= 0.97
+        elif pop >= 6: mult *= 1.05
+        elif pop >= 4: mult *= 1.02
+    elif is_slight:
+        if   pop == 1: mult *= 0.98
+        elif pop >= 6: mult *= 1.01
+
+    # 天候（馬場「良」でも雨なら軽微に補正）
+    is_rainy = weather in ('雨', '小雨', '雪')
+    if is_rainy and not is_heavy and not is_slight and not is_straight:
+        hn_m = 1.02 if hn <= 3 else 0.98 if hn >= 12 else 1.0
+        mult *= hn_m
+        if pop == 1: mult *= 0.99
+
+    # 距離
+    if distance and not is_straight:
+        if distance <= 900:
+            hn_m = (1.07 if hn <= 2 else 1.04 if hn <= 4 else 1.01 if hn <= 6
+                    else 0.99 if hn <= 9 else 0.96 if hn <= 12 else 0.93)
+            mult *= hn_m
+        elif distance <= 1200:
+            hn_m = (1.05 if hn <= 2 else 1.03 if hn <= 4 else 1.01 if hn <= 7
+                    else 0.99 if hn <= 10 else 0.97 if hn <= 13 else 0.95)
+            mult *= hn_m
+        elif distance <= 1600:
+            hn_m = 1.02 if hn <= 3 else 1.01 if hn <= 6 else 1.00 if hn <= 11 else 0.98
+            mult *= hn_m
+        elif distance <= 2000:
+            hn_m = 1.01 if hn <= 3 else 0.99 if hn >= 13 else 1.0
+            mult *= hn_m
+
+    # 頭数
+    if field_size <= 6:
+        if   pop == 1: mult *= 1.05
+        elif pop <= 3: mult *= 1.02
+        elif pop >= 7: mult *= 0.92
+    elif field_size >= 13:
+        if   pop == 1: mult *= 0.95
+        elif pop <= 3: mult *= 0.98
+        elif pop >= 7: mult *= 1.04
+    elif field_size >= 11:
+        if   pop == 1: mult *= 0.97
+        elif pop >= 7: mult *= 1.02
+
+    # 早期レース（1-3R）は荒れやすい
+    if race_no <= 3:
+        if   pop == 1: mult *= 0.97
+        elif pop >= 5: mult *= 1.02
+
+    return mult
+
+
+def score_horses(horses: list, hist_stats: dict, race_info: dict = None, venue: str = '') -> list:
     pop_stats  = hist_stats['popStats']
     hn_stats   = hist_stats['hnStats']
     field_size = len(horses)
     has_odds   = any(h.get('odds') for h in horses)
+    race_info  = race_info or {}
 
     # オーバーラウンド除去（地方競馬の控除率は約25%）
     overround = (sum(1 / h['odds'] for h in horses if h.get('odds')) or 1) if has_odds else 1
@@ -342,8 +444,13 @@ def score_horses(horses: list, hist_stats: dict) -> list:
             0.45 * min(mkt_prob * 3, 1) + 0.30 * pop_place + 0.25 * hn_place if has_odds
             else 0.55 * pop_place + 0.45 * hn_place
         )
+
+        # レース条件補正
+        cond_mult = get_race_cond_mult(h, {**race_info, 'fieldSize': field_size}, venue)
         raw.append({**h, 'mktProb': mkt_prob, 'popScore': pop_score, 'hnScore': hn_score,
-                    'composite': composite, 'compositePlace': composite_place})
+                    'composite':      composite      * cond_mult,
+                    'compositePlace': composite_place * cond_mult,
+                    'condMult': cond_mult})
 
     total    = sum(r['composite']      for r in raw) or 1
     tot_pl   = sum(r['compositePlace'] for r in raw) or 1
@@ -573,11 +680,12 @@ def main():
                 continue
 
             time.sleep(0.5)
-            horses = get_entries(date_str, code, rno)
+            horses, race_info = get_entries(date_str, code, rno)
             if not horses:
                 continue
 
-            ranked   = score_horses(horses, hist_stats)
+            race_info['raceNo'] = rno
+            ranked   = score_horses(horses, hist_stats, race_info, name)
             decision = bot_decide(ranked, settings, state['balance'])
             if not decision:
                 continue

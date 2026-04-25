@@ -58,6 +58,46 @@ def fmt_date(d: str) -> str:
     return d.replace('-', '/')
 
 
+def parse_race_info(soup: BeautifulSoup) -> dict:
+    """
+    出馬表HTML からレース条件（馬場状態・天候・距離・コース種別）を抽出する。
+    取得できない項目は None を返す。
+    """
+    info = {'track': None, 'weather': None, 'distance': None, 'surface': None}
+    text = soup.get_text(' ', strip=True)
+
+    # 馬場状態: 良 / 稍重 / 重 / 不良
+    m = re.search(r'馬場[：:\s]*([良稍重不](良|重|稍重|不良)?)', text)
+    if m:
+        raw = m.group(0)
+        for t in ('不良', '稍重', '重', '良'):
+            if t in raw:
+                info['track'] = t
+                break
+
+    # 天候: 晴 / 曇 / 雨 / 小雨 / 雪
+    m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', text)
+    if m:
+        raw = m.group(1)
+        info['weather'] = '曇' if '曇' in raw else raw
+
+    # 距離・コース種別: "ダ1400m" "芝1600m" "障1000m" "直線1000m"
+    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*m', text, re.IGNORECASE)
+    if m:
+        surf_raw = m.group(1)
+        info['distance'] = int(m.group(2))
+        if '芝' in surf_raw:
+            info['surface'] = '芝'
+        elif '障' in surf_raw:
+            info['surface'] = '障害'
+        elif '直' in surf_raw:
+            info['surface'] = '直線'   # ばんえい
+        else:
+            info['surface'] = 'ダート'
+
+    return info
+
+
 def parse_horses(soup: BeautifulSoup) -> list:
     """
     出馬表HTML から馬番・人気・単勝オッズを抽出する。
@@ -215,7 +255,8 @@ def entries():
         )
         soup = BeautifulSoup(res.content, 'lxml', from_encoding='utf-8')
 
-        horses = parse_horses(soup)
+        horses    = parse_horses(soup)
+        race_info = parse_race_info(soup)
 
         if not horses:
             return jsonify({
@@ -229,6 +270,61 @@ def entries():
             'race': int(race_no),
             'horses': horses,
             'total': len(horses),
+            'raceInfo': race_info,   # 馬場状態・天候・距離・コース
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/results')
+def results():
+    """指定競馬場の全レース着順を返す（RefundMoneyListから取得）"""
+    date  = fmt_date(request.args.get('date', ''))
+    venue = request.args.get('venue', '')
+    code  = VENUE_CODES.get(venue)
+
+    if not code:
+        return jsonify({'error': f'競馬場「{venue}」は未対応です'}), 400
+
+    try:
+        res = requests.get(
+            f'{BASE}/RefundMoneyList',
+            params={'k_raceDate': date, 'k_babaCode': code},
+            headers=HEADERS, timeout=10
+        )
+        soup = BeautifulSoup(res.content, 'lxml', from_encoding='utf-8')
+
+        all_results = {}
+        current_race = None
+
+        for elem in soup.find_all(['p', 'table']):
+            if elem.name == 'p':
+                txt = elem.get_text(strip=True)
+                m = re.match(r'^(\d+)R$', txt)
+                if m:
+                    current_race = int(m.group(1))
+            elif elem.name == 'table' and current_race is not None and current_race not in all_results:
+                pos_map = {}
+                for row in elem.find_all('tr'):
+                    cells = row.find_all(['td', 'th'])
+                    if len(cells) < 3:
+                        continue
+                    try:
+                        pos = int(cells[0].get_text(strip=True))
+                        hn  = int(cells[2].get_text(strip=True))
+                        if 1 <= pos <= 20 and 1 <= hn <= 16:
+                            pos_map[hn] = pos
+                    except (ValueError, TypeError):
+                        continue
+                if pos_map:
+                    all_results[current_race] = pos_map
+                current_race = None  # 最初のテーブル（着順表）のみ参照
+
+        return jsonify({
+            'venue': venue,
+            'date': date,
+            'results': all_results,  # {raceNo(int): {hn(int): pos(int)}}
         })
 
     except Exception as e:

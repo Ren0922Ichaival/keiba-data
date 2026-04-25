@@ -148,20 +148,46 @@ def fetch_all_results(date_str, code):
     return results
 
 
+def parse_race_info(soup):
+    """出馬表HTMLからレース条件（馬場状態・天候・距離・コース）を抽出"""
+    info = {'track': None, 'weather': None, 'distance': None, 'surface': None}
+    text = soup.get_text(' ', strip=True)
+
+    # 馬場状態
+    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良)', text)
+    if m:
+        info['track'] = m.group(1)
+
+    # 天候
+    m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', text)
+    if m:
+        info['weather'] = '曇' if '曇' in m.group(1) else m.group(1)
+
+    # 距離・コース種別
+    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*m', text, re.IGNORECASE)
+    if m:
+        surf = m.group(1)
+        info['distance'] = int(m.group(2))
+        info['surface']  = ('芝' if '芝' in surf else '障害' if '障' in surf
+                            else '直線' if '直' in surf else 'ダート')
+    return info
+
+
 def fetch_race_data(date_str, code, race_no, pos_map=None):
-    """1レース分：エントリー取得 → 着順を反映"""
+    """1レース分：エントリー取得 → 着順・レース条件を反映"""
     params = {'k_raceDate': date_str, 'k_babaCode': code, 'k_raceNo': race_no}
 
     entry_soup = get_soup(f'{BASE}/DebaTable', params=params)
     horses = parse_entries(entry_soup)
     if not horses:
-        return None
+        return None, {}
 
     if pos_map:
         for h in horses:
             h['pos'] = pos_map.get(h['hn'])
 
-    return horses
+    race_info = parse_race_info(entry_soup)
+    return horses, race_info
 
 
 def main():
@@ -230,11 +256,21 @@ def main():
             try:
                 time.sleep(0.6)
                 pos_map = all_results.get(rno)
-                horses = fetch_race_data(date_str, code, rno, pos_map)
+                horses, race_info = fetch_race_data(date_str, code, rno, pos_map)
                 if horses:
-                    races.append({'raceNo': rno, 'entries': horses})
+                    race_entry = {'raceNo': rno, 'entries': horses}
+                    # レース条件をデータに追加
+                    if race_info.get('track'):    race_entry['track']    = race_info['track']
+                    if race_info.get('weather'):  race_entry['weather']  = race_info['weather']
+                    if race_info.get('distance'): race_entry['distance'] = race_info['distance']
+                    if race_info.get('surface'):  race_entry['surface']  = race_info['surface']
+                    races.append(race_entry)
                     finished = [h for h in horses if h.get('pos') is not None]
-                    status = f'{len(finished)}/{len(horses)}頭 結果済'
+                    cond_str = ' / '.join(filter(None, [
+                        race_info.get('track'), race_info.get('weather'),
+                        f"{race_info['distance']}m" if race_info.get('distance') else None
+                    ]))
+                    status = f'{len(finished)}/{len(horses)}頭 結果済' + (f' [{cond_str}]' if cond_str else '')
                     print(f'  {rno}R: {len(horses)}頭 ({status})')
                 elif old_race:
                     races.append(old_race)

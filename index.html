@@ -651,12 +651,41 @@
                 <input type="date" class="form-control form-control-sm" id="pred-date">
               </div>
             </div>
+            <!-- レース条件 -->
+            <div class="row g-2 mb-2">
+              <div class="col-4">
+                <label class="form-label">馬場状態</label>
+                <select class="form-select form-select-sm" id="pred-track">
+                  <option value="">不明</option>
+                  <option value="良">良</option>
+                  <option value="稍重">稍重</option>
+                  <option value="重">重</option>
+                  <option value="不良">不良</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <label class="form-label">天候</label>
+                <select class="form-select form-select-sm" id="pred-weather">
+                  <option value="">不明</option>
+                  <option value="晴">晴</option>
+                  <option value="曇">曇</option>
+                  <option value="雨">雨</option>
+                  <option value="小雨">小雨</option>
+                  <option value="雪">雪</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <label class="form-label">距離 (m)</label>
+                <input type="number" class="form-control form-control-sm" id="pred-distance"
+                  min="400" max="3000" step="100" placeholder="例: 1400">
+              </div>
+            </div>
             <div class="fetch-divider">自動取得</div>
             <div class="d-flex gap-2 align-items-center mb-2">
               <button class="btn-fetch" onclick="autoFetch('pred', event)">
                 <i class="bi bi-cloud-download me-1"></i>出走馬を自動取得
               </button>
-              <span class="text-muted" style="font-size:0.72rem">keiba.go.jp</span>
+              <span class="text-muted" style="font-size:0.72rem">keiba.go.jp（条件も自動反映）</span>
             </div>
             <label class="form-label">出走馬 <span class="text-muted">— オッズ入力で精度UP</span></label>
             <div class="table-responsive">
@@ -1044,7 +1073,23 @@ async function autoFetch(mode, ev) {
     }
 
     const oddsCount = data.horses.filter(h => h.odds).length;
-    toast(`${data.total}頭を取得しました（オッズ ${oddsCount}頭分）`);
+
+    // 予測タブの場合: レース条件（馬場状態・天候・距離）を自動反映
+    if (!isEntry && data.raceInfo) {
+      const ri = data.raceInfo;
+      if (ri.track)    document.getElementById('pred-track').value    = ri.track;
+      if (ri.weather)  document.getElementById('pred-weather').value  = ri.weather;
+      if (ri.distance) document.getElementById('pred-distance').value = ri.distance;
+    }
+
+    const condParts = [];
+    if (!isEntry && data.raceInfo) {
+      if (data.raceInfo.track)    condParts.push(data.raceInfo.track);
+      if (data.raceInfo.weather)  condParts.push(data.raceInfo.weather);
+      if (data.raceInfo.distance) condParts.push(data.raceInfo.distance + 'm');
+    }
+    const condStr = condParts.length ? ` / ${condParts.join(' ')}` : '';
+    toast(`${data.total}頭を取得しました（オッズ ${oddsCount}頭分${condStr}）`);
 
   } catch (err) {
     const msg = err.message || '';
@@ -1681,6 +1726,97 @@ function buildHistStats(allEntries, venue, refDate = null) {
   return { popStats, hnStats, useVenue, baseName: useVenue ? venue : '全競馬場', baseN: base.length };
 }
 
+// ── 帯広（ばんえい競馬）は直線走路のため馬番補正を大幅縮小 ──
+const STRAIGHT_VENUES = new Set(['帯広']);
+
+// --- レース条件による補正倍率 ---
+// 各補正は ±数%程度に抑えて過学習を防ぐ
+function getRaceCondMult(h, raceInfo, venue) {
+  let mult = 1.0;
+  const { track, weather, distance } = raceInfo || {};
+  const hn        = h.hn  || 8;
+  const pop       = h.pop || 8;
+  const isStraight = STRAIGHT_VENUES.has(venue); // ばんえい競馬は馬番補正なし
+
+  // ── 馬場状態（重/不良: 内枠大有利・荒れやすい） ──
+  const isHeavy  = track === '重' || track === '不良';
+  const isSlight = track === '稍重';
+
+  if (!isStraight) {
+    if (isHeavy) {
+      // 内枠(1-3番)有利: 外を回るコストが増大
+      const hnM = hn <= 2 ? 1.07 : hn <= 4 ? 1.04 : hn <= 7 ? 1.01 : hn <= 10 ? 0.99 : hn <= 13 ? 0.96 : 0.93;
+      mult *= hnM;
+    } else if (isSlight) {
+      const hnM = hn <= 2 ? 1.03 : hn <= 4 ? 1.02 : hn <= 7 ? 1.00 : hn <= 10 ? 0.99 : 0.97;
+      mult *= hnM;
+    }
+  }
+
+  // 重/不良: 1人気の信頼度低下・穴馬出現率UP
+  if (isHeavy) {
+    if      (pop === 1)  mult *= 0.94;
+    else if (pop === 2)  mult *= 0.97;
+    else if (pop >= 6)   mult *= 1.05;
+    else if (pop >= 4)   mult *= 1.02;
+  } else if (isSlight) {
+    if      (pop === 1)  mult *= 0.98;
+    else if (pop >= 6)   mult *= 1.01;
+  }
+
+  // ── 天候（馬場状態が「良」でも雨天なら軽微に補正） ──
+  const isRainy = weather === '雨' || weather === '小雨' || weather === '雪';
+  if (isRainy && !isHeavy && !isSlight && !isStraight) {
+    const hnM = hn <= 3 ? 1.02 : hn >= 12 ? 0.98 : 1.0;
+    mult *= hnM;
+    if (pop === 1) mult *= 0.99;
+  }
+
+  // ── 距離（短距離ほど内枠の優位性が高い） ──
+  if (distance && !isStraight) {
+    if (distance <= 900) {
+      // 超短距離: スタートダッシュが全て、内枠大有利
+      const hnM = hn <= 2 ? 1.07 : hn <= 4 ? 1.04 : hn <= 6 ? 1.01 : hn <= 9 ? 0.99 : hn <= 12 ? 0.96 : 0.93;
+      mult *= hnM;
+    } else if (distance <= 1200) {
+      const hnM = hn <= 2 ? 1.05 : hn <= 4 ? 1.03 : hn <= 7 ? 1.01 : hn <= 10 ? 0.99 : hn <= 13 ? 0.97 : 0.95;
+      mult *= hnM;
+    } else if (distance <= 1600) {
+      const hnM = hn <= 3 ? 1.02 : hn <= 6 ? 1.01 : hn <= 11 ? 1.00 : 0.98;
+      mult *= hnM;
+    } else if (distance <= 2000) {
+      // 中〜長距離: 内外の差は小さい
+      const hnM = hn <= 3 ? 1.01 : hn >= 13 ? 0.99 : 1.0;
+      mult *= hnM;
+    }
+    // 2000m超: 中立（距離適性が支配的でデータ不足）
+  }
+
+  // ── 頭数（少頭数=本命信頼UP、多頭数=波乱増加） ──
+  const fieldSize = raceInfo?.fieldSize || 8;
+  if (fieldSize <= 6) {
+    if      (pop === 1) mult *= 1.05;
+    else if (pop <= 3)  mult *= 1.02;
+    else if (pop >= 7)  mult *= 0.92;
+  } else if (fieldSize >= 13) {
+    if      (pop === 1) mult *= 0.95;
+    else if (pop <= 3)  mult *= 0.98;
+    else if (pop >= 7)  mult *= 1.04;
+  } else if (fieldSize >= 11) {
+    if (pop === 1) mult *= 0.97;
+    else if (pop >= 7) mult *= 1.02;
+  }
+
+  // ── 早期レース（1R-3R）は未勝利・若馬が多く荒れやすい ──
+  const raceNo = raceInfo?.raceNo || 99;
+  if (raceNo <= 3) {
+    if      (pop === 1) mult *= 0.97;
+    else if (pop >= 5)  mult *= 1.02;
+  }
+
+  return mult;
+}
+
 // --- Harville式（三連複/三連単の正確な確率計算）---
 function harvilleP(probMap, a, b, c) {
   const pa = probMap[a] || 0, pb = probMap[b] || 0, pc = probMap[c] || 0;
@@ -1698,7 +1834,7 @@ function trioHarvilleP(probMap, hn1, hn2, hn3) {
 }
 
 // --- スコアリング ---
-function scoreHorses(horses, histStats) {
+function scoreHorses(horses, histStats, raceInfo = {}, venue = '') {
   const { popStats, hnStats } = histStats;
   const fieldSize = horses.length;
   const hasOdds   = horses.some(h => h.odds);
@@ -1752,7 +1888,19 @@ function scoreHorses(horses, histStats) {
       ? 0.45 * Math.min(mktProb * 3, 1) + 0.30 * popPlace + 0.25 * hnPlace
       : 0.55 * popPlace + 0.45 * hnPlace;
 
-    return { ...h, mktProb, popScore, hnScore, popPlace, hnPlace, composite, compositePlace };
+    // ── レース条件補正（馬場・天候・距離・頭数・レース番号） ──
+    const condMult = getRaceCondMult(
+      h,
+      { ...raceInfo, fieldSize: horses.length },
+      venue
+    );
+
+    return {
+      ...h, mktProb, popScore, hnScore, popPlace, hnPlace,
+      composite:      composite      * condMult,
+      compositePlace: compositePlace * condMult,
+      condMult,  // 表示用
+    };
   });
 
   // 正規化
@@ -1764,9 +1912,9 @@ function scoreHorses(horses, histStats) {
   return raw
     .map(h => ({
       ...h,
-      prob:   h.composite      / total,  // 勝つ確率（AI推定）
-      probPl: h.compositePlace / totPl,  // 3着以内確率（AI推定）
-      mktPct: h.mktProb  / mktTot,       // 正規化済み市場確率
+      prob:   h.composite      / total,  // 勝つ確率（AI推定・条件補正済み）
+      probPl: h.compositePlace / totPl,  // 3着以内確率（AI推定・条件補正済み）
+      mktPct: h.mktProb  / mktTot,
       popPct: h.popScore / popTot,
       hnPct:  h.hnScore  / hnTot,
     }))
@@ -1774,11 +1922,42 @@ function scoreHorses(horses, histStats) {
 }
 
 // --- コメント生成 ---
-function genComments(ranked, histStats, venue, raceNo) {
+function genComments(ranked, histStats, venue, raceNo, raceInfo = {}) {
   const top = ranked[0], second = ranked[1], third = ranked[2];
   const lines = [];
   const v = venue || '今回のレース';
   const r = raceNo ? `${raceNo}R` : '';
+
+  // ── レース条件コメント ──
+  const { track, weather, distance, raceNo: rno } = raceInfo;
+  const condParts = [];
+  if (track)    condParts.push(`馬場: <b>${track}</b>`);
+  if (weather)  condParts.push(`天候: <b>${weather}</b>`);
+  if (distance) condParts.push(`距離: <b>${distance}m</b>`);
+  if (condParts.length) {
+    lines.push(`<span style="color:var(--accent-blue-lt)">📋 ${condParts.join(' / ')}</span>`);
+  }
+  const isHeavy = track === '重' || track === '不良';
+  const isSlight = track === '稍重';
+  if (isHeavy) {
+    const inner = ranked.filter(h => h.hn <= 4).slice(0, 2).map(h => `${h.hn}番`).join('・');
+    lines.push(`⚠ <b>${track}馬場</b>: 外枠不利・波乱含み。内枠（${inner || '1〜4番'}）を重視。1人気の信頼度がやや低下。`);
+  } else if (isSlight) {
+    lines.push(`⚠ <b>稍重</b>: 内枠がやや有利。標準より荒れる可能性あり。`);
+  }
+  if (weather === '雨' || weather === '小雨') {
+    lines.push(`🌧 <b>${weather}</b>: 雨天により馬場が悪化する可能性。内枠・道悪得意馬を優先。`);
+  }
+  if (distance && distance <= 1000) {
+    lines.push(`⚡ <b>超短距離${distance}m</b>: スタートダッシュと内枠が最重要。外枠は大きく不利。`);
+  } else if (distance && distance <= 1400) {
+    lines.push(`📏 <b>${distance}m</b>: 中〜短距離。内枠有利が標準的に働きやすい。`);
+  } else if (distance && distance >= 2000) {
+    lines.push(`🏇 <b>長距離${distance}m</b>: ペース配分重要。内外の差は小さい。スタミナ型の人気馬に注目。`);
+  }
+  if (rno && rno <= 3) {
+    lines.push(`🔰 <b>${rno}R（早期レース）</b>: 未勝利・若馬が多く荒れやすい傾向。本命の信頼度はやや低め。`);
+  }
 
   // 本命コメント
   const topProb = Math.round(top.prob * 100);
@@ -1809,8 +1988,16 @@ function genComments(ranked, histStats, venue, raceNo) {
 // --- メイン予想実行 ---
 function runPrediction() {
   const venue   = document.getElementById('pred-venue').value;
-  const raceNo  = document.getElementById('pred-raceno').value;
+  const raceNo  = parseInt(document.getElementById('pred-raceno').value) || null;
   const date    = document.getElementById('pred-date').value;
+
+  // レース条件を読み込む
+  const raceInfo = {
+    track:    document.getElementById('pred-track').value    || null,
+    weather:  document.getElementById('pred-weather').value  || null,
+    distance: parseInt(document.getElementById('pred-distance').value) || null,
+    raceNo:   raceNo,
+  };
 
   const horses = [];
   document.querySelectorAll('#pred-tbody tr').forEach(tr => {
@@ -1827,10 +2014,10 @@ function runPrediction() {
   const allEntries = d.races.flatMap(r => r.entries.map(e => ({ ...e, _venue: r.venue, _date: r.date })));
 
   const histStats = buildHistStats(allEntries, venue, date || getTodayJST());
-  const ranked    = scoreHorses(horses, histStats);
-  const comments  = genComments(ranked, histStats, venue, raceNo);
+  const ranked    = scoreHorses(horses, histStats, raceInfo, venue);
+  const comments  = genComments(ranked, histStats, venue, raceNo, raceInfo);
 
-  renderPredResult(ranked, histStats, comments, { venue, raceNo, date });
+  renderPredResult(ranked, histStats, comments, { venue, raceNo, date, raceInfo });
 }
 
 // --- 結果描画 ---
@@ -2044,7 +2231,8 @@ function runBacktest() {
       .filter(r => r.date < race.date || (r.date === race.date && r.raceNo < race.raceNo))
       .flatMap(r => r.entries.map(e => ({ ...e, _venue: r.venue, _date: r.date })));
     const histStats = buildHistStats(pastEntries, race.venue, race.date);
-    const ranked    = scoreHorses(horses, histStats);
+    const raceInfo  = { track: race.track, weather: race.weather, distance: race.distance, raceNo: race.raceNo };
+    const ranked    = scoreHorses(horses, histStats, raceInfo, race.venue);
     const decision  = botDecide(ranked, s, balance);
     if (!decision) continue;
 
@@ -2539,8 +2727,9 @@ async function autoPoll() {
         if (!er.horses || !er.horses.length) continue;
 
         const histStats = buildHistStats(allEntries, venue.name, dateStr);
-        const ranked = scoreHorses(er.horses, histStats);
-        const decision = botDecide(ranked, s, st.balance);
+        const raceInfo  = { ...(er.raceInfo || {}), raceNo: race.no };
+        const ranked    = scoreHorses(er.horses, histStats, raceInfo, venue.name);
+        const decision  = botDecide(ranked, s, st.balance);
         if (!decision) continue;
 
         st.balance -= decision.amount;
