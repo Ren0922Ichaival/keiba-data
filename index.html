@@ -1072,6 +1072,11 @@ async function autoFetch(mode, ev) {
         row.querySelector('.r-hn').value   = h.hn;
         row.querySelector('.r-pop').value  = h.pop  ?? '';
         row.querySelector('.r-odds').value = h.odds ?? '';
+        // 騎手・馬名・体重をdata属性に保存（saveRace()で使用）
+        if (h.jockey)    row.dataset.jockey    = h.jockey;
+        if (h.horseName) row.dataset.horseName = h.horseName;
+        if (h.weight     != null) row.dataset.weight     = h.weight;
+        if (h.weightDiff != null) row.dataset.weightDiff = h.weightDiff;
       });
     } else {
       predRowIdx = 0;
@@ -1081,6 +1086,8 @@ async function autoFetch(mode, ev) {
         row.querySelector('.p-hn').value   = h.hn;
         row.querySelector('.p-pop').value  = h.pop  ?? '';
         row.querySelector('.p-odds').value = h.odds ?? '';
+        if (h.jockey)    row.dataset.jockey    = h.jockey;
+        if (h.weightDiff != null) row.dataset.weightDiff = h.weightDiff;
       });
     }
 
@@ -1307,7 +1314,14 @@ function saveRace() {
     const hn  = parseInt(tr.querySelector('.r-hn').value);
     const pop = parseInt(tr.querySelector('.r-pop').value);
     const odd = parseFloat(tr.querySelector('.r-odds').value);
-    if (hn && pop) entries.push({ pos: i+1, hn, pop, odds: isNaN(odd) ? null : odd });
+    if (hn && pop) {
+      const e = { pos: i+1, hn, pop, odds: isNaN(odd) ? null : odd };
+      if (tr.dataset.jockey)    e.jockey    = tr.dataset.jockey;
+      if (tr.dataset.horseName) e.horseName = tr.dataset.horseName;
+      if (tr.dataset.weight     !== undefined) e.weight     = parseInt(tr.dataset.weight);
+      if (tr.dataset.weightDiff !== undefined) e.weightDiff = parseInt(tr.dataset.weightDiff);
+      entries.push(e);
+    }
   });
 
   if (entries.length < 1) { toast('少なくとも1頭の情報を入力してください','danger'); return; }
@@ -1819,7 +1833,7 @@ function buildHistStats(allEntries, venue, refDate = null) {
   const wSum   = (arr, pred) => arr.reduce((s, e) => s + (pred(e) ? getW(e) : 0), 0);
   const wTotal = arr => arr.reduce((s, e) => s + getW(e), 0);
 
-  const popStats = {}, hnStats = {};
+  const popStats = {}, hnStats = {}, jockeyStats = {};
   for (let p = 1; p <= 16; p++) {
     const es = base.filter(e => e.pop === p);
     if (es.length >= 4) {
@@ -1841,7 +1855,19 @@ function buildHistStats(allEntries, venue, refDate = null) {
       hnStats[h] = { wr: w * wr + (1-w) * (1/8), pr: w * pr + (1-w) * (3/8), raw: wr, n: es.length };
     }
   }
-  return { popStats, hnStats, useVenue, baseName: useVenue ? venue : '全競馬場', baseN: base.length };
+  // 騎手別統計（最低4件以上）
+  const jockeys = [...new Set(base.map(e => e.jockey).filter(Boolean))];
+  for (const jk of jockeys) {
+    const es = base.filter(e => e.jockey === jk);
+    if (es.length >= 4) {
+      const tot = wTotal(es) || 1;
+      const wr  = wSum(es, e => e.pos === 1) / tot;
+      const pr  = wSum(es, e => e.pos != null && e.pos <= 3) / tot;
+      const w   = Math.min(1, es.length / 20);
+      jockeyStats[jk] = { wr: w * wr + (1-w) * (1/8), pr: w * pr + (1-w) * (3/8), raw: wr, n: es.length };
+    }
+  }
+  return { popStats, hnStats, jockeyStats, useVenue, baseName: useVenue ? venue : '全競馬場', baseN: base.length };
 }
 
 // ── 帯広（ばんえい競馬）は直線走路のため馬番補正を大幅縮小 ──
@@ -1953,12 +1979,12 @@ function trioHarvilleP(probMap, hn1, hn2, hn3) {
 
 // --- スコアリング ---
 function scoreHorses(horses, histStats, raceInfo = {}, venue = '') {
-  const { popStats, hnStats } = histStats;
-  const fieldSize = horses.length;
-  const hasOdds   = horses.some(h => h.odds);
+  const { popStats, hnStats, jockeyStats = {} } = histStats;
+  const fieldSize  = horses.length;
+  const hasOdds    = horses.some(h => h.odds);
+  const hasJockeys = horses.some(h => h.jockey);
 
   // ① オーバーラウンド除去（地方競馬の控除率は約25%）
-  //    sum(1/odds) ≈ 1.25 → 各市場確率をこれで割って正規化
   const overround = hasOdds
     ? (horses.reduce((s, h) => s + (h.odds ? 1 / h.odds : 0), 0) || 1)
     : 1;
@@ -1974,7 +2000,7 @@ function scoreHorses(horses, histStats, raceInfo = {}, venue = '') {
       mktProb = 1 / fieldSize;
     }
 
-    // 2. 人気別歴史スコア（勝率 + 複勝率）
+    // 2. 人気別歴史スコア
     let popScore, popPlace;
     if (h.pop && popStats[h.pop]) {
       popScore = popStats[h.pop].wr;
@@ -1987,7 +2013,7 @@ function scoreHorses(horses, histStats, raceInfo = {}, venue = '') {
       popPlace = 3 / fieldSize;
     }
 
-    // 3. 馬番別歴史スコア（勝率 + 複勝率）
+    // 3. 馬番別歴史スコア
     let hnScore, hnPlace;
     if (hnStats[h.hn]) {
       hnScore = hnStats[h.hn].wr;
@@ -1997,14 +2023,31 @@ function scoreHorses(horses, histStats, raceInfo = {}, venue = '') {
       hnPlace = 3 / fieldSize;
     }
 
-    // 重み: オッズあり=市場50%/人気30%/馬番20%、オッズなし=人気60%/馬番40%
-    const composite = hasOdds
-      ? 0.50 * mktProb + 0.30 * popScore + 0.20 * hnScore
-      : 0.60 * popScore + 0.40 * hnScore;
-    // 複勝スコア（三連複/複勝に使用）
-    const compositePlace = hasOdds
-      ? 0.45 * Math.min(mktProb * 3, 1) + 0.30 * popPlace + 0.25 * hnPlace
-      : 0.55 * popPlace + 0.45 * hnPlace;
+    // 4. 騎手別歴史スコア
+    let jkScore, jkPlace;
+    if (h.jockey && jockeyStats[h.jockey]) {
+      jkScore = jockeyStats[h.jockey].wr;
+      jkPlace = jockeyStats[h.jockey].pr || jkScore * 3;
+    } else {
+      jkScore = 1 / fieldSize;
+      jkPlace = 3 / fieldSize;
+    }
+
+    // 重み: 騎手あり=市場45%/人気25%/馬番15%/騎手15%、なし=市場50%/人気30%/馬番20%
+    let composite, compositePlace;
+    if (hasOdds && hasJockeys) {
+      composite      = 0.45 * mktProb + 0.25 * popScore + 0.15 * hnScore + 0.15 * jkScore;
+      compositePlace = 0.42 * Math.min(mktProb * 3, 1) + 0.25 * popPlace + 0.18 * hnPlace + 0.15 * jkPlace;
+    } else if (hasOdds) {
+      composite      = 0.50 * mktProb + 0.30 * popScore + 0.20 * hnScore;
+      compositePlace = 0.45 * Math.min(mktProb * 3, 1) + 0.30 * popPlace + 0.25 * hnPlace;
+    } else if (hasJockeys) {
+      composite      = 0.55 * popScore + 0.25 * hnScore + 0.20 * jkScore;
+      compositePlace = 0.50 * popPlace  + 0.30 * hnPlace + 0.20 * jkPlace;
+    } else {
+      composite      = 0.60 * popScore + 0.40 * hnScore;
+      compositePlace = 0.55 * popPlace  + 0.45 * hnPlace;
+    }
 
     // ── レース条件補正（馬場・天候・距離・頭数・レース番号） ──
     const condMult = getRaceCondMult(
@@ -2017,18 +2060,17 @@ function scoreHorses(horses, histStats, raceInfo = {}, venue = '') {
     let weightMult = 1.0;
     if (h.weightDiff != null) {
       const wd = h.weightDiff;
-      if      (wd <= -10) weightMult = 0.95;  // -10kg以上の大幅減: 消耗・調子不良の可能性
-      else if (wd <= -6)  weightMult = 0.98;  // -6〜-9kg
-      else if (wd >= 10)  weightMult = 0.96;  // +10kg以上の大幅増
-      else if (wd >= 6)   weightMult = 0.98;  // +6〜+9kg: 体重増加で動きが重い
+      if      (wd <= -10) weightMult = 0.95;
+      else if (wd <= -6)  weightMult = 0.98;
+      else if (wd >= 10)  weightMult = 0.96;
+      else if (wd >= 6)   weightMult = 0.98;
     }
 
     return {
-      ...h, mktProb, popScore, hnScore, popPlace, hnPlace,
+      ...h, mktProb, popScore, hnScore, jkScore, popPlace, hnPlace, jkPlace,
       composite:      composite      * condMult * weightMult,
       compositePlace: compositePlace * condMult * weightMult,
-      condMult,  // 表示用
-      weightMult,  // 表示用
+      condMult, weightMult,
     };
   });
 
@@ -2038,14 +2080,16 @@ function scoreHorses(horses, histStats, raceInfo = {}, venue = '') {
   const mktTot  = raw.reduce((s, h) => s + h.mktProb, 0) || 1;
   const popTot  = raw.reduce((s, h) => s + h.popScore, 0) || 1;
   const hnTot   = raw.reduce((s, h) => s + h.hnScore, 0) || 1;
+  const jkTot   = raw.reduce((s, h) => s + h.jkScore, 0) || 1;
   return raw
     .map(h => ({
       ...h,
-      prob:   h.composite      / total,  // 勝つ確率（AI推定・条件補正済み）
-      probPl: h.compositePlace / totPl,  // 3着以内確率（AI推定・条件補正済み）
+      prob:   h.composite      / total,
+      probPl: h.compositePlace / totPl,
       mktPct: h.mktProb  / mktTot,
       popPct: h.popScore / popTot,
       hnPct:  h.hnScore  / hnTot,
+      jkPct:  h.jkScore  / jkTot,
     }))
     .sort((a, b) => b.prob - a.prob);
 }
@@ -2059,6 +2103,15 @@ function genComments(ranked, histStats, venue, raceNo, raceInfo = {}) {
 
   // ── レース条件コメント ──
   const { track, weather, distance, raceNo: rno } = raceInfo;
+
+  // ── ばんえい競馬（帯広）専用コメント ──
+  const isBanei = STRAIGHT_VENUES.has(venue);
+  if (isBanei) {
+    lines.push(`🐴 <b>ばんえい競馬（帯広）</b>: 直線200m・障害物あり。内枠外枠の差はなし。馬力・重量適性が重要。馬番バイアス補正は無効化しています。`);
+    if (track === '重' || track === '不良') {
+      lines.push(`⚠ <b>${track}馬場</b>: 砂が重く荒れやすい展開。スタミナ型・体重の重い馬に注目。`);
+    }
+  }
   const condParts = [];
   if (track)    condParts.push(`馬場: <b>${track}</b>`);
   if (weather)  condParts.push(`天候: <b>${weather}</b>`);
@@ -2068,21 +2121,23 @@ function genComments(ranked, histStats, venue, raceNo, raceInfo = {}) {
   }
   const isHeavy = track === '重' || track === '不良';
   const isSlight = track === '稍重';
-  if (isHeavy) {
+  if (!isBanei && isHeavy) {
     const inner = ranked.filter(h => h.hn <= 4).slice(0, 2).map(h => `${h.hn}番`).join('・');
     lines.push(`⚠ <b>${track}馬場</b>: 外枠不利・波乱含み。内枠（${inner || '1〜4番'}）を重視。1人気の信頼度がやや低下。`);
-  } else if (isSlight) {
+  } else if (!isBanei && isSlight) {
     lines.push(`⚠ <b>稍重</b>: 内枠がやや有利。標準より荒れる可能性あり。`);
   }
   if (weather === '雨' || weather === '小雨') {
-    lines.push(`🌧 <b>${weather}</b>: 雨天により馬場が悪化する可能性。内枠・道悪得意馬を優先。`);
+    lines.push(`🌧 <b>${weather}</b>: 雨天により馬場が悪化する可能性。${isBanei ? 'ばんえいは砂が重くなり展開が荒れやすい。' : '内枠・道悪得意馬を優先。'}`);
   }
-  if (distance && distance <= 1000) {
-    lines.push(`⚡ <b>超短距離${distance}m</b>: スタートダッシュと内枠が最重要。外枠は大きく不利。`);
-  } else if (distance && distance <= 1400) {
-    lines.push(`📏 <b>${distance}m</b>: 中〜短距離。内枠有利が標準的に働きやすい。`);
-  } else if (distance && distance >= 2000) {
-    lines.push(`🏇 <b>長距離${distance}m</b>: ペース配分重要。内外の差は小さい。スタミナ型の人気馬に注目。`);
+  if (!isBanei) {
+    if (distance && distance <= 1000) {
+      lines.push(`⚡ <b>超短距離${distance}m</b>: スタートダッシュと内枠が最重要。外枠は大きく不利。`);
+    } else if (distance && distance <= 1400) {
+      lines.push(`📏 <b>${distance}m</b>: 中〜短距離。内枠有利が標準的に働きやすい。`);
+    } else if (distance && distance >= 2000) {
+      lines.push(`🏇 <b>長距離${distance}m</b>: ペース配分重要。内外の差は小さい。スタミナ型の人気馬に注目。`);
+    }
   }
   if (rno && rno <= 3) {
     lines.push(`🔰 <b>${rno}R（早期レース）</b>: 未勝利・若馬が多く荒れやすい傾向。本命の信頼度はやや低め。`);
@@ -2104,6 +2159,15 @@ function genComments(ranked, histStats, venue, raceNo, raceInfo = {}) {
     const rank1 = ranked.indexOf(pop1);
     if (rank1 === 0) lines.push(`1人気 ${pop1.hn}番 がデータ上も最有力。信頼度高め。`);
     else if (rank1 >= 3) lines.push(`1人気 ${pop1.hn}番 は過去データで上位が取りにくいパターン。ヒモまで下げる選択肢も。`);
+  }
+
+  // 騎手データ利用状況
+  const jkStats = histStats.jockeyStats || {};
+  const usedJockeys = ranked.filter(h => h.jockey && jkStats[h.jockey]);
+  if (usedJockeys.length > 0) {
+    const topJk = usedJockeys[0];
+    const jkInfo = jkStats[topJk.jockey];
+    lines.push(`<span style="color:#faad14">🏇 騎手傾向データ反映: ${topJk.jockey}（${(jkInfo.raw*100).toFixed(1)}%勝率 / ${jkInfo.n}戦）他${usedJockeys.length}名。黄バーで確認できます。</span>`);
   }
 
   // データ品質コメント
@@ -2133,7 +2197,13 @@ function runPrediction() {
     const hn   = parseInt(tr.querySelector('.p-hn').value);
     const pop  = parseInt(tr.querySelector('.p-pop').value) || null;
     const odds = parseFloat(tr.querySelector('.p-odds').value) || null;
-    if (hn) horses.push({ hn, pop, odds });
+    if (hn) {
+      const h = { hn, pop, odds };
+      if (tr.dataset.jockey)    h.jockey    = tr.dataset.jockey;
+      if (tr.dataset.weightDiff !== undefined && tr.dataset.weightDiff !== '')
+        h.weightDiff = parseInt(tr.dataset.weightDiff);
+      horses.push(h);
+    }
   });
 
   if (horses.length < 2) { toast('2頭以上入力してください', 'danger'); return; }
@@ -2179,13 +2249,23 @@ function renderPredResult(ranked, histStats, comments, info) {
     const mH = Math.round(h.mktPct / ranked.reduce((m,x)=>Math.max(m,x.mktPct),0) * 16);
     const pH = Math.round(h.popPct / ranked.reduce((m,x)=>Math.max(m,x.popPct),0) * 16);
     const nH = Math.round(h.hnPct  / ranked.reduce((m,x)=>Math.max(m,x.hnPct), 0) * 16);
+    const jH = ranked.some(x=>x.jkPct>0)
+      ? Math.round(h.jkPct / ranked.reduce((m,x)=>Math.max(m,x.jkPct),0) * 16) : 0;
+
+    // 体重表示
+    const wStr = h.weight
+      ? `<small style="color:var(--text-secondary)">${h.weight}kg${h.weightDiff!=null?(h.weightDiff>=0?'+':'')+h.weightDiff:''}</small>`
+      : '';
+    // 騎手表示
+    const jkStr = h.jockey
+      ? `<small style="color:var(--accent-blue-lt)">${h.jockey}</small>` : '';
 
     return `<tr class="${rowCls}">
       <td class="fw-bold" style="color:${barColor}">${i+1}着予</td>
       <td><span class="mark mark-${mark}">${mark}</span></td>
-      <td class="fw-bold">${h.hn}番</td>
+      <td class="fw-bold">${h.hn}番${jkStr ? '<br>'+jkStr : ''}</td>
       <td class="${popCls}">${h.pop ? h.pop+'人気' : '-'}</td>
-      <td>${h.odds ? h.odds+'倍' : '-'}</td>
+      <td>${h.odds ? h.odds+'倍' : '-'}${wStr ? '<br>'+wStr : ''}</td>
       <td>
         <div class="prob-bar-wrap">
           <div class="prob-bar-bg"><div class="prob-bar-fill" style="width:${barW}%;background:${barColor}"></div></div>
@@ -2193,10 +2273,11 @@ function renderPredResult(ranked, histStats, comments, info) {
         </div>
       </td>
       <td>
-        <div class="factor-bars" title="青:市場 赤:人気傾向 緑:馬番傾向">
+        <div class="factor-bars" title="青:市場 赤:人気傾向 緑:馬番傾向${jH?'/黄:騎手':''}">
           <div class="factor-bar" style="height:${mH}px;background:#1677ff"></div>
           <div class="factor-bar" style="height:${pH}px;background:#ff4d4f"></div>
           <div class="factor-bar" style="height:${nH}px;background:#52c41a"></div>
+          ${jH ? `<div class="factor-bar" style="height:${jH}px;background:#faad14"></div>` : ''}
         </div>
       </td>
     </tr>`;
@@ -2217,7 +2298,7 @@ function renderPredResult(ranked, histStats, comments, info) {
           <table class="table table-sm mb-0">
             <thead><tr>
               <th>予想着順</th><th>印</th><th>馬番</th><th>人気</th><th>オッズ</th>
-              <th>予想確率</th><th title="青:市場確率 / 赤:人気傾向 / 緑:馬番傾向">要因</th>
+              <th>予想確率</th><th title="青:市場確率 / 赤:人気傾向 / 緑:馬番傾向 / 黄:騎手傾向">要因</th>
             </tr></thead>
             <tbody>${tableRows}</tbody>
           </table>

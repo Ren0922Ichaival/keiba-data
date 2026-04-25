@@ -60,22 +60,19 @@ def fmt_date(d: str) -> str:
     return d.replace('-', '/')
 
 
-def parse_race_info(soup: BeautifulSoup) -> dict:
+def parse_race_info(soup: BeautifulSoup, venue: str = '') -> dict:
     """
     出馬表HTML からレース条件（馬場状態・天候・距離・コース種別）を抽出する。
-    取得できない項目は None を返す。
+    取得できない項目は None を返す。venue='帯広' でばんえい専用解析。
     """
     info = {'track': None, 'weather': None, 'distance': None, 'surface': None}
     text = soup.get_text(' ', strip=True)
 
-    # 馬場状態: 良 / 稍重 / 重 / 不良
-    m = re.search(r'馬場[：:\s]*([良稍重不](良|重|稍重|不良)?)', text)
+    # 馬場状態: 良 / 稍重 / 重 / 不良 / 軽（ばんえい独自）
+    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良|軽)', text)
     if m:
-        raw = m.group(0)
-        for t in ('不良', '稍重', '重', '良'):
-            if t in raw:
-                info['track'] = t
-                break
+        raw = m.group(1)
+        info['track'] = '良' if raw == '軽' else raw
 
     # 天候: 晴 / 曇 / 雨 / 小雨 / 雪
     m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', text)
@@ -83,7 +80,7 @@ def parse_race_info(soup: BeautifulSoup) -> dict:
         raw = m.group(1)
         info['weather'] = '曇' if '曇' in raw else raw
 
-    # 距離・コース種別: "ダ1400m" "芝1600m" "障1000m" "直線1000m"
+    # 距離・コース種別: "ダ1400m" "芝1600m" "障1000m" "直線1000m"（全角ｍ対応）
     m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*[mｍ]', text, re.IGNORECASE)
     if m:
         surf_raw = m.group(1)
@@ -97,12 +94,21 @@ def parse_race_info(soup: BeautifulSoup) -> dict:
         else:
             info['surface'] = 'ダート'
 
+    # ばんえい競馬（帯広）専用: 距離未取得の場合はデフォルト200m直線
+    if venue == '帯広' and info['distance'] is None:
+        m2 = re.search(r'(\d{3,4})\s*[mｍ]', text)
+        if m2:
+            info['distance'] = int(m2.group(1))
+        else:
+            info['distance'] = 200
+        info['surface'] = '直線'
+
     return info
 
 
 def parse_horses(soup: BeautifulSoup) -> list:
     """
-    出馬表HTML から馬番・人気・単勝オッズ・馬体重を抽出する。
+    出馬表HTML から馬番・人気・単勝オッズ・馬体重・騎手・馬名を抽出する。
     keiba.go.jp の実際のHTML構造（class='horseNum', class='odds_weight'）に対応。
     各馬について2行のtrがある:
       1行目（horseNumセル有り）: odds_weightセルに "4.7 (3人気)" 形式
@@ -154,6 +160,18 @@ def parse_horses(soup: BeautifulSoup) -> list:
                 odds_val = float(m.group(1))
                 pop_val = int(m.group(2))
 
+        # 騎手名（class='jocky' または 'jockey'）
+        jockey = None
+        jk_cell = row.find('td', class_='jocky') or row.find('td', class_='jockey')
+        if jk_cell:
+            jockey = jk_cell.get_text(strip=True) or None
+
+        # 馬名（class='horseName'）
+        horse_name = None
+        name_cell = row.find('td', class_='horseName')
+        if name_cell:
+            horse_name = name_cell.get_text(strip=True) or None
+
         # 次の行から体重を取得（2行目: horseNumセルなし・odds_weightセルに "506 (+12)" 形式）
         weight = None
         weight_diff = None
@@ -170,13 +188,16 @@ def parse_horses(soup: BeautifulSoup) -> list:
                             weight_diff = int(wm.group(2))
 
         seen.add(hn)
-        horses.append({
+        entry = {
             'hn': hn,
             'pop': pop_val,
             'odds': odds_val,
             'weight': weight,
             'weightDiff': weight_diff,
-        })
+        }
+        if jockey:     entry['jockey']    = jockey
+        if horse_name: entry['horseName'] = horse_name
+        horses.append(entry)
         i += 1
 
     horses.sort(key=lambda h: h['hn'])
@@ -316,7 +337,7 @@ def entries():
         soup = BeautifulSoup(res.content, 'lxml', from_encoding='utf-8')
 
         horses    = parse_horses(soup)
-        race_info = parse_race_info(soup)
+        race_info = parse_race_info(soup, venue=venue)
 
         if not horses:
             return jsonify({

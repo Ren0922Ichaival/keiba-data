@@ -89,7 +89,7 @@ def add_log(state: dict, msg: str, level: str = 'inf'):
 # ── 過去データ読み込み ─────────────────────────────────────────────
 
 def load_all_past_entries() -> list:
-    """data/*.json から全エントリーを読み込み [{hn,pop,odds,pos,_venue,_date}] 形式で返す"""
+    """data/*.json から全エントリーを読み込み [{hn,pop,odds,pos,jockey,weightDiff,_venue,_date}] 形式で返す"""
     entries = []
     for p in sorted(DATA_DIR.glob('????-??-??.json')):
         try:
@@ -99,14 +99,17 @@ def load_all_past_entries() -> list:
                 vname = venue.get('name', '')
                 for race in venue.get('races', []):
                     for e in race.get('entries', []):
-                        entries.append({
+                        entry = {
                             'hn':    e.get('hn'),
                             'pop':   e.get('pop'),
                             'odds':  e.get('odds'),
                             'pos':   e.get('pos'),
                             '_venue': vname,
                             '_date':  date,
-                        })
+                        }
+                        if e.get('jockey'):     entry['jockey']     = e['jockey']
+                        if e.get('weightDiff') is not None: entry['weightDiff'] = e['weightDiff']
+                        entries.append(entry)
         except Exception:
             pass
     return entries
@@ -159,38 +162,54 @@ def get_race_list(date_str: str, code: int) -> list:
         return []
 
 
-def parse_race_info_soup(soup) -> dict:
-    """出馬表HTMLからレース条件を抽出"""
+def parse_race_info_soup(soup, venue: str = '') -> dict:
+    """出馬表HTMLからレース条件を抽出。venue='帯広' でばんえい専用解析。"""
     info = {'track': None, 'weather': None, 'distance': None, 'surface': None}
     text = soup.get_text(' ', strip=True)
-    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良)', text)
-    if m: info['track'] = m.group(1)
+    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良|軽)', text)
+    if m:
+        raw = m.group(1)
+        info['track'] = '良' if raw == '軽' else raw
     m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', text)
     if m: info['weather'] = '曇' if '曇' in m.group(1) else m.group(1)
-    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*m', text, re.IGNORECASE)
+    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*[mｍ]', text, re.IGNORECASE)
     if m:
         info['distance'] = int(m.group(2))
         surf = m.group(1)
         info['surface'] = ('芝' if '芝' in surf else '障害' if '障' in surf
                            else '直線' if '直' in surf else 'ダート')
+    # ばんえい競馬（帯広）専用: 距離未取得の場合はデフォルト200m直線
+    if venue == '帯広' and info['distance'] is None:
+        m2 = re.search(r'(\d{3,4})\s*[mｍ]', text)
+        if m2:
+            info['distance'] = int(m2.group(1))
+        else:
+            info['distance'] = 200
+        info['surface'] = '直線'
     return info
 
 
-def get_entries(date_str: str, code: int, race_no: int) -> tuple:
-    """出走馬データ ([{hn, pop, odds}], race_info)"""
+def get_entries(date_str: str, code: int, race_no: int, venue: str = '') -> tuple:
+    """出走馬データ ([{hn, pop, odds, jockey}], race_info)"""
     try:
         soup = get_soup(f'{BASE}/DebaTable',
                         params={'k_raceDate': date_str, 'k_babaCode': code, 'k_raceNo': race_no})
         horses, seen = [], set()
-        for row in soup.find_all('tr'):
+        all_rows = soup.find_all('tr')
+        i = 0
+        while i < len(all_rows):
+            row = all_rows[i]
             hn_cell = row.find('td', class_='horseNum')
             if not hn_cell:
+                i += 1
                 continue
             try:
                 hn = int(hn_cell.get_text(strip=True))
                 if not (1 <= hn <= 16) or hn in seen:
+                    i += 1
                     continue
             except (ValueError, TypeError):
+                i += 1
                 continue
             odds_val = pop_val = None
             odds_cell = row.find('td', class_='odds_weight')
@@ -200,10 +219,18 @@ def get_entries(date_str: str, code: int, race_no: int) -> tuple:
                 if m:
                     odds_val = float(m.group(1))
                     pop_val  = int(m.group(2))
+            # 騎手名
+            jockey = None
+            jk_cell = row.find('td', class_='jocky') or row.find('td', class_='jockey')
+            if jk_cell:
+                jockey = jk_cell.get_text(strip=True) or None
             seen.add(hn)
-            horses.append({'hn': hn, 'pop': pop_val, 'odds': odds_val})
+            entry = {'hn': hn, 'pop': pop_val, 'odds': odds_val}
+            if jockey: entry['jockey'] = jockey
+            horses.append(entry)
+            i += 1
         horses.sort(key=lambda h: h['hn'])
-        race_info = parse_race_info_soup(soup)
+        race_info = parse_race_info_soup(soup, venue=venue)
         return horses, race_info
     except Exception as e:
         print(f'  エントリー取得失敗: {e}')
@@ -269,7 +296,7 @@ def build_hist_stats(all_entries: list, venue: str, ref_date: str = None) -> dic
     def w_total(arr):
         return sum(get_w(e) for e in arr) or 1
 
-    pop_stats, hn_stats = {}, {}
+    pop_stats, hn_stats, jockey_stats = {}, {}, {}
     for p in range(1, 17):
         es = [e for e in base if e.get('pop') == p]
         if len(es) >= 4:
@@ -289,13 +316,26 @@ def build_hist_stats(all_entries: list, venue: str, ref_date: str = None) -> dic
             w   = min(1.0, len(es) / 30)
             hn_stats[h] = {'wr': w * wr + (1 - w) * (1 / 8), 'pr': w * pr + (1 - w) * (3 / 8),
                            'raw': wr, 'n': len(es)}
+    # 騎手別統計（最低4件以上の記録が必要）
+    jockeys = {e.get('jockey') for e in base if e.get('jockey')}
+    for jk in jockeys:
+        es = [e for e in base if e.get('jockey') == jk]
+        if len(es) >= 4:
+            tot = w_total(es)
+            wr  = w_sum(es, lambda e: e.get('pos') == 1) / tot
+            pr  = w_sum(es, lambda e: e.get('pos') is not None and e.get('pos') <= 3) / tot
+            w   = min(1.0, len(es) / 20)
+            jockey_stats[jk] = {'wr': w * wr + (1 - w) * (1 / 8),
+                                 'pr': w * pr + (1 - w) * (3 / 8),
+                                 'raw': wr, 'n': len(es)}
 
     return {
-        'popStats': pop_stats,
-        'hnStats':  hn_stats,
-        'useVenue': use_venue,
-        'baseName': venue if use_venue else '全競馬場',
-        'baseN': len(base),
+        'popStats':    pop_stats,
+        'hnStats':     hn_stats,
+        'jockeyStats': jockey_stats,
+        'useVenue':    use_venue,
+        'baseName':    venue if use_venue else '全競馬場',
+        'baseN':       len(base),
     }
 
 
@@ -400,20 +440,23 @@ def get_race_cond_mult(h: dict, race_info: dict, venue: str) -> float:
 
 
 def score_horses(horses: list, hist_stats: dict, race_info: dict = None, venue: str = '') -> list:
-    pop_stats  = hist_stats['popStats']
-    hn_stats   = hist_stats['hnStats']
-    field_size = len(horses)
-    has_odds   = any(h.get('odds') for h in horses)
-    race_info  = race_info or {}
+    pop_stats    = hist_stats['popStats']
+    hn_stats     = hist_stats['hnStats']
+    jockey_stats = hist_stats.get('jockeyStats', {})
+    field_size   = len(horses)
+    has_odds     = any(h.get('odds') for h in horses)
+    has_jockeys  = any(h.get('jockey') for h in horses)
+    race_info    = race_info or {}
 
     # オーバーラウンド除去（地方競馬の控除率は約25%）
     overround = (sum(1 / h['odds'] for h in horses if h.get('odds')) or 1) if has_odds else 1
 
     raw = []
     for h in horses:
-        pop  = h.get('pop')
-        odds = h.get('odds')
-        hn   = h.get('hn')
+        pop    = h.get('pop')
+        odds   = h.get('odds')
+        hn     = h.get('hn')
+        jockey = h.get('jockey')
 
         mkt_prob = ((1 / odds) / overround) if odds else (
             DEFAULT_POP_WIN[pop] if pop and 1 <= pop < len(DEFAULT_POP_WIN) else 1 / field_size
@@ -436,21 +479,45 @@ def score_horses(horses: list, hist_stats: dict, race_info: dict = None, venue: 
             hn_score = 1 / field_size
             hn_place = 3 / field_size
 
-        composite = (
-            0.50 * mkt_prob + 0.30 * pop_score + 0.20 * hn_score if has_odds
-            else 0.60 * pop_score + 0.40 * hn_score
-        )
-        composite_place = (
-            0.45 * min(mkt_prob * 3, 1) + 0.30 * pop_place + 0.25 * hn_place if has_odds
-            else 0.55 * pop_place + 0.45 * hn_place
-        )
+        # 騎手スコア
+        if jockey and jockey in jockey_stats:
+            jk_score = jockey_stats[jockey]['wr']
+            jk_place = jockey_stats[jockey].get('pr', jk_score * 3)
+        else:
+            jk_score = 1 / field_size
+            jk_place = 3 / field_size
+
+        # 重み: 騎手データあり=市場45%/人気25%/馬番15%/騎手15%、なし=従来通り
+        if has_odds and has_jockeys:
+            composite       = 0.45 * mkt_prob + 0.25 * pop_score + 0.15 * hn_score + 0.15 * jk_score
+            composite_place = (0.42 * min(mkt_prob * 3, 1) + 0.25 * pop_place
+                               + 0.18 * hn_place + 0.15 * jk_place)
+        elif has_odds:
+            composite       = 0.50 * mkt_prob + 0.30 * pop_score + 0.20 * hn_score
+            composite_place = 0.45 * min(mkt_prob * 3, 1) + 0.30 * pop_place + 0.25 * hn_place
+        elif has_jockeys:
+            composite       = 0.55 * pop_score + 0.25 * hn_score + 0.20 * jk_score
+            composite_place = 0.50 * pop_place  + 0.30 * hn_place + 0.20 * jk_place
+        else:
+            composite       = 0.60 * pop_score + 0.40 * hn_score
+            composite_place = 0.55 * pop_place  + 0.45 * hn_place
+
+        # 馬体重変動補正
+        weight_mult = 1.0
+        wd = h.get('weightDiff')
+        if wd is not None:
+            if   wd <= -10: weight_mult = 0.95
+            elif wd <=  -6: weight_mult = 0.98
+            elif wd >=  10: weight_mult = 0.96
+            elif wd >=   6: weight_mult = 0.98
 
         # レース条件補正
         cond_mult = get_race_cond_mult(h, {**race_info, 'fieldSize': field_size}, venue)
         raw.append({**h, 'mktProb': mkt_prob, 'popScore': pop_score, 'hnScore': hn_score,
-                    'composite':      composite      * cond_mult,
-                    'compositePlace': composite_place * cond_mult,
-                    'condMult': cond_mult})
+                    'jkScore': jk_score,
+                    'composite':      composite      * cond_mult * weight_mult,
+                    'compositePlace': composite_place * cond_mult * weight_mult,
+                    'condMult': cond_mult, 'weightMult': weight_mult})
 
     total    = sum(r['composite']      for r in raw) or 1
     tot_pl   = sum(r['compositePlace'] for r in raw) or 1
@@ -680,7 +747,7 @@ def main():
                 continue
 
             time.sleep(0.5)
-            horses, race_info = get_entries(date_str, code, rno)
+            horses, race_info = get_entries(date_str, code, rno, venue=name)
             if not horses:
                 continue
 

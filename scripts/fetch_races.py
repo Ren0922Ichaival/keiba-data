@@ -110,7 +110,7 @@ def get_race_list(date_str, code):
 
 
 def parse_entries(soup):
-    """出走馬データ（馬番・人気・単勝オッズ・馬体重）を抽出
+    """出走馬データ（馬番・人気・単勝オッズ・馬体重・騎手・馬名）を抽出
     各馬について2行のtrがある:
       1行目（horseNumセル有り）: odds_weightセルに "4.7 (3人気)" 形式
       2行目（horseNumセル無し）: odds_weightセルに "506 (+12)" 形式（体重と増減）
@@ -141,6 +141,16 @@ def parse_entries(soup):
             if m:
                 odds_val = float(m.group(1))
                 pop_val = int(m.group(2))
+        # 騎手名（class='jocky' または 'jockey'）
+        jockey = None
+        jk_cell = row.find('td', class_='jocky') or row.find('td', class_='jockey')
+        if jk_cell:
+            jockey = jk_cell.get_text(strip=True) or None
+        # 馬名（class='horseName'）
+        horse_name = None
+        name_cell = row.find('td', class_='horseName')
+        if name_cell:
+            horse_name = name_cell.get_text(strip=True) or None
         # 次の行から体重を取得
         weight = None
         weight_diff = None
@@ -156,10 +166,13 @@ def parse_entries(soup):
                         if wm.group(2):
                             weight_diff = int(wm.group(2))
         seen.add(hn)
-        horses.append({
+        entry = {
             'hn': hn, 'pop': pop_val, 'odds': odds_val,
             'weight': weight, 'weightDiff': weight_diff, 'pos': None,
-        })
+        }
+        if jockey:     entry['jockey']    = jockey
+        if horse_name: entry['horseName'] = horse_name
+        horses.append(entry)
         i += 1
     horses.sort(key=lambda h: h['hn'])
     return horses
@@ -209,32 +222,47 @@ def fetch_all_results(date_str, code):
     return results
 
 
-def parse_race_info(soup):
-    """出馬表HTMLからレース条件（馬場状態・天候・距離・コース）を抽出"""
+def parse_race_info(soup, venue: str = ''):
+    """出馬表HTMLからレース条件（馬場状態・天候・距離・コース）を抽出
+    venue='帯広'（ばんえい競馬）の場合は専用解析を行う。
+    """
     info = {'track': None, 'weather': None, 'distance': None, 'surface': None}
     text = soup.get_text(' ', strip=True)
 
-    # 馬場状態
-    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良)', text)
+    # 馬場状態（ばんえいは「軽」「やや重」「重」「不良」も使う場合あり）
+    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良|軽)', text)
     if m:
-        info['track'] = m.group(1)
+        raw = m.group(1)
+        # 「軽」はばんえい独自表記 → 「良」相当
+        info['track'] = '良' if raw == '軽' else raw
 
     # 天候
     m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', text)
     if m:
         info['weather'] = '曇' if '曇' in m.group(1) else m.group(1)
 
-    # 距離・コース種別
+    # 距離・コース種別（全角ｍにも対応）
     m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*[mｍ]', text, re.IGNORECASE)
     if m:
         surf = m.group(1)
         info['distance'] = int(m.group(2))
         info['surface']  = ('芝' if '芝' in surf else '障害' if '障' in surf
                             else '直線' if '直' in surf else 'ダート')
+
+    # ばんえい競馬（帯広）専用: 距離未取得の場合はデフォルト200m直線
+    if venue == '帯広' and info['distance'] is None:
+        # ばんえいは常に200m直線コース
+        m2 = re.search(r'(\d{3,4})\s*[mｍ]', text)
+        if m2:
+            info['distance'] = int(m2.group(1))
+        else:
+            info['distance'] = 200
+        info['surface'] = '直線'
+
     return info
 
 
-def fetch_race_data(date_str, code, race_no, pos_map=None):
+def fetch_race_data(date_str, code, race_no, pos_map=None, venue: str = ''):
     """1レース分：エントリー取得 → 着順・レース条件を反映"""
     params = {'k_raceDate': date_str, 'k_babaCode': code, 'k_raceNo': race_no}
 
@@ -247,7 +275,7 @@ def fetch_race_data(date_str, code, race_no, pos_map=None):
         for h in horses:
             h['pos'] = pos_map.get(h['hn'])
 
-    race_info = parse_race_info(entry_soup)
+    race_info = parse_race_info(entry_soup, venue=venue)
     return horses, race_info
 
 
@@ -317,7 +345,7 @@ def main():
             try:
                 time.sleep(0.6)
                 pos_map = all_results.get(rno)
-                horses, race_info = fetch_race_data(date_str, code, rno, pos_map)
+                horses, race_info = fetch_race_data(date_str, code, rno, pos_map, venue=name)
                 if horses:
                     race_entry = {'raceNo': rno, 'entries': horses}
                     # レース条件をデータに追加
@@ -325,6 +353,16 @@ def main():
                     if race_info.get('weather'):  race_entry['weather']  = race_info['weather']
                     if race_info.get('distance'): race_entry['distance'] = race_info['distance']
                     if race_info.get('surface'):  race_entry['surface']  = race_info['surface']
+                    # 発走直前オッズ取得のため、最終オッズ更新日時を記録
+                    race_entry['oddsUpdatedAt'] = now.isoformat()
+                    # 前回取得時と比べてオッズが大きく変動した馬をログ
+                    if old_race:
+                        old_odds = {e['hn']: e.get('odds') for e in old_race.get('entries', []) if e.get('odds')}
+                        for h in horses:
+                            old_o = old_odds.get(h['hn'])
+                            new_o = h.get('odds')
+                            if old_o and new_o and abs(new_o - old_o) / old_o >= 0.25:
+                                print(f'    ⚠ {rno}R {h["hn"]}番: オッズ大幅変動 {old_o}→{new_o}')
                     races.append(race_entry)
                     finished = [h for h in horses if h.get('pos') is not None]
                     cond_str = ' / '.join(filter(None, [
