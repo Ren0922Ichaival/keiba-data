@@ -513,6 +513,7 @@
           <select class="form-select form-select-sm" id="filter-venue" style="width:120px" onchange="renderList()">
             <option value="">全競馬場</option>
           </select>
+          <button class="btn btn-sm btn-outline-info" onclick="repairConditions(this)" title="馬場・天候・距離が空のレースに、保存済みJSONから補完します"><i class="bi bi-magic me-1"></i>条件補完</button>
           <button class="btn btn-sm btn-outline-secondary" onclick="exportCSV()"><i class="bi bi-download me-1"></i>CSV出力</button>
           <button class="btn btn-sm btn-outline-danger" onclick="clearAll()"><i class="bi bi-trash me-1"></i>全削除</button>
         </div>
@@ -1085,16 +1086,22 @@ async function autoFetch(mode, ev) {
 
     const oddsCount = data.horses.filter(h => h.odds).length;
 
-    // 予測タブの場合: レース条件（馬場状態・天候・距離）を自動反映
-    if (!isEntry && data.raceInfo) {
+    // レース条件（馬場状態・天候・距離）を自動反映
+    if (data.raceInfo) {
       const ri = data.raceInfo;
-      if (ri.track)    document.getElementById('pred-track').value    = ri.track;
-      if (ri.weather)  document.getElementById('pred-weather').value  = ri.weather;
-      if (ri.distance) document.getElementById('pred-distance').value = ri.distance;
+      if (isEntry) {
+        // 入力タブ: グローバル変数に保存 → saveRace() で使用
+        entryRaceInfo = ri;
+      } else {
+        // 予測タブ: 入力フォームに反映
+        if (ri.track)    document.getElementById('pred-track').value    = ri.track;
+        if (ri.weather)  document.getElementById('pred-weather').value  = ri.weather;
+        if (ri.distance) document.getElementById('pred-distance').value = ri.distance;
+      }
     }
 
     const condParts = [];
-    if (!isEntry && data.raceInfo) {
+    if (data.raceInfo) {
       if (data.raceInfo.track)    condParts.push(data.raceInfo.track);
       if (data.raceInfo.weather)  condParts.push(data.raceInfo.weather);
       if (data.raceInfo.distance) condParts.push(data.raceInfo.distance + 'm');
@@ -1263,6 +1270,7 @@ function switchTab(tab) {
 // =============================================
 let rowIndex = 0;
 let listSort = { col: 'date', dir: -1 };  // 一覧ソート状態
+let entryRaceInfo = {};  // autoFetch で取得したレース条件（entry用）
 
 function addRow() {
   rowIndex++;
@@ -1305,7 +1313,13 @@ function saveRace() {
   if (entries.length < 1) { toast('少なくとも1頭の情報を入力してください','danger'); return; }
 
   const d = getData();
-  d.races.push({ id: Date.now().toString(), venue, date, raceNo, entries });
+  d.races.push({
+    id: Date.now().toString(), venue, date, raceNo, entries,
+    ...(entryRaceInfo.track    ? { track:    entryRaceInfo.track }    : {}),
+    ...(entryRaceInfo.weather  ? { weather:  entryRaceInfo.weather }  : {}),
+    ...(entryRaceInfo.distance ? { distance: entryRaceInfo.distance } : {}),
+    ...(entryRaceInfo.surface  ? { surface:  entryRaceInfo.surface }  : {}),
+  });
   setData(d);
 
   toast(`${venue} ${raceNo}R を保存しました`);
@@ -1495,6 +1509,49 @@ function renderList() {
 function deleteRace(id) {
   const d = getData(); d.races = d.races.filter(r=>r.id!==id); setData(d);
   renderList(); refreshSummary(); updateNavCount(); toast('削除しました','warning');
+}
+
+// 既存データの馬場・天候・距離・コースをローカルJSONから補完する
+async function repairConditions(btn) {
+  const d = getData();
+  const missing = d.races.filter(r => !r.track && !r.distance);
+  if (!missing.length) { toast('補完が必要なレースはありません', 'info'); return; }
+
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm" style="width:.8rem;height:.8rem"></span> 補完中...'; }
+
+  // 必要な日付を一括取得
+  const dates = [...new Set(missing.map(r => r.date))];
+  const cache = {};
+  for (const date of dates) {
+    try {
+      const res = await fetch(`data/${date}.json`);
+      if (res.ok) cache[date] = await res.json();
+    } catch {}
+  }
+
+  let fixed = 0;
+  d.races.forEach(race => {
+    if (race.track && race.distance) return;  // 既存データはスキップ
+    const jd = cache[race.date];
+    if (!jd) return;
+    for (const venue of jd.venues || []) {
+      if (venue.name !== race.venue) continue;
+      for (const jr of venue.races || []) {
+        if (jr.raceNo !== race.raceNo) continue;
+        if (jr.track    && !race.track)    { race.track    = jr.track;    fixed++; }
+        if (jr.weather  && !race.weather)  { race.weather  = jr.weather; }
+        if (jr.distance && !race.distance) { race.distance = jr.distance; }
+        if (jr.surface  && !race.surface)  { race.surface  = jr.surface; }
+        break;
+      }
+      break;
+    }
+  });
+
+  setData(d);
+  renderList();
+  if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-magic me-1"></i>条件補完'; }
+  toast(fixed ? `${fixed}レースに条件データを補完しました` : '対応するJSONデータが見つかりませんでした', fixed ? 'success' : 'warning');
 }
 function clearAll() {
   if (!confirm('全データを削除しますか？')) return;
