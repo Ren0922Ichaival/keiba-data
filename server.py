@@ -20,12 +20,14 @@ def add_cors(response):
 
 BASE = 'https://www.keiba.go.jp/KeibaWeb/TodayRaceInfo'
 
-# keiba.go.jp の k_babaCode（実データから確認済み）
+# keiba.go.jp の k_babaCode（TodayRaceInfoTopリンクから実測確認済み）
 VENUE_CODES = {
     '帯広': 3,
     '水沢': 11,
     '浦和': 18,
+    '大井': 20,   # 旧設定44は誤り→20が正しい
     '金沢': 22,
+    '笠松': 23,   # 旧設定47は誤り→23が正しい
     '名古屋': 24,
     '園田': 27,
     '門別': 30,
@@ -33,9 +35,7 @@ VENUE_CODES = {
     '佐賀': 32,
     '盛岡': 35,
     '船橋': 43,
-    '大井': 44,
     '川崎': 45,
-    '笠松': 47,
     '姫路': 51,
 }
 CODE_TO_VENUE = {v: k for k, v in VENUE_CODES.items()}
