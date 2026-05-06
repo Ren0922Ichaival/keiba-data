@@ -1,0 +1,58 @@
+name: Backfill Past Race Data
+
+on:
+  workflow_dispatch:
+    inputs:
+      from_date:
+        description: '取得開始日 (YYYY-MM-DD)'
+        required: true
+        default: '2026-05-05'
+      to_date:
+        description: '取得終了日 (YYYY-MM-DD)'
+        required: true
+        default: '2026-05-06'
+      force:
+        description: '強制上書き (true/false)'
+        required: false
+        default: 'false'
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Backfill race data
+        run: |
+          FORCE_FLAG=""
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then
+            FORCE_FLAG="--force"
+          fi
+          python scripts/fetch_history.py \
+            --from "${{ github.event.inputs.from_date }}" \
+            --to   "${{ github.event.inputs.to_date }}" \
+            $FORCE_FLAG
+
+      - name: Commit and push data
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No new data to commit"
+          else
+            git commit -m "Backfill: ${{ github.event.inputs.from_date }} to ${{ github.event.inputs.to_date }}"
+            git push
+          fi
