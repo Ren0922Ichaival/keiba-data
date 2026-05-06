@@ -2003,10 +2003,6 @@ async function repairConditions(btn) {
 // 既存の登録レースに配当データを一括取得して保存
 // Phase1: ローカルJSON(data/YYYY-MM-DD.json) → Phase2: ライブAPI(keiba.go.jp)
 async function bulkFetchPayouts(btn) {
-  if (!apiOnline) {
-    toast('サーバーが起動していません。start.bat を実行してください', 'danger');
-    return;
-  }
   const d = getData();
   const targets = d.races.filter(r => !r.payouts);
   if (!targets.length) {
@@ -2154,10 +2150,6 @@ async function bulkFetchPayouts(btn) {
 // 既存レースの出走馬データを補完（父・母父・調教師等）
 // Phase1: ローカルJSON → Phase2: /api/entries (keiba.go.jp)
 async function refreshEntries(btn) {
-  if (!apiOnline) {
-    toast('サーバーが起動していません。start.bat を実行してください', 'danger');
-    return;
-  }
   const d = getData();
   const PED_KEYS = ['sire', 'broodmareSire', 'trainer', 'jockey', 'horseName', 'weight', 'weightDiff'];
   const needsSire = r => {
@@ -4329,21 +4321,45 @@ async function importFromLocal() {
   };
   logEl.innerHTML = '';
   logEl.style.display = 'block';
-  addLog('ローカルサーバーに接続中...');
 
   let dates;
+  let useStatic = false;
+
+  addLog('データ取得先を確認中...');
   try {
     const res = await fetch(`${API}/api/available_dates`, { signal: AbortSignal.timeout(4000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
     dates = json.dates || [];
+    addLog(`サーバーから ${dates.length}日分を検出`, 'ok');
   } catch (e) {
-    addLog(`接続失敗: server.py が起動していますか？ (${e.message})`, 'err');
-    return;
+    addLog(`サーバー未起動 (${e.message}) → 静的JSONから読み込みます`);
+    useStatic = true;
+    // Discover available dates by probing data/YYYY-MM-DD.json for the last 180 days
+    const today = new Date();
+    const candidates = [];
+    for (let i = 1; i <= 180; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      candidates.push(d.toISOString().slice(0, 10));
+    }
+    addLog('静的JSONを検索中（最大180日）...');
+    const found = [];
+    for (let i = 0; i < candidates.length; i += 20) {
+      const batch = candidates.slice(i, i + 20);
+      const results = await Promise.all(batch.map(async dt => {
+        try {
+          const r = await fetch(`data/${dt}.json`, { method: 'HEAD', signal: AbortSignal.timeout(3000) });
+          return r.ok ? dt : null;
+        } catch { return null; }
+      }));
+      results.forEach(dt => { if (dt) found.push(dt); });
+    }
+    dates = found.sort();
+    addLog(`静的JSONから ${dates.length}日分を検出`, dates.length > 0 ? 'ok' : 'err');
   }
 
   if (!dates.length) { addLog('インポート可能なデータがありません', 'err'); return; }
-  addLog(`${dates.length}日分のデータを検出`, 'ok');
 
   const store = getData();
   const existingKeys = new Set(store.races.map(r => `${r.date}_${r.venue}_${r.raceNo}`));
@@ -4352,7 +4368,13 @@ async function importFromLocal() {
   for (const dateStr of dates) {
     if (quotaHit) break;
     try {
-      const res = await fetch(`${API}/api/localdata/${dateStr}`, { signal: AbortSignal.timeout(6000) });
+      let res;
+      if (useStatic) {
+        res = await fetch(`data/${dateStr}.json`, { signal: AbortSignal.timeout(6000) });
+      } else {
+        res = await fetch(`${API}/api/localdata/${dateStr}`, { signal: AbortSignal.timeout(6000) });
+        if (!res.ok) res = await fetch(`data/${dateStr}.json`, { signal: AbortSignal.timeout(6000) });
+      }
       if (!res.ok) continue;
       const data = await res.json();
       let dayAdded = 0;
