@@ -3,12 +3,13 @@
 keiba.go.jp の DebaTable ページを再スクレイピングして情報を補完する。
 """
 import json
-import re
 import time
 from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
+
+from fetch_races import _parse_text_for_conditions
 
 BASE = 'https://www.keiba.go.jp/KeibaWeb/TodayRaceInfo'
 
@@ -25,37 +26,13 @@ HEADERS = {
 
 def get_soup(url, params=None):
     res = requests.get(url, params=params, headers=HEADERS, timeout=15)
+    res.raise_for_status()
     return BeautifulSoup(res.content, 'lxml', from_encoding='utf-8')
 
 
-def parse_race_info(soup) -> dict:
+def parse_race_info(soup, venue: str = '') -> dict:
     """出馬表 HTML からレース条件を抽出する"""
-    info = {'track': None, 'weather': None, 'distance': None, 'surface': None}
-    text = soup.get_text(' ', strip=True)
-
-    # 馬場状態: 不良 > 稍重 > 重 > 良 の順で検索
-    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良)', text)
-    if m:
-        info['track'] = m.group(1)
-
-    # 天候
-    m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', text)
-    if m:
-        info['weather'] = '曇' if '曇' in m.group(1) else m.group(1)
-
-    # 距離・コース種別
-    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*[mｍ]', text, re.IGNORECASE)
-    if m:
-        surf = m.group(1)
-        info['distance'] = int(m.group(2))
-        info['surface'] = (
-            '芝'   if '芝' in surf else
-            '障害'  if '障' in surf else
-            '直線'  if '直' in surf else
-            'ダート'
-        )
-
-    return info
+    return _parse_text_for_conditions(soup.get_text(' ', strip=True), venue)
 
 
 def backfill_file(json_path: Path):
@@ -81,7 +58,7 @@ def backfill_file(json_path: Path):
                     f'{BASE}/DebaTable',
                     params={'k_raceDate': date_str, 'k_babaCode': code, 'k_raceNo': rno}
                 )
-                info = parse_race_info(soup)
+                info = parse_race_info(soup, venue=vname)
 
                 added = []
                 for key in ('track', 'weather', 'distance', 'surface'):

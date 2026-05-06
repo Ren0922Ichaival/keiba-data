@@ -5,6 +5,7 @@ GitHub Actions で定期実行し、data/YYYY-MM-DD.json に保存する
 import json
 import re
 import time
+import unicodedata as _ud
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -19,7 +20,10 @@ VENUE_CODES = {
     '笠松': 23, '名古屋': 24, '園田': 27, '門別': 30, '高知': 31,
     '佐賀': 32, '盛岡': 35, '船橋': 43, '川崎': 45, '姫路': 51,
 }
+# ページによって異なるコードが使われる場合の代替マッピング
+ALT_CODES = {19: '船橋', 36: '門別'}
 CODE_TO_VENUE = {v: k for k, v in VENUE_CODES.items()}
+CODE_TO_VENUE.update(ALT_CODES)
 
 HEADERS = {
     'User-Agent': (
@@ -34,6 +38,7 @@ HEADERS = {
 
 def get_soup(url, params=None):
     res = requests.get(url, params=params, headers=HEADERS, timeout=15)
+    res.raise_for_status()
     return BeautifulSoup(res.content, 'lxml', from_encoding='utf-8')
 
 
@@ -109,73 +114,196 @@ def get_race_list(date_str, code):
     return sorted(races)
 
 
+def _direct_tds(tr):
+    """tr の直接の子の td のみ（ネスト table の td を除外）"""
+    if tr is None:
+        return []
+    return [c for c in tr.children if getattr(c, 'name', None) == 'td']
+
+
+def _extract_trainer(text):
+    if not text:
+        return None
+    name = re.split(r'[（(]', text, maxsplit=1)[0].strip()
+    return name or None
+
+
 def parse_entries(soup):
-    """出走馬データ（馬番・人気・単勝オッズ・馬体重・騎手・馬名）を抽出
-    各馬について2行のtrがある:
-      1行目（horseNumセル有り）: odds_weightセルに "4.7 (3人気)" 形式
-      2行目（horseNumセル無し）: odds_weightセルに "506 (+12)" 形式（体重と増減）
+    """出走馬データを抽出。1頭=5行構造:
+      行0(horseNum有): 枠/馬番/馬名/騎手/オッズ
+      行1: 性齢/毛色/生年
+      行2: [0]父 [1]調教師(所属) [2]馬体重(増減)
+      行3: [0]母 [1]生産者
+      行4: [0](母父)
+    親 table 内の sibling を辿り、ネスト result table を混入させない。
     """
     horses = []
     seen = set()
-    all_rows = soup.find_all('tr')
-    i = 0
-    while i < len(all_rows):
-        row = all_rows[i]
-        hn_cell = row.find('td', class_='horseNum')
-        if not hn_cell:
-            i += 1
-            continue
+    for hn_cell in soup.find_all('td', class_='horseNum'):
         try:
             hn = int(hn_cell.get_text(strip=True))
             if not (1 <= hn <= 16) or hn in seen:
-                i += 1
                 continue
         except (ValueError, TypeError):
-            i += 1
             continue
-        odds_val, pop_val = None, None
-        odds_cell = row.find('td', class_='odds_weight')
+
+        row0 = hn_cell.find_parent('tr')
+        if row0 is None:
+            continue
+
+        odds_val = pop_val = None
+        odds_cell = row0.find('td', class_='odds_weight')
         if odds_cell:
             t = odds_cell.get_text(' ', strip=True)
             m = re.search(r'([\d]+\.[\d]+)\s*[（(](\d+)人気[）)]', t)
             if m:
                 odds_val = float(m.group(1))
-                pop_val = int(m.group(2))
-        # 騎手名（class='jocky' または 'jockey'）
+                pop_val  = int(m.group(2))
+
         jockey = None
-        jk_cell = row.find('td', class_='jocky') or row.find('td', class_='jockey')
+        jk_cell = row0.find('td', class_='jocky') or row0.find('td', class_='jockey')
         if jk_cell:
-            jockey = jk_cell.get_text(strip=True) or None
-        # 馬名（class='horseName'）
+            jockey = re.split(r'[（(]', jk_cell.get_text(strip=True), maxsplit=1)[0].strip() or None
+        else:
+            tds = _direct_tds(row0)
+            if len(tds) >= 4:
+                jockey = re.split(r'[（(]', tds[3].get_text(' ', strip=True),
+                                  maxsplit=1)[0].strip() or None
+
         horse_name = None
-        name_cell = row.find('td', class_='horseName')
+        name_cell = row0.find('td', class_='horseName')
         if name_cell:
             horse_name = name_cell.get_text(strip=True) or None
-        # 次の行から体重を取得
-        weight = None
-        weight_diff = None
-        if i + 1 < len(all_rows):
-            next_row = all_rows[i + 1]
-            if not next_row.find('td', class_='horseNum'):
-                wc = next_row.find('td', class_='odds_weight')
-                if wc:
-                    wt = wc.get_text(' ', strip=True)
-                    wm = re.search(r'(\d{3,4})\s*(?:\(([+-]\d+)\))?', wt)
-                    if wm:
-                        weight = int(wm.group(1))
-                        if wm.group(2):
-                            weight_diff = int(wm.group(2))
+
+        # 行1〜4 を sibling で辿る
+        sub_rows = []
+        cur = row0.find_next_sibling('tr')
+        while cur is not None and len(sub_rows) < 4:
+            if cur.find('td', class_='horseNum'):
+                break
+            sub_rows.append(cur)
+            cur = cur.find_next_sibling('tr')
+
+        weight = weight_diff = None
+        sire = trainer = broodmare_sire = None
+
+        if len(sub_rows) >= 2:
+            r2 = sub_rows[1]
+            wc = r2.find('td', class_='odds_weight')
+            if wc:
+                wt = wc.get_text(' ', strip=True)
+                wm = re.search(r'(\d{3,4})\s*(?:\(([+-]\d+)\))?', wt)
+                if wm:
+                    weight = int(wm.group(1))
+                    if wm.group(2):
+                        weight_diff = int(wm.group(2))
+            tds = _direct_tds(r2)
+            if len(tds) >= 1:
+                txt = tds[0].get_text(strip=True)
+                if txt and len(txt) >= 2 and not txt.startswith(('（', '(')):
+                    sire = txt
+            if len(tds) >= 2:
+                trainer = _extract_trainer(tds[1].get_text(strip=True))
+
+        if len(sub_rows) >= 4:
+            r4 = sub_rows[3]
+            tds = _direct_tds(r4)
+            if len(tds) >= 1:
+                txt = tds[0].get_text(strip=True)
+                m = re.match(r'^[（(]\s*(.+?)\s*[）)]$', txt)
+                if m:
+                    broodmare_sire = m.group(1)
+
         seen.add(hn)
         entry = {
             'hn': hn, 'pop': pop_val, 'odds': odds_val,
             'weight': weight, 'weightDiff': weight_diff, 'pos': None,
         }
-        if jockey:     entry['jockey']    = jockey
-        if horse_name: entry['horseName'] = horse_name
+        if jockey:         entry['jockey']        = jockey
+        if horse_name:     entry['horseName']     = horse_name
+        if sire:           entry['sire']          = sire
+        if broodmare_sire: entry['broodmareSire'] = broodmare_sire
+        if trainer:        entry['trainer']       = trainer
         horses.append(entry)
-        i += 1
     horses.sort(key=lambda h: h['hn'])
     return horses
+
+
+_BET_TYPES = frozenset({'単勝', '複勝', '馬連', '枠連', '馬単', 'ワイド', '三連複', '三連単'})
+
+
+def _parse_payout_table(table_elem) -> dict:
+    """払戻金テーブル1枚を解析して {式別: [{horses, payout}]} を返す（テスト可能）"""
+    race_payouts: dict = {}
+    current_bet_type = None
+    for row in table_elem.find_all('tr'):
+        cells = row.find_all(['td', 'th'])
+        if not cells:
+            continue
+        type_text = cells[0].get_text(strip=True)
+        if type_text in _BET_TYPES:
+            current_bet_type = type_text
+        if current_bet_type and len(cells) >= 2:
+            try:
+                horse_txt  = cells[-2].get_text(strip=True) if len(cells) >= 3 else ''
+                payout_txt = cells[-1].get_text(strip=True)
+                payout_val = int(re.sub(r'[^\d]', '', payout_txt))
+                if payout_val > 0:
+                    if current_bet_type not in race_payouts:
+                        race_payouts[current_bet_type] = []
+                    race_payouts[current_bet_type].append({
+                        'horses': horse_txt,
+                        'payout': payout_val,
+                    })
+            except (ValueError, IndexError):
+                pass
+    return race_payouts
+
+
+def parse_refund_soup(soup) -> tuple:
+    """
+    RefundMoneyList の BeautifulSoup から着順と払戻を解析（テスト可能なモジュール関数）。
+    戻り値: (results, payouts)
+      results : {raceNo(int): {hn(int): pos(int)}}
+      payouts : {raceNo(int): {式別: [{horses, payout}]}}
+    HTML構造に依存しない方式（テーブル位置ではなく内容で判定）。
+    """
+    results: dict = {}
+    payouts: dict = {}
+    current_race = None
+
+    for elem in soup.find_all(['p', 'table']):
+        if elem.name == 'p':
+            m = re.match(r'^(\d+)R$', elem.get_text(strip=True))
+            if m:
+                current_race = int(m.group(1))
+        elif elem.name == 'table' and current_race is not None:
+            table_text = elem.get_text()
+            is_payout = any(bt in table_text for bt in _BET_TYPES)
+
+            if is_payout and current_race not in payouts:
+                race_payouts = _parse_payout_table(elem)
+                if race_payouts:
+                    payouts[current_race] = race_payouts
+                    current_race = None
+
+            elif not is_payout and current_race not in results:
+                pos_map: dict = {}
+                for row in elem.find_all('tr'):
+                    cells = row.find_all(['td', 'th'])
+                    if len(cells) < 3:
+                        continue
+                    try:
+                        pos = int(cells[0].get_text(strip=True))
+                        hn  = int(cells[2].get_text(strip=True))
+                        if 1 <= pos <= 20 and 1 <= hn <= 16:
+                            pos_map[hn] = pos
+                    except (ValueError, TypeError):
+                        continue
+                if pos_map:
+                    results[current_race] = pos_map
+
+    return results, payouts
 
 
 def fetch_all_results(date_str, code):
@@ -190,110 +318,86 @@ def fetch_all_results(date_str, code):
             f'{BASE}/RefundMoneyList',
             params={'k_raceDate': date_str, 'k_babaCode': code}
         )
-    except Exception:
+    except Exception as e:
+        print(f'  fetch_all_results 失敗 ({date_str} code={code}): {e}')
         return {}, {}
 
-    results = {}   # {raceNo: {hn: pos}}
-    payouts = {}   # {raceNo: {式別: [{horses,payout}]}}
-    current_race = None
-    table_idx = 0  # 各レース内のテーブル順（1=着順, 2=払戻）
-
-    for elem in soup.find_all(['p', 'table']):
-        if elem.name == 'p':
-            txt = elem.get_text(strip=True)
-            m = re.match(r'^(\d+)R$', txt)
-            if m:
-                current_race = int(m.group(1))
-                table_idx = 0
-        elif elem.name == 'table' and current_race is not None:
-            table_idx += 1
-            if table_idx == 1 and current_race not in results:
-                # 着順テーブル: cells[0]=着順, cells[1]=枠, cells[2]=馬番
-                pos_map = {}
-                for row in elem.find_all('tr'):
-                    cells = row.find_all(['td', 'th'])
-                    if len(cells) < 3:
-                        continue
-                    try:
-                        pos = int(cells[0].get_text(strip=True))
-                        hn  = int(cells[2].get_text(strip=True))
-                        if 1 <= pos <= 20 and 1 <= hn <= 16:
-                            pos_map[hn] = pos
-                    except (ValueError, TypeError):
-                        continue
-                if pos_map:
-                    results[current_race] = pos_map
-            elif table_idx == 2 and current_race not in payouts:
-                # 払戻テーブル: 単勝/複勝/馬連 etc. と払戻金
-                BET_TYPES = {'単勝', '複勝', '馬連', '枠連', '馬単',
-                             'ワイド', '三連複', '三連単'}
-                race_payouts = {}
-                current_bet_type = None
-                for row in elem.find_all('tr'):
-                    cells = row.find_all(['td', 'th'])
-                    if not cells:
-                        continue
-                    type_text = cells[0].get_text(strip=True)
-                    if type_text in BET_TYPES:
-                        current_bet_type = type_text
-                    if current_bet_type and len(cells) >= 2:
-                        try:
-                            horse_txt  = cells[-2].get_text(strip=True) if len(cells) >= 3 else ''
-                            payout_txt = cells[-1].get_text(strip=True)
-                            payout_val = int(re.sub(r'[^\d]', '', payout_txt))
-                            if payout_val > 0:
-                                if current_bet_type not in race_payouts:
-                                    race_payouts[current_bet_type] = []
-                                race_payouts[current_bet_type].append({
-                                    'horses': horse_txt,
-                                    'payout': payout_val,
-                                })
-                        except (ValueError, IndexError):
-                            pass
-                if race_payouts:
-                    payouts[current_race] = race_payouts
-
-    return results, payouts
+    return parse_refund_soup(soup)
 
 
-def parse_race_info(soup, venue: str = ''):
-    """出馬表HTMLからレース条件（馬場状態・天候・距離・コース）を抽出
-    venue='帯広'（ばんえい競馬）の場合は専用解析を行う。
-    """
-    info = {'track': None, 'weather': None, 'distance': None, 'surface': None}
-    text = soup.get_text(' ', strip=True)
+def _parse_text_for_conditions(text: str, venue: str = '') -> dict:
+    # NFKC で半角カナ・全角英数・全角空白・濁点を一括正規化
+    t = _ud.normalize('NFKC', text)
+    info: dict = {'track': None, 'weather': None, 'distance': None, 'surface': None}
 
-    # 馬場状態（ばんえいは「軽」「やや重」「重」「不良」も使う場合あり）
-    m = re.search(r'馬場[：:\s]*\S*?(不良|稍重|重|良|軽)', text)
+    m = re.search(r'馬場(?:状態)?[：:\s]{0,3}\S{0,4}?(不良|稍重|重|良|軽)', t)
     if m:
-        raw = m.group(1)
-        # 「軽」はばんえい独自表記 → 「良」相当
-        info['track'] = '良' if raw == '軽' else raw
+        info['track'] = '良' if m.group(1) == '軽' else m.group(1)
 
-    # 天候
-    m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', text)
+    m = re.search(r'天候[：:\s]*(晴|曇り?|雨|小雨|雪)', t)
     if m:
         info['weather'] = '曇' if '曇' in m.group(1) else m.group(1)
 
-    # 距離・コース種別（全角ｍにも対応）
-    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直線?)\s*(\d{3,4})\s*[mｍ]', text, re.IGNORECASE)
+    # パターン1: コース種別 + 距離
+    m = re.search(r'(芝|ダ(?:ート)?|障(?:害)?|直(?:線)?)\s*(\d{3,4})\s*m', t, re.IGNORECASE)
     if m:
-        surf = m.group(1)
         info['distance'] = int(m.group(2))
-        info['surface']  = ('芝' if '芝' in surf else '障害' if '障' in surf
-                            else '直線' if '直' in surf else 'ダート')
+        info['surface'] = ('芝' if '芝' in m.group(1) else '障害' if '障' in m.group(1)
+                           else '直線' if '直' in m.group(1) else 'ダート')
+    # パターン2: 距離 + コース種別
+    if info['distance'] is None:
+        m = re.search(r'(\d{3,4})\s*m\s*(芝|ダート?|障害?|直線?)', t)
+        if m:
+            info['distance'] = int(m.group(1))
+            info['surface'] = ('芝' if '芝' in m.group(2) else '障害' if '障' in m.group(2)
+                               else '直線' if '直' in m.group(2) else 'ダート')
+    # パターン3: 距離のみ
+    if info['distance'] is None:
+        m = re.search(r'距離[：:\s]*(\d{3,4})', t) or re.search(r'(?<!\d)(\d{3,4})\s*m(?!\d)', t)
+        if m:
+            info['distance'] = int(m.group(1))
 
-    # ばんえい競馬（帯広）専用: 距離未取得の場合はデフォルト200m直線
-    if venue == '帯広' and info['distance'] is None:
-        # ばんえいは常に200m直線コース
-        m2 = re.search(r'(\d{3,4})\s*[mｍ]', text)
-        if m2:
-            info['distance'] = int(m2.group(1))
-        else:
-            info['distance'] = 200
+    # surface フォールバック: 距離は取れたが種別未取得 → テキスト全体から探す
+    if info['distance'] is not None and info['surface'] is None:
+        if 'ダート' in t:
+            info['surface'] = 'ダート'
+        elif re.search(r'(?<![一二三四五六七八九十])芝', t):
+            info['surface'] = '芝'
+        elif '障害' in t:
+            info['surface'] = '障害'
+        elif '直線' in t:
+            info['surface'] = '直線'
+
+    # ばんえい（帯広）専用
+    if venue == '帯広':
+        if info['distance'] is None:
+            m2 = re.search(r'(\d{3,4})\s*m', t)
+            info['distance'] = int(m2.group(1)) if m2 else 200
         info['surface'] = '直線'
+        # 馬場が標準カテゴリで取れない場合、馬場水分(%) から推定
+        # 例: "馬場：1.6" → 稍重
+        if info['track'] is None:
+            mm = re.search(r'馬場[：:\s]*(\d+(?:\.\d+)?)(?!\d)', t)
+            if mm:
+                try:
+                    moisture = float(mm.group(1))
+                    if moisture <= 1.5:
+                        info['track'] = '良'
+                    elif moisture <= 2.5:
+                        info['track'] = '稍重'
+                    elif moisture <= 3.5:
+                        info['track'] = '重'
+                    else:
+                        info['track'] = '不良'
+                except ValueError:
+                    pass
 
     return info
+
+
+def parse_race_info(soup, venue: str = ''):
+    """出馬表HTMLからレース条件（馬場状態・天候・距離・コース）を抽出"""
+    return _parse_text_for_conditions(soup.get_text(' ', strip=True), venue)
 
 
 def fetch_race_data(date_str, code, race_no, pos_map=None, venue: str = ''):
@@ -331,8 +435,8 @@ def main():
         try:
             old = json.loads(out_path.read_text(encoding='utf-8'))
             existing_venues = {v['name']: v for v in old.get('venues', [])}
-        except Exception:
-            pass
+        except Exception as e:
+            print(f'  既存JSONの読み込み失敗（無視して続行）: {out_path.name}: {e}')
 
     # スケジュール取得
     venues = get_schedule(date_str)
@@ -366,15 +470,32 @@ def main():
             old_race = old_races.get(rno)
 
             # 既に全馬の着順が揃っているレースはスキップ
+            # ただし条件・血統・払戻が欠落している場合は再スクレイプする
             if old_race:
                 already_done = all(
                     e.get('pos') is not None
                     for e in old_race.get('entries', [])
                 )
-                if already_done:
+                has_conditions = bool(
+                    old_race.get('track') or old_race.get('distance')
+                )
+                has_sire = all(
+                    e.get('sire') for e in old_race.get('entries', [])
+                )
+                if already_done and has_conditions and has_sire:
+                    # スキップするが、払戻金だけは取得済みなら補完する
+                    if rno in all_payouts and not old_race.get('payouts'):
+                        old_race = dict(old_race)
+                        old_race['payouts'] = all_payouts[rno]
+                        print(f'  {rno}R: スキップ（払戻のみ補完）')
+                    else:
+                        print(f'  {rno}R: スキップ（取得済み）')
                     races.append(old_race)
-                    print(f'  {rno}R: スキップ（取得済み）')
                     continue
+                elif already_done and not has_conditions:
+                    print(f'  {rno}R: 条件データ欠落 → 再スクレイプ')
+                elif already_done and not has_sire:
+                    print(f'  {rno}R: 血統データ欠落 → 再スクレイプ')
 
             try:
                 time.sleep(0.6)
@@ -443,7 +564,7 @@ def main():
         'venues_ok': len(result_venues),
         'total_races': total,
         'total_entries': sum(
-            len(r['entries']) for v in result_venues for r in v['races']
+            len(r.get('entries', [])) for v in result_venues for r in v['races']
         ),
         'warnings': warnings,
     }

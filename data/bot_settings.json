@@ -1,9 +1,9 @@
 {
   "initialBalance": 100000,
   "betAmount": 1000,
-  "strategy": "ai_win",
-  "minOdds": 1.5,
-  "maxOdds": 20.0,
+  "strategy": "safe_place",
+  "minOdds": 1.0,
+  "maxOdds": 8.0,
   "venueFilter": "",
   "useKelly": false,
   "kellyFraction": 0.25
