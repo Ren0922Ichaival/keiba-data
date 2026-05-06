@@ -58,5 +58,6 @@ jobs:
           else
             TZ='Asia/Tokyo' DATE=$(date +'%Y-%m-%d %H:%M JST')
             git commit -m "Bot: ${DATE}"
+            git pull --rebase origin main
             git push
           fi

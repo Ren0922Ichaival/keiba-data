@@ -47,5 +47,6 @@ jobs:
           else
             TZ='Asia/Tokyo' DATE=$(date +'%Y-%m-%d %H:%M JST')
             git commit -m "Auto-fetch: ${DATE}"
+            git pull --rebase origin main
             git push
           fi
