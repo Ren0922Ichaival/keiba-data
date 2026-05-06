@@ -77,20 +77,13 @@ def get_schedule_for_date(date_str: str) -> list:
 
 
 def _is_full_race(race: dict) -> bool:
-    """レースがフルデータ（オッズあり・血統あり・払戻あり）かどうか判定"""
+    """レースがフルデータ（オッズあり）かどうか判定
+    注: 血統・払戻の有無はここでは問わない（backfill対象を絞りすぎないよう）
+    --patch-sire オプション使用時のみ血統チェックを別途行う
+    """
     if race.get('_result_only'):
         return False
-    entries = race.get('entries', [])
-    if not any(e.get('odds') is not None for e in entries):
-        return False
-    # 全馬の着順が揃っているのに払戻か血統が欠落 → 再取得
-    all_finished = entries and all(e.get('pos') is not None for e in entries)
-    if all_finished:
-        if not race.get('payouts'):
-            return False
-        if not all(e.get('sire') for e in entries):
-            return False
-    return True
+    return any(e.get('odds') is not None for e in race.get('entries', []))
 
 
 def fetch_day(target_date: date, force: bool = False) -> dict:
