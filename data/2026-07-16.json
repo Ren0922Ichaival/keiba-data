@@ -1,6 +1,6 @@
 {
   "date": "2026-07-16",
-  "updated": "2026-07-16T14:41:54.938107+09:00",
+  "updated": "2026-07-16T16:53:23.373642+09:00",
   "venues": [
     {
       "name": "門別",
@@ -11,8 +11,8 @@
           "entries": [
             {
               "hn": 1,
-              "pop": 8,
-              "odds": 40.7,
+              "pop": 7,
+              "odds": 47.5,
               "weight": 440,
               "weightDiff": 2,
               "pos": null,
@@ -24,7 +24,7 @@
             {
               "hn": 2,
               "pop": 9,
-              "odds": 73.5,
+              "odds": 157.0,
               "weight": 382,
               "weightDiff": 2,
               "pos": null,
@@ -36,7 +36,7 @@
             {
               "hn": 3,
               "pop": 3,
-              "odds": 5.4,
+              "odds": 5.6,
               "weight": 474,
               "weightDiff": null,
               "pos": null,
@@ -48,7 +48,7 @@
             {
               "hn": 4,
               "pop": 10,
-              "odds": 80.3,
+              "odds": 168.1,
               "weight": 448,
               "weightDiff": -2,
               "pos": null,
@@ -60,10 +60,10 @@
             {
               "hn": 5,
               "pop": 4,
-              "odds": 6.1,
+              "odds": 5.7,
               "weight": 416,
               "weightDiff": 4,
-              "pos": null,
+              "pos": 3,
               "jockey": "黒澤愛",
               "sire": "ミスチヴィアスアレックス",
               "broodmareSire": "ダイワメジャー",
@@ -72,11 +72,11 @@
             {
               "hn": 6,
               "pop": 6,
-              "odds": 9.9,
+              "odds": 10.0,
               "weight": 448,
               "weightDiff": null,
               "pos": null,
-              "jockey": "9.9",
+              "jockey": "10.0",
               "sire": "ルーラーシップ",
               "broodmareSire": "シンボリクリスエス",
               "trainer": "川島雅"
@@ -87,7 +87,7 @@
               "odds": 4.4,
               "weight": 472,
               "weightDiff": -2,
-              "pos": null,
+              "pos": 2,
               "jockey": "井上瑛",
               "sire": "ベルシャザール",
               "broodmareSire": "クロフネ",
@@ -96,11 +96,11 @@
             {
               "hn": 8,
               "pop": 1,
-              "odds": 2.9,
+              "odds": 2.7,
               "weight": 460,
               "weightDiff": 2,
-              "pos": null,
-              "jockey": "2.9",
+              "pos": 1,
+              "jockey": "2.7",
               "sire": "ベストウォーリア",
               "broodmareSire": "サウスヴィグラス",
               "trainer": "田中淳"
@@ -108,7 +108,7 @@
             {
               "hn": 9,
               "pop": 11,
-              "odds": 111.0,
+              "odds": 318.7,
               "weight": 428,
               "weightDiff": 6,
               "pos": null,
@@ -119,12 +119,12 @@
             },
             {
               "hn": 10,
-              "pop": 7,
-              "odds": 40.4,
+              "pop": 8,
+              "odds": 70.7,
               "weight": 450,
               "weightDiff": null,
               "pos": null,
-              "jockey": "40.4",
+              "jockey": "70.7",
               "sire": "リオンリオン",
               "broodmareSire": "トゥザワールド",
               "trainer": "桧森邦"
@@ -132,7 +132,7 @@
             {
               "hn": 11,
               "pop": 12,
-              "odds": 218.1,
+              "odds": 402.9,
               "weight": 442,
               "weightDiff": 2,
               "pos": null,
@@ -144,11 +144,11 @@
             {
               "hn": 12,
               "pop": 5,
-              "odds": 6.4,
+              "odds": 6.6,
               "weight": 450,
               "weightDiff": 2,
               "pos": null,
-              "jockey": "6.4",
+              "jockey": "6.6",
               "sire": "ストロングリターン",
               "broodmareSire": "ダンスインザダーク",
               "trainer": "小国博"
@@ -158,15 +158,45 @@
           "weather": "晴",
           "distance": 1100,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "270円",
+                "payout": 1
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "130円",
+                "payout": 1
+              },
+              {
+                "horses": "150円",
+                "payout": 3
+              },
+              {
+                "horses": "180円",
+                "payout": 4
+              },
+              {
+                "horses": "620円",
+                "payout": 4
+              },
+              {
+                "horses": "590円",
+                "payout": 2
+              }
+            ]
+          }
         },
         {
           "raceNo": 2,
           "entries": [
             {
               "hn": 1,
-              "pop": 7,
-              "odds": 85.1,
+              "pop": 9,
+              "odds": 190.0,
               "weight": 462,
               "weightDiff": -6,
               "pos": null,
@@ -177,8 +207,8 @@
             },
             {
               "hn": 2,
-              "pop": 10,
-              "odds": 121.6,
+              "pop": 11,
+              "odds": 316.7,
               "weight": 454,
               "weightDiff": -2,
               "pos": null,
@@ -189,11 +219,11 @@
             },
             {
               "hn": 3,
-              "pop": 4,
-              "odds": 9.7,
+              "pop": 1,
+              "odds": 1.4,
               "weight": 482,
               "weightDiff": null,
-              "pos": null,
+              "pos": 2,
               "jockey": "石川倭",
               "sire": "インカンテーション",
               "broodmareSire": "ネオユニヴァース",
@@ -201,11 +231,11 @@
             },
             {
               "hn": 4,
-              "pop": 10,
-              "odds": 121.6,
+              "pop": 8,
+              "odds": 159.7,
               "weight": 460,
               "weightDiff": -6,
-              "pos": null,
+              "pos": 3,
               "jockey": "黒澤愛",
               "sire": "リアルスティール",
               "broodmareSire": "ベルシャザール",
@@ -213,11 +243,11 @@
             },
             {
               "hn": 5,
-              "pop": 1,
-              "odds": 1.4,
+              "pop": 2,
+              "odds": 4.8,
               "weight": 474,
               "weightDiff": 6,
-              "pos": null,
+              "pos": 1,
               "jockey": "落合玄",
               "sire": "ダノンレジェンド",
               "broodmareSire": "パイロ",
@@ -225,8 +255,8 @@
             },
             {
               "hn": 6,
-              "pop": 9,
-              "odds": 106.4,
+              "pop": 7,
+              "odds": 96.5,
               "weight": 428,
               "weightDiff": 6,
               "pos": null,
@@ -237,20 +267,20 @@
             },
             {
               "hn": 7,
-              "pop": 2,
-              "odds": 3.8,
+              "pop": 3,
+              "odds": 5.3,
               "weight": 476,
               "weightDiff": -6,
               "pos": null,
-              "jockey": "3.8",
+              "jockey": "5.3",
               "sire": "キセキ",
               "broodmareSire": "サクラバクシンオー",
               "trainer": "角川秀"
             },
             {
               "hn": 8,
-              "pop": 6,
-              "odds": 60.8,
+              "pop": 5,
+              "odds": 35.0,
               "weight": 494,
               "weightDiff": -2,
               "pos": null,
@@ -261,20 +291,20 @@
             },
             {
               "hn": 9,
-              "pop": 5,
-              "odds": 27.4,
+              "pop": 6,
+              "odds": 38.1,
               "weight": 468,
               "weightDiff": 6,
               "pos": null,
-              "jockey": "27.4",
+              "jockey": "38.1",
               "sire": "アルアイン",
               "broodmareSire": "シンボリクリスエス",
               "trainer": "五十冬"
             },
             {
               "hn": 10,
-              "pop": 3,
-              "odds": 9.6,
+              "pop": 4,
+              "odds": 11.2,
               "weight": 462,
               "weightDiff": null,
               "pos": null,
@@ -285,12 +315,12 @@
             },
             {
               "hn": 11,
-              "pop": 8,
-              "odds": 94.5,
+              "pop": 10,
+              "odds": 261.6,
               "weight": 440,
               "weightDiff": 2,
               "pos": null,
-              "jockey": "94.5",
+              "jockey": "261.6",
               "sire": "マカヒキ",
               "broodmareSire": "キングヘイロー",
               "trainer": "佐久雅"
@@ -300,17 +330,47 @@
           "weather": "晴",
           "distance": 1700,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "480円",
+                "payout": 2
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "150円",
+                "payout": 2
+              },
+              {
+                "horses": "110円",
+                "payout": 1
+              },
+              {
+                "horses": "1,550円",
+                "payout": 10
+              },
+              {
+                "horses": "290円",
+                "payout": 1
+              },
+              {
+                "horses": "300円",
+                "payout": 1
+              }
+            ]
+          }
         },
         {
           "raceNo": 3,
           "entries": [
             {
               "hn": 1,
-              "pop": 9,
-              "odds": 60.6,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 24.3,
+              "weight": 432,
+              "weightDiff": -2,
               "pos": null,
               "jockey": "桑村真",
               "sire": "オメガパフューム",
@@ -319,11 +379,11 @@
             },
             {
               "hn": 2,
-              "pop": 7,
-              "odds": 28.3,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 6,
+              "odds": 18.5,
+              "weight": 512,
+              "weightDiff": -4,
+              "pos": 1,
               "jockey": "岩橋勇",
               "sire": "シルバーステート",
               "broodmareSire": "Lonhro",
@@ -332,9 +392,9 @@
             {
               "hn": 3,
               "pop": 5,
-              "odds": 10.3,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 17.3,
+              "weight": 466,
+              "weightDiff": -8,
               "pos": null,
               "jockey": "黒澤愛",
               "sire": "コパノリッキー",
@@ -344,9 +404,9 @@
             {
               "hn": 4,
               "pop": 1,
-              "odds": 1.9,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 1.7,
+              "weight": 490,
+              "weightDiff": 2,
               "pos": null,
               "jockey": "落合玄",
               "sire": "ルヴァンスレーヴ",
@@ -355,11 +415,11 @@
             },
             {
               "hn": 5,
-              "pop": 3,
-              "odds": 7.7,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 4,
+              "odds": 9.4,
+              "weight": 440,
+              "weightDiff": -2,
+              "pos": 2,
               "jockey": "阿部龍",
               "sire": "ダノンスマッシュ",
               "broodmareSire": "ハービンジャー",
@@ -367,10 +427,10 @@
             },
             {
               "hn": 6,
-              "pop": 6,
-              "odds": 15.7,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 2,
+              "odds": 4.8,
+              "weight": 474,
+              "weightDiff": 2,
               "pos": null,
               "jockey": "服部茂",
               "sire": "アルクトス",
@@ -379,9 +439,9 @@
             },
             {
               "hn": 7,
-              "pop": 4,
-              "odds": 8.8,
-              "weight": null,
+              "pop": 8,
+              "odds": 36.5,
+              "weight": 452,
               "weightDiff": null,
               "pos": null,
               "jockey": "井上瑛",
@@ -391,10 +451,10 @@
             },
             {
               "hn": 8,
-              "pop": 8,
-              "odds": 47.2,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 9,
+              "odds": 148.2,
+              "weight": 484,
+              "weightDiff": 2,
               "pos": null,
               "jockey": "宮内勇",
               "sire": "ベストウォーリア",
@@ -403,12 +463,12 @@
             },
             {
               "hn": 9,
-              "pop": 2,
-              "odds": 3.7,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
-              "jockey": "3.7",
+              "pop": 3,
+              "odds": 5.3,
+              "weight": 494,
+              "weightDiff": -8,
+              "pos": 3,
+              "jockey": "5.3",
               "sire": "リーチザクラウン",
               "broodmareSire": "ベルシャザール",
               "trainer": "米川昇"
@@ -418,17 +478,47 @@
           "weather": "晴",
           "distance": 1700,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "1,850円",
+                "payout": 6
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "370円",
+                "payout": 6
+              },
+              {
+                "horses": "180円",
+                "payout": 3
+              },
+              {
+                "horses": "130円",
+                "payout": 2
+              },
+              {
+                "horses": "3,940円",
+                "payout": 11
+              },
+              {
+                "horses": "3,800円",
+                "payout": 16
+              }
+            ]
+          }
         },
         {
           "raceNo": 4,
           "entries": [
             {
               "hn": 1,
-              "pop": 11,
-              "odds": 30.5,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 10,
+              "odds": 415.3,
+              "weight": 460,
+              "weightDiff": 2,
               "pos": null,
               "jockey": "藤田駕",
               "sire": "エイシンフラッシュ",
@@ -437,10 +527,10 @@
             },
             {
               "hn": 2,
-              "pop": 6,
-              "odds": 11.2,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 5,
+              "odds": 58.2,
+              "weight": 456,
+              "weightDiff": 2,
               "pos": null,
               "jockey": "黒澤愛",
               "sire": "オーヴァルエース",
@@ -449,11 +539,11 @@
             },
             {
               "hn": 3,
-              "pop": 4,
-              "odds": 8.5,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 2,
+              "odds": 3.8,
+              "weight": 448,
+              "weightDiff": 24,
+              "pos": 1,
               "jockey": "石川倭",
               "sire": "ルヴァンスレーヴ",
               "broodmareSire": "パイロ",
@@ -461,11 +551,11 @@
             },
             {
               "hn": 4,
-              "pop": 7,
-              "odds": 19.4,
-              "weight": null,
+              "pop": 4,
+              "odds": 30.2,
+              "weight": 474,
               "weightDiff": null,
-              "pos": null,
+              "pos": 2,
               "jockey": "宮内勇",
               "sire": "リアルスティール",
               "broodmareSire": "ケイムホーム",
@@ -473,9 +563,9 @@
             },
             {
               "hn": 5,
-              "pop": 8,
-              "odds": 21.3,
-              "weight": null,
+              "pop": 9,
+              "odds": 144.5,
+              "weight": 530,
               "weightDiff": null,
               "pos": null,
               "jockey": "岩橋勇",
@@ -485,22 +575,22 @@
             },
             {
               "hn": 6,
-              "pop": 9,
-              "odds": 26.7,
-              "weight": null,
+              "pop": 8,
+              "odds": 118.5,
+              "weight": 380,
               "weightDiff": null,
               "pos": null,
-              "jockey": "26.7",
+              "jockey": "118.5",
               "sire": "マクフィ",
               "broodmareSire": "ディープインパクト",
               "trainer": "桧森邦"
             },
             {
               "hn": 7,
-              "pop": 2,
-              "odds": 4.7,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 3,
+              "odds": 5.3,
+              "weight": 528,
+              "weightDiff": 4,
               "pos": null,
               "jockey": "阿部龍",
               "sire": "ホッコータルマエ",
@@ -509,12 +599,12 @@
             },
             {
               "hn": 8,
-              "pop": 5,
-              "odds": 10.6,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 88.3,
+              "weight": 414,
+              "weightDiff": 2,
               "pos": null,
-              "jockey": "10.6",
+              "jockey": "88.3",
               "sire": "アジアエクスプレス",
               "broodmareSire": "スズカコーズウェイ",
               "trainer": "山田和"
@@ -522,10 +612,10 @@
             {
               "hn": 9,
               "pop": 1,
-              "odds": 2.5,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "odds": 1.4,
+              "weight": 504,
+              "weightDiff": 6,
+              "pos": 3,
               "jockey": "桑村真",
               "sire": "エスポワールシチー",
               "broodmareSire": "Shamardal",
@@ -533,22 +623,22 @@
             },
             {
               "hn": 10,
-              "pop": 3,
-              "odds": 7.9,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 6,
+              "odds": 79.8,
+              "weight": 476,
+              "weightDiff": 4,
               "pos": null,
-              "jockey": "7.9",
+              "jockey": "79.8",
               "sire": "ラブリーデイ",
               "broodmareSire": "ダイワメジャー",
               "trainer": "齊藤正"
             },
             {
               "hn": 11,
-              "pop": 9,
-              "odds": 26.7,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 11,
+              "odds": 602.5,
+              "weight": 440,
+              "weightDiff": 2,
               "pos": null,
               "jockey": "松井伸",
               "sire": "ミッキーアイル",
@@ -558,11 +648,11 @@
             {
               "hn": 12,
               "pop": 12,
-              "odds": 106.8,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 999.9,
+              "weight": 464,
+              "weightDiff": -2,
               "pos": null,
-              "jockey": "106.8",
+              "jockey": "999.9",
               "sire": "ミッキーロケット",
               "broodmareSire": "エイシンデピュティ",
               "trainer": "秋田大"
@@ -572,16 +662,46 @@
           "weather": "晴",
           "distance": 1000,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "380円",
+                "payout": 2
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "130円",
+                "payout": 3
+              },
+              {
+                "horses": "230円",
+                "payout": 4
+              },
+              {
+                "horses": "110円",
+                "payout": 1
+              },
+              {
+                "horses": "3,310円",
+                "payout": 13
+              },
+              {
+                "horses": "4,040円",
+                "payout": 9
+              }
+            ]
+          }
         },
         {
           "raceNo": 5,
           "entries": [
             {
               "hn": 1,
-              "pop": 5,
-              "odds": 29.7,
-              "weight": null,
+              "pop": 3,
+              "odds": 5.6,
+              "weight": 412,
               "weightDiff": null,
               "pos": null,
               "jockey": "阿岸潤",
@@ -603,9 +723,9 @@
             },
             {
               "hn": 3,
-              "pop": 7,
-              "odds": 63.7,
-              "weight": null,
+              "pop": 5,
+              "odds": 26.6,
+              "weight": 478,
               "weightDiff": null,
               "pos": null,
               "jockey": "桑村真",
@@ -615,9 +735,9 @@
             },
             {
               "hn": 4,
-              "pop": 6,
-              "odds": 59.4,
-              "weight": null,
+              "pop": 7,
+              "odds": 53.2,
+              "weight": 458,
               "weightDiff": null,
               "pos": null,
               "jockey": "石川倭",
@@ -628,8 +748,8 @@
             {
               "hn": 5,
               "pop": 2,
-              "odds": 3.0,
-              "weight": null,
+              "odds": 5.5,
+              "weight": 514,
               "weightDiff": null,
               "pos": null,
               "jockey": "近藤翔",
@@ -639,9 +759,9 @@
             },
             {
               "hn": 6,
-              "pop": 4,
-              "odds": 23.4,
-              "weight": null,
+              "pop": 6,
+              "odds": 33.3,
+              "weight": 516,
               "weightDiff": null,
               "pos": null,
               "jockey": "小野楓",
@@ -653,7 +773,7 @@
               "hn": 7,
               "pop": 1,
               "odds": 1.3,
-              "weight": null,
+              "weight": 454,
               "weightDiff": null,
               "pos": null,
               "jockey": "落合玄",
@@ -664,8 +784,8 @@
             {
               "hn": 8,
               "pop": 8,
-              "odds": 148.6,
-              "weight": null,
+              "odds": 192.9,
+              "weight": 422,
               "weightDiff": null,
               "pos": null,
               "jockey": "小川悠",
@@ -675,12 +795,12 @@
             },
             {
               "hn": 9,
-              "pop": 3,
-              "odds": 15.6,
-              "weight": null,
+              "pop": 4,
+              "odds": 13.6,
+              "weight": 418,
               "weightDiff": null,
               "pos": null,
-              "jockey": "15.6",
+              "jockey": "13.6",
               "sire": "カレンブラックヒル",
               "broodmareSire": "サウスヴィグラス",
               "trainer": "佐々国"
@@ -690,7 +810,7 @@
           "weather": "晴",
           "distance": 1000,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 6,
@@ -698,8 +818,8 @@
             {
               "hn": 1,
               "pop": 4,
-              "odds": 13.0,
-              "weight": null,
+              "odds": 20.0,
+              "weight": 426,
               "weightDiff": null,
               "pos": null,
               "jockey": "黒澤愛",
@@ -710,8 +830,8 @@
             {
               "hn": 2,
               "pop": 7,
-              "odds": 29.7,
-              "weight": null,
+              "odds": 33.2,
+              "weight": 452,
               "weightDiff": null,
               "pos": null,
               "jockey": "小野楓",
@@ -722,8 +842,8 @@
             {
               "hn": 3,
               "pop": 2,
-              "odds": 3.1,
-              "weight": null,
+              "odds": 4.0,
+              "weight": 504,
               "weightDiff": null,
               "pos": null,
               "jockey": "宮内勇",
@@ -734,8 +854,8 @@
             {
               "hn": 4,
               "pop": 1,
-              "odds": 1.8,
-              "weight": null,
+              "odds": 1.5,
+              "weight": 490,
               "weightDiff": null,
               "pos": null,
               "jockey": "西啓太",
@@ -746,8 +866,8 @@
             {
               "hn": 5,
               "pop": 8,
-              "odds": 62.4,
-              "weight": null,
+              "odds": 38.5,
+              "weight": 454,
               "weightDiff": null,
               "pos": null,
               "jockey": "井上瑛",
@@ -757,9 +877,9 @@
             },
             {
               "hn": 6,
-              "pop": 6,
-              "odds": 27.1,
-              "weight": null,
+              "pop": 5,
+              "odds": 21.2,
+              "weight": 450,
               "weightDiff": null,
               "pos": null,
               "jockey": "石川倭",
@@ -770,8 +890,8 @@
             {
               "hn": 7,
               "pop": 3,
-              "odds": 4.9,
-              "weight": null,
+              "odds": 6.0,
+              "weight": 502,
               "weightDiff": null,
               "pos": null,
               "jockey": "落合玄",
@@ -781,9 +901,9 @@
             },
             {
               "hn": 8,
-              "pop": 5,
-              "odds": 24.9,
-              "weight": null,
+              "pop": 6,
+              "odds": 28.7,
+              "weight": 462,
               "weightDiff": null,
               "pos": null,
               "jockey": "桑村真",
@@ -796,7 +916,7 @@
           "weather": "晴",
           "distance": 1200,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 7,
@@ -804,7 +924,7 @@
             {
               "hn": 1,
               "pop": 4,
-              "odds": 4.6,
+              "odds": 6.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -816,7 +936,7 @@
             {
               "hn": 2,
               "pop": 6,
-              "odds": 18.2,
+              "odds": 15.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -828,7 +948,7 @@
             {
               "hn": 3,
               "pop": 5,
-              "odds": 6.5,
+              "odds": 7.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -840,7 +960,7 @@
             {
               "hn": 4,
               "pop": 7,
-              "odds": 20.5,
+              "odds": 18.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -851,8 +971,8 @@
             },
             {
               "hn": 5,
-              "pop": 3,
-              "odds": 4.5,
+              "pop": 2,
+              "odds": 3.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -864,7 +984,7 @@
             {
               "hn": 6,
               "pop": 1,
-              "odds": 3.4,
+              "odds": 3.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -875,8 +995,8 @@
             },
             {
               "hn": 7,
-              "pop": 2,
-              "odds": 3.7,
+              "pop": 3,
+              "odds": 4.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -890,7 +1010,7 @@
           "weather": "晴",
           "distance": 1200,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 8,
@@ -898,7 +1018,7 @@
             {
               "hn": 1,
               "pop": 4,
-              "odds": 8.3,
+              "odds": 12.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -910,7 +1030,7 @@
             {
               "hn": 2,
               "pop": 1,
-              "odds": 1.5,
+              "odds": 2.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -922,7 +1042,7 @@
             {
               "hn": 3,
               "pop": 7,
-              "odds": 58.6,
+              "odds": 99.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -933,8 +1053,8 @@
             },
             {
               "hn": 4,
-              "pop": 3,
-              "odds": 6.1,
+              "pop": 2,
+              "odds": 2.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -945,8 +1065,8 @@
             },
             {
               "hn": 5,
-              "pop": 2,
-              "odds": 4.2,
+              "pop": 3,
+              "odds": 3.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -957,8 +1077,8 @@
             },
             {
               "hn": 6,
-              "pop": 5,
-              "odds": 33.4,
+              "pop": 6,
+              "odds": 36.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -970,7 +1090,7 @@
             {
               "hn": 7,
               "pop": 5,
-              "odds": 33.4,
+              "odds": 33.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -984,7 +1104,7 @@
           "weather": "晴",
           "distance": 1200,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 9,
@@ -992,7 +1112,7 @@
             {
               "hn": 1,
               "pop": 1,
-              "odds": 2.2,
+              "odds": 1.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1004,7 +1124,7 @@
             {
               "hn": 2,
               "pop": 6,
-              "odds": 36.4,
+              "odds": 26.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1016,7 +1136,7 @@
             {
               "hn": 3,
               "pop": 7,
-              "odds": 145.6,
+              "odds": 97.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1027,8 +1147,8 @@
             },
             {
               "hn": 4,
-              "pop": 2,
-              "odds": 2.8,
+              "pop": 3,
+              "odds": 5.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1039,8 +1159,8 @@
             },
             {
               "hn": 5,
-              "pop": 3,
-              "odds": 5.3,
+              "pop": 2,
+              "odds": 2.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1052,7 +1172,7 @@
             {
               "hn": 6,
               "pop": 4,
-              "odds": 6.9,
+              "odds": 11.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1064,7 +1184,7 @@
             {
               "hn": 7,
               "pop": 5,
-              "odds": 11.2,
+              "odds": 15.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1078,7 +1198,7 @@
           "weather": "晴",
           "distance": 1200,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 10,
@@ -1086,7 +1206,7 @@
             {
               "hn": 1,
               "pop": 11,
-              "odds": 44.5,
+              "odds": 31.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1097,8 +1217,8 @@
             },
             {
               "hn": 2,
-              "pop": 9,
-              "odds": 36.4,
+              "pop": 7,
+              "odds": 16.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1110,7 +1230,7 @@
             {
               "hn": 3,
               "pop": 6,
-              "odds": 20.0,
+              "odds": 13.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1122,7 +1242,7 @@
             {
               "hn": 4,
               "pop": 12,
-              "odds": 57.2,
+              "odds": 40.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1133,8 +1253,8 @@
             },
             {
               "hn": 5,
-              "pop": 3,
-              "odds": 6.1,
+              "pop": 4,
+              "odds": 8.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1146,19 +1266,19 @@
             {
               "hn": 6,
               "pop": 5,
-              "odds": 11.1,
+              "odds": 12.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "11.1",
+              "jockey": "12.1",
               "sire": "レッドファルクス",
               "broodmareSire": "Flying Spur",
               "trainer": "佐久雅"
             },
             {
               "hn": 7,
-              "pop": 7,
-              "odds": 28.6,
+              "pop": 9,
+              "odds": 23.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1170,11 +1290,11 @@
             {
               "hn": 8,
               "pop": 10,
-              "odds": 40.0,
+              "odds": 24.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "40.0",
+              "jockey": "24.7",
               "sire": "マジェスティックウォリアー",
               "broodmareSire": "カネヒキリ",
               "trainer": "五十冬"
@@ -1182,7 +1302,7 @@
             {
               "hn": 9,
               "pop": 2,
-              "odds": 4.0,
+              "odds": 3.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1194,19 +1314,19 @@
             {
               "hn": 10,
               "pop": 1,
-              "odds": 2.6,
+              "odds": 3.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "2.6",
+              "jockey": "3.2",
               "sire": "ゴールドシップ",
               "broodmareSire": "ビービーガルダン",
               "trainer": "櫻井拓"
             },
             {
               "hn": 11,
-              "pop": 4,
-              "odds": 6.3,
+              "pop": 3,
+              "odds": 7.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1218,11 +1338,11 @@
             {
               "hn": 12,
               "pop": 8,
-              "odds": 30.8,
+              "odds": 18.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "30.8",
+              "jockey": "18.9",
               "sire": "タワーオブロンドン",
               "broodmareSire": "ヘネシー",
               "trainer": "五十冬"
@@ -1232,7 +1352,7 @@
           "weather": "晴",
           "distance": 1700,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 11,
@@ -1240,7 +1360,7 @@
             {
               "hn": 1,
               "pop": 7,
-              "odds": 54.5,
+              "odds": 94.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1252,7 +1372,7 @@
             {
               "hn": 2,
               "pop": 1,
-              "odds": 2.3,
+              "odds": 1.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1264,7 +1384,7 @@
             {
               "hn": 3,
               "pop": 4,
-              "odds": 7.1,
+              "odds": 14.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1276,7 +1396,7 @@
             {
               "hn": 4,
               "pop": 3,
-              "odds": 5.0,
+              "odds": 10.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1288,7 +1408,7 @@
             {
               "hn": 5,
               "pop": 5,
-              "odds": 13.6,
+              "odds": 22.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1300,7 +1420,7 @@
             {
               "hn": 6,
               "pop": 2,
-              "odds": 2.9,
+              "odds": 3.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1312,7 +1432,7 @@
             {
               "hn": 7,
               "pop": 6,
-              "odds": 15.5,
+              "odds": 30.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1326,7 +1446,7 @@
           "weather": "晴",
           "distance": 1200,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 12,
@@ -1334,7 +1454,7 @@
             {
               "hn": 1,
               "pop": 7,
-              "odds": 32.7,
+              "odds": 34.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1346,7 +1466,7 @@
             {
               "hn": 2,
               "pop": 4,
-              "odds": 6.9,
+              "odds": 6.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1358,7 +1478,7 @@
             {
               "hn": 3,
               "pop": 5,
-              "odds": 7.6,
+              "odds": 8.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1370,7 +1490,7 @@
             {
               "hn": 4,
               "pop": 2,
-              "odds": 3.8,
+              "odds": 2.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1381,8 +1501,8 @@
             },
             {
               "hn": 5,
-              "pop": 9,
-              "odds": 134.4,
+              "pop": 8,
+              "odds": 52.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1393,8 +1513,8 @@
             },
             {
               "hn": 6,
-              "pop": 8,
-              "odds": 79.0,
+              "pop": 9,
+              "odds": 103.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1406,7 +1526,7 @@
             {
               "hn": 7,
               "pop": 1,
-              "odds": 2.3,
+              "odds": 2.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1418,7 +1538,7 @@
             {
               "hn": 8,
               "pop": 6,
-              "odds": 14.0,
+              "odds": 13.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -1430,11 +1550,11 @@
             {
               "hn": 9,
               "pop": 3,
-              "odds": 6.0,
+              "odds": 5.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "6.0",
+              "jockey": "5.9",
               "sire": "パイロ",
               "broodmareSire": "ディープブリランテ",
               "trainer": "林隆之"
@@ -1444,7 +1564,7 @@
           "weather": "晴",
           "distance": 1800,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         }
       ]
     },
@@ -1568,7 +1688,7 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -1744,7 +1864,7 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -1872,7 +1992,7 @@
           "weather": "曇",
           "distance": 1300,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -1902,7 +2022,7 @@
             {
               "hn": 1,
               "pop": 10,
-              "odds": 27.0,
+              "odds": 48.0,
               "weight": 476,
               "weightDiff": -2,
               "pos": null,
@@ -1914,7 +2034,7 @@
             {
               "hn": 2,
               "pop": 12,
-              "odds": 85.4,
+              "odds": 191.7,
               "weight": 441,
               "weightDiff": -11,
               "pos": null,
@@ -1925,11 +2045,11 @@
             },
             {
               "hn": 3,
-              "pop": 4,
-              "odds": 6.4,
+              "pop": 5,
+              "odds": 9.0,
               "weight": 510,
               "weightDiff": -5,
-              "pos": null,
+              "pos": 3,
               "jockey": "室陽一",
               "sire": "レーヴミストラル",
               "broodmareSire": "マンハッタンカフェ",
@@ -1937,11 +2057,11 @@
             },
             {
               "hn": 4,
-              "pop": 3,
-              "odds": 6.3,
+              "pop": 4,
+              "odds": 6.5,
               "weight": 447,
               "weightDiff": -2,
-              "pos": null,
+              "pos": 2,
               "jockey": "櫻井光",
               "sire": "バゴ",
               "broodmareSire": "ゴールドアリュール",
@@ -1949,8 +2069,8 @@
             },
             {
               "hn": 5,
-              "pop": 6,
-              "odds": 9.4,
+              "pop": 7,
+              "odds": 17.8,
               "weight": 461,
               "weightDiff": 1,
               "pos": null,
@@ -1962,11 +2082,11 @@
             {
               "hn": 6,
               "pop": 8,
-              "odds": 15.8,
+              "odds": 27.9,
               "weight": 476,
               "weightDiff": 2,
               "pos": null,
-              "jockey": "15.8",
+              "jockey": "27.9",
               "sire": "トゥザワールド",
               "broodmareSire": "ダンスインザダーク",
               "trainer": "玉井昇"
@@ -1974,7 +2094,7 @@
             {
               "hn": 7,
               "pop": 9,
-              "odds": 23.9,
+              "odds": 40.5,
               "weight": 410,
               "weightDiff": 1,
               "pos": null,
@@ -1986,19 +2106,19 @@
             {
               "hn": 8,
               "pop": 2,
-              "odds": 5.0,
+              "odds": 4.1,
               "weight": 493,
               "weightDiff": -9,
               "pos": null,
-              "jockey": "5.0",
+              "jockey": "4.1",
               "sire": "ストロングリターン",
               "broodmareSire": "ヴィクトワールピサ",
               "trainer": "海馬司"
             },
             {
               "hn": 9,
-              "pop": 5,
-              "odds": 7.1,
+              "pop": 3,
+              "odds": 5.8,
               "weight": 446,
               "weightDiff": -3,
               "pos": null,
@@ -2010,22 +2130,22 @@
             {
               "hn": 10,
               "pop": 1,
-              "odds": 4.1,
+              "odds": 2.8,
               "weight": 529,
               "weightDiff": 3,
               "pos": null,
-              "jockey": "4.1",
+              "jockey": "2.8",
               "sire": "シャンハイボビー",
               "broodmareSire": "ディープインパクト",
               "trainer": "水野貴"
             },
             {
               "hn": 11,
-              "pop": 7,
-              "odds": 12.2,
+              "pop": 6,
+              "odds": 12.8,
               "weight": 464,
               "weightDiff": 10,
-              "pos": null,
+              "pos": 1,
               "jockey": "小杉亮",
               "sire": "ディープスカイ",
               "broodmareSire": "オペラハウス",
@@ -2034,11 +2154,11 @@
             {
               "hn": 12,
               "pop": 11,
-              "odds": 54.7,
+              "odds": 130.8,
               "weight": 446,
               "weightDiff": -2,
               "pos": null,
-              "jockey": "54.7",
+              "jockey": "130.8",
               "sire": "カレンブラックヒル",
               "broodmareSire": "ヴィクトワールピサ",
               "trainer": "吉田正"
@@ -2048,7 +2168,41 @@
           "weather": "曇",
           "distance": 1500,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "1,280円",
+                "payout": 6
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "320円",
+                "payout": 5
+              },
+              {
+                "horses": "290円",
+                "payout": 4
+              },
+              {
+                "horses": "380円",
+                "payout": 7
+              },
+              {
+                "horses": "3,420円",
+                "payout": 15
+              },
+              {
+                "horses": "4,010円",
+                "payout": 17
+              },
+              {
+                "horses": "10,290円",
+                "payout": 34
+              }
+            ]
+          }
         },
         {
           "raceNo": 5,
@@ -2056,10 +2210,10 @@
             {
               "hn": 1,
               "pop": 1,
-              "odds": 1.5,
+              "odds": 1.6,
               "weight": 485,
               "weightDiff": -4,
-              "pos": null,
+              "pos": 2,
               "jockey": "本田重",
               "sire": "スクリーンヒーロー",
               "broodmareSire": "サクラプレジデント",
@@ -2068,10 +2222,10 @@
             {
               "hn": 2,
               "pop": 6,
-              "odds": 13.3,
+              "odds": 29.1,
               "weight": 421,
               "weightDiff": -7,
-              "pos": null,
+              "pos": 3,
               "jockey": "及川烈",
               "sire": "マクフィ",
               "broodmareSire": "Dansili",
@@ -2079,8 +2233,8 @@
             },
             {
               "hn": 3,
-              "pop": 8,
-              "odds": 17.4,
+              "pop": 7,
+              "odds": 43.1,
               "weight": 526,
               "weightDiff": -6,
               "pos": null,
@@ -2092,7 +2246,7 @@
             {
               "hn": 4,
               "pop": 2,
-              "odds": 10.1,
+              "odds": 2.6,
               "weight": 462,
               "weightDiff": -6,
               "pos": null,
@@ -2104,7 +2258,7 @@
             {
               "hn": 5,
               "pop": 11,
-              "odds": 72.9,
+              "odds": 248.6,
               "weight": 457,
               "weightDiff": -2,
               "pos": null,
@@ -2115,8 +2269,8 @@
             },
             {
               "hn": 6,
-              "pop": 3,
-              "odds": 11.8,
+              "pop": 8,
+              "odds": 79.1,
               "weight": 461,
               "weightDiff": 1,
               "pos": null,
@@ -2128,19 +2282,19 @@
             {
               "hn": 7,
               "pop": 10,
-              "odds": 53.4,
+              "odds": 245.4,
               "weight": 458,
               "weightDiff": 2,
               "pos": null,
-              "jockey": "53.4",
+              "jockey": "245.4",
               "sire": "ディープスカイ",
               "broodmareSire": "スピニングワールド",
               "trainer": "冨田敏"
             },
             {
               "hn": 8,
-              "pop": 7,
-              "odds": 16.7,
+              "pop": 3,
+              "odds": 14.8,
               "weight": 452,
               "weightDiff": -3,
               "pos": null,
@@ -2152,11 +2306,11 @@
             {
               "hn": 9,
               "pop": 5,
-              "odds": 13.1,
+              "odds": 23.1,
               "weight": 426,
               "weightDiff": -10,
               "pos": null,
-              "jockey": "13.1",
+              "jockey": "23.1",
               "sire": "シュヴァルグラン",
               "broodmareSire": "マンハッタンカフェ",
               "trainer": "佐藤太"
@@ -2164,7 +2318,7 @@
             {
               "hn": 10,
               "pop": 9,
-              "odds": 32.7,
+              "odds": 82.7,
               "weight": 434,
               "weightDiff": -12,
               "pos": null,
@@ -2175,12 +2329,12 @@
             },
             {
               "hn": 11,
-              "pop": 3,
-              "odds": 11.8,
+              "pop": 4,
+              "odds": 15.6,
               "weight": 471,
               "weightDiff": 2,
-              "pos": null,
-              "jockey": "11.8",
+              "pos": 1,
+              "jockey": "15.6",
               "sire": "レイデオロ",
               "broodmareSire": "Twirling Candy",
               "trainer": "酒井一"
@@ -2190,7 +2344,41 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "1,560円",
+                "payout": 4
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "180円",
+                "payout": 3
+              },
+              {
+                "horses": "120円",
+                "payout": 1
+              },
+              {
+                "horses": "210円",
+                "payout": 4
+              },
+              {
+                "horses": "600円",
+                "payout": 3
+              },
+              {
+                "horses": "660円",
+                "payout": 2
+              },
+              {
+                "horses": "2,850円",
+                "payout": 9
+              }
+            ]
+          }
         },
         {
           "raceNo": 6,
@@ -2198,9 +2386,9 @@
             {
               "hn": 1,
               "pop": 12,
-              "odds": 55.3,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 428.0,
+              "weight": 470,
+              "weightDiff": 3,
               "pos": null,
               "jockey": "國分祐",
               "sire": "ダンカーク",
@@ -2209,10 +2397,10 @@
             },
             {
               "hn": 2,
-              "pop": 3,
-              "odds": 5.7,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 21.5,
+              "weight": 507,
+              "weightDiff": -11,
               "pos": null,
               "jockey": "臼井健",
               "sire": "タリスマニック",
@@ -2221,10 +2409,10 @@
             },
             {
               "hn": 3,
-              "pop": 7,
-              "odds": 10.7,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 3,
+              "odds": 4.7,
+              "weight": 436,
+              "weightDiff": 5,
               "pos": null,
               "jockey": "野畑凌",
               "sire": "ディスクリートキャット",
@@ -2234,9 +2422,9 @@
             {
               "hn": 4,
               "pop": 4,
-              "odds": 8.8,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 7.3,
+              "weight": 466,
+              "weightDiff": 1,
               "pos": null,
               "jockey": "山口達",
               "sire": "ザファクター",
@@ -2245,11 +2433,11 @@
             },
             {
               "hn": 5,
-              "pop": 5,
-              "odds": 9.2,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 8,
+              "odds": 36.2,
+              "weight": 438,
+              "weightDiff": -10,
+              "pos": 2,
               "jockey": "吉留孝",
               "sire": "マインドユアビスケッツ",
               "broodmareSire": "サウスヴィグラス",
@@ -2258,21 +2446,21 @@
             {
               "hn": 6,
               "pop": 9,
-              "odds": 24.1,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 78.6,
+              "weight": 480,
+              "weightDiff": -2,
               "pos": null,
-              "jockey": "24.1",
+              "jockey": "78.6",
               "sire": "アメリカンペイトリオット",
               "broodmareSire": "フリオーソ",
               "trainer": "小澤宏"
             },
             {
               "hn": 7,
-              "pop": 2,
-              "odds": 4.8,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 1,
+              "odds": 3.2,
+              "weight": 546,
+              "weightDiff": -7,
               "pos": null,
               "jockey": "赤津和",
               "sire": "ナダル",
@@ -2281,12 +2469,12 @@
             },
             {
               "hn": 8,
-              "pop": 8,
-              "odds": 14.7,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 6,
+              "odds": 13.9,
+              "weight": 430,
+              "weightDiff": 2,
               "pos": null,
-              "jockey": "14.7",
+              "jockey": "13.9",
               "sire": "モーニン",
               "broodmareSire": "ハーツクライ",
               "trainer": "入口由"
@@ -2294,9 +2482,9 @@
             {
               "hn": 9,
               "pop": 11,
-              "odds": 30.8,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 113.5,
+              "weight": 478,
+              "weightDiff": 7,
               "pos": null,
               "jockey": "七夕裕",
               "sire": "ギンザグリングラス",
@@ -2305,23 +2493,23 @@
             },
             {
               "hn": 10,
-              "pop": 1,
-              "odds": 3.9,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
-              "jockey": "3.9",
+              "pop": 2,
+              "odds": 3.5,
+              "weight": 453,
+              "weightDiff": -3,
+              "pos": 3,
+              "jockey": "3.5",
               "sire": "ミスターメロディ",
               "broodmareSire": "マンハッタンカフェ",
               "trainer": "秋山直"
             },
             {
               "hn": 11,
-              "pop": 6,
-              "odds": 9.3,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 5,
+              "odds": 7.7,
+              "weight": 456,
+              "weightDiff": -9,
+              "pos": 1,
               "jockey": "及川烈",
               "sire": "シャンハイボビー",
               "broodmareSire": "Bernardini",
@@ -2330,11 +2518,11 @@
             {
               "hn": 12,
               "pop": 10,
-              "odds": 25.5,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 101.4,
+              "weight": 423,
+              "weightDiff": -8,
               "pos": null,
-              "jockey": "25.5",
+              "jockey": "101.4",
               "sire": "ノーブルミッション",
               "broodmareSire": "エピファネイア",
               "trainer": "阿井正"
@@ -2344,17 +2532,51 @@
           "weather": "曇",
           "distance": 1500,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "770円",
+                "payout": 5
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "180円",
+                "payout": 3
+              },
+              {
+                "horses": "400円",
+                "payout": 7
+              },
+              {
+                "horses": "160円",
+                "payout": 1
+              },
+              {
+                "horses": "6,920円",
+                "payout": 21
+              },
+              {
+                "horses": "7,470円",
+                "payout": 26
+              },
+              {
+                "horses": "8,560円",
+                "payout": 36
+              }
+            ]
+          }
         },
         {
           "raceNo": 7,
           "entries": [
             {
               "hn": 1,
-              "pop": 7,
-              "odds": 11.2,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 8,
+              "odds": 14.7,
+              "weight": 450,
+              "weightDiff": 2,
               "pos": null,
               "jockey": "佐野遥",
               "sire": "ジャスタウェイ",
@@ -2363,10 +2585,10 @@
             },
             {
               "hn": 2,
-              "pop": 12,
-              "odds": 51.1,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 11,
+              "odds": 106.1,
+              "weight": 437,
+              "weightDiff": -5,
               "pos": null,
               "jockey": "國分祐",
               "sire": "エスケンデレヤ",
@@ -2375,11 +2597,11 @@
             },
             {
               "hn": 3,
-              "pop": 4,
-              "odds": 8.3,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 3,
+              "odds": 4.6,
+              "weight": 440,
+              "weightDiff": -9,
+              "pos": 1,
               "jockey": "岡村健",
               "sire": "トビーズコーナー",
               "broodmareSire": "シンボリクリスエス",
@@ -2387,10 +2609,10 @@
             },
             {
               "hn": 4,
-              "pop": 3,
-              "odds": 7.9,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 2,
+              "odds": 4.5,
+              "weight": 417,
+              "weightDiff": -9,
               "pos": null,
               "jockey": "七夕裕",
               "sire": "トランセンド",
@@ -2399,10 +2621,10 @@
             },
             {
               "hn": 5,
-              "pop": 10,
-              "odds": 23.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 9,
+              "odds": 17.8,
+              "weight": 465,
+              "weightDiff": -10,
               "pos": null,
               "jockey": "菅原涼",
               "sire": "サトノダイヤモンド",
@@ -2411,12 +2633,12 @@
             },
             {
               "hn": 6,
-              "pop": 6,
-              "odds": 10.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 14.1,
+              "weight": 416,
+              "weightDiff": -4,
               "pos": null,
-              "jockey": "10.3",
+              "jockey": "14.1",
               "sire": "タイムパラドックス",
               "broodmareSire": "マーベラスサンデー",
               "trainer": "長谷忍"
@@ -2424,10 +2646,10 @@
             {
               "hn": 7,
               "pop": 5,
-              "odds": 8.9,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "odds": 11.0,
+              "weight": 468,
+              "weightDiff": 2,
+              "pos": 2,
               "jockey": "及川烈",
               "sire": "マクフィ",
               "broodmareSire": "ハーツクライ",
@@ -2435,23 +2657,23 @@
             },
             {
               "hn": 8,
-              "pop": 8,
-              "odds": 11.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 6,
+              "odds": 11.6,
+              "weight": 484,
+              "weightDiff": 1,
               "pos": null,
-              "jockey": "11.3",
+              "jockey": "11.6",
               "sire": "モズアスコット",
               "broodmareSire": "ハーツクライ",
               "trainer": "川村守"
             },
             {
               "hn": 9,
-              "pop": 2,
-              "odds": 4.9,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 1,
+              "odds": 3.8,
+              "weight": 462,
+              "weightDiff": -1,
+              "pos": 3,
               "jockey": "中島良",
               "sire": "シルバーステート",
               "broodmareSire": "シンボリクリスエス",
@@ -2459,22 +2681,22 @@
             },
             {
               "hn": 10,
-              "pop": 1,
-              "odds": 3.6,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 4,
+              "odds": 8.8,
+              "weight": 456,
+              "weightDiff": -1,
               "pos": null,
-              "jockey": "3.6",
+              "jockey": "8.8",
               "sire": "アルデバラン２",
               "broodmareSire": "クロフネ",
               "trainer": "薮口一"
             },
             {
               "hn": 11,
-              "pop": 9,
-              "odds": 22.6,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 10,
+              "odds": 19.5,
+              "weight": 495,
+              "weightDiff": -4,
               "pos": null,
               "jockey": "秋元耕",
               "sire": "アポロソニック",
@@ -2483,12 +2705,12 @@
             },
             {
               "hn": 12,
-              "pop": 11,
-              "odds": 27.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 12,
+              "odds": 117.7,
+              "weight": 453,
+              "weightDiff": -4,
               "pos": null,
-              "jockey": "27.3",
+              "jockey": "117.7",
               "sire": "カレンブラックヒル",
               "broodmareSire": "ブライアンズタイム",
               "trainer": "冨田敏"
@@ -2498,17 +2720,51 @@
           "weather": "曇",
           "distance": 2000,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "460円",
+                "payout": 3
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "180円",
+                "payout": 2
+              },
+              {
+                "horses": "460円",
+                "payout": 9
+              },
+              {
+                "horses": "180円",
+                "payout": 3
+              },
+              {
+                "horses": "1,210円",
+                "payout": 5
+              },
+              {
+                "horses": "2,260円",
+                "payout": 11
+              },
+              {
+                "horses": "2,320円",
+                "payout": 10
+              }
+            ]
+          }
         },
         {
           "raceNo": 8,
           "entries": [
             {
               "hn": 1,
-              "pop": 3,
-              "odds": 5.1,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 2,
+              "odds": 2.6,
+              "weight": 447,
+              "weightDiff": -7,
               "pos": null,
               "jockey": "岡村健",
               "sire": "オーヴァルエース",
@@ -2518,9 +2774,9 @@
             {
               "hn": 2,
               "pop": 6,
-              "odds": 7.1,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 23.3,
+              "weight": 498,
+              "weightDiff": 6,
               "pos": null,
               "jockey": "町田直",
               "sire": "ディスクリートキャット",
@@ -2530,9 +2786,9 @@
             {
               "hn": 3,
               "pop": 9,
-              "odds": 52.2,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 133.2,
+              "weight": 506,
+              "weightDiff": -11,
               "pos": null,
               "jockey": "吉留孝",
               "sire": "ネロ",
@@ -2541,10 +2797,10 @@
             },
             {
               "hn": 4,
-              "pop": 4,
-              "odds": 6.6,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 23.8,
+              "weight": 495,
+              "weightDiff": -2,
               "pos": null,
               "jockey": "木間龍",
               "sire": "モーニン",
@@ -2553,10 +2809,10 @@
             },
             {
               "hn": 5,
-              "pop": 5,
-              "odds": 7.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 3,
+              "odds": 5.2,
+              "weight": 488,
+              "weightDiff": -6,
               "pos": null,
               "jockey": "室陽一",
               "sire": "ゴールドドリーム",
@@ -2565,10 +2821,10 @@
             },
             {
               "hn": 6,
-              "pop": 8,
-              "odds": 17.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 5,
+              "odds": 16.6,
+              "weight": 489,
+              "weightDiff": -4,
               "pos": null,
               "jockey": "藤本現",
               "sire": "サンダースノー",
@@ -2577,10 +2833,10 @@
             },
             {
               "hn": 7,
-              "pop": 1,
-              "odds": 4.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 4,
+              "odds": 8.6,
+              "weight": 454,
+              "weightDiff": -2,
               "pos": null,
               "jockey": "野畑凌",
               "sire": "トランセンド",
@@ -2589,10 +2845,10 @@
             },
             {
               "hn": 8,
-              "pop": 7,
-              "odds": 12.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 8,
+              "odds": 24.4,
+              "weight": 479,
+              "weightDiff": -6,
               "pos": null,
               "jockey": "中山遥",
               "sire": "ベストウォーリア",
@@ -2601,12 +2857,12 @@
             },
             {
               "hn": 9,
-              "pop": 2,
-              "odds": 4.5,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 1,
+              "odds": 2.6,
+              "weight": 468,
+              "weightDiff": 4,
               "pos": null,
-              "jockey": "4.5",
+              "jockey": "2.6",
               "sire": "ポアゾンブラック",
               "broodmareSire": "スマートファルコン",
               "trainer": "水上直"
@@ -2616,17 +2872,17 @@
           "weather": "曇",
           "distance": 800,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 9,
           "entries": [
             {
               "hn": 1,
-              "pop": 9,
-              "odds": 32.8,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 24.9,
+              "weight": 459,
+              "weightDiff": -3,
               "pos": null,
               "jockey": "武藤雅",
               "sire": "ゴールドシップ",
@@ -2636,9 +2892,9 @@
             {
               "hn": 2,
               "pop": 1,
-              "odds": 2.3,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 2.4,
+              "weight": 439,
+              "weightDiff": -5,
               "pos": null,
               "jockey": "和田譲",
               "sire": "ロードカナロア",
@@ -2648,9 +2904,9 @@
             {
               "hn": 3,
               "pop": 6,
-              "odds": 21.5,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 11.4,
+              "weight": 532,
+              "weightDiff": 6,
               "pos": null,
               "jockey": "篠谷葵",
               "sire": "サートゥルナーリア",
@@ -2659,10 +2915,10 @@
             },
             {
               "hn": 4,
-              "pop": 10,
-              "odds": 38.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 11,
+              "odds": 72.0,
+              "weight": 440,
+              "weightDiff": -8,
               "pos": null,
               "jockey": "木間龍",
               "sire": "ミュゼスルタン",
@@ -2671,10 +2927,10 @@
             },
             {
               "hn": 5,
-              "pop": 11,
-              "odds": 39.4,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 10,
+              "odds": 54.0,
+              "weight": 421,
+              "weightDiff": 6,
               "pos": null,
               "jockey": "秋元耕",
               "sire": "エイシンフラッシュ",
@@ -2684,21 +2940,21 @@
             {
               "hn": 6,
               "pop": 2,
-              "odds": 4.6,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 3.9,
+              "weight": 485,
+              "weightDiff": 9,
               "pos": null,
-              "jockey": "4.6",
+              "jockey": "3.9",
               "sire": "モーニン",
               "broodmareSire": "ゴールドアリュール",
               "trainer": "箕輪武"
             },
             {
               "hn": 7,
-              "pop": 5,
-              "odds": 11.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 3,
+              "odds": 6.3,
+              "weight": 518,
+              "weightDiff": 10,
               "pos": null,
               "jockey": "佐野遥",
               "sire": "Kantharos",
@@ -2707,12 +2963,12 @@
             },
             {
               "hn": 8,
-              "pop": 8,
-              "odds": 23.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 9,
+              "odds": 34.7,
+              "weight": 438,
+              "weightDiff": 2,
               "pos": null,
-              "jockey": "23.3",
+              "jockey": "34.7",
               "sire": "トゥザワールド",
               "broodmareSire": "キングヘイロー",
               "trainer": "山中尊"
@@ -2732,21 +2988,21 @@
             {
               "hn": 10,
               "pop": 4,
-              "odds": 7.0,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 8.9,
+              "weight": 440,
+              "weightDiff": 2,
               "pos": null,
-              "jockey": "7.0",
+              "jockey": "8.9",
               "sire": "アルアイン",
               "broodmareSire": "Pioneerof the Nile",
               "trainer": "小手準"
             },
             {
               "hn": 11,
-              "pop": 7,
-              "odds": 22.6,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 8,
+              "odds": 27.0,
+              "weight": 487,
+              "weightDiff": -1,
               "pos": null,
               "jockey": "七夕裕",
               "sire": "エイシンフラッシュ",
@@ -2755,12 +3011,12 @@
             },
             {
               "hn": 12,
-              "pop": 3,
-              "odds": 6.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 5,
+              "odds": 9.7,
+              "weight": 456,
+              "weightDiff": -8,
               "pos": null,
-              "jockey": "6.0",
+              "jockey": "9.7",
               "sire": "ベストウォーリア",
               "broodmareSire": "タイキシャトル",
               "trainer": "萱野浩"
@@ -2770,7 +3026,7 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 10,
@@ -2778,7 +3034,7 @@
             {
               "hn": 1,
               "pop": 8,
-              "odds": 18.5,
+              "odds": 21.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2790,7 +3046,7 @@
             {
               "hn": 2,
               "pop": 5,
-              "odds": 6.3,
+              "odds": 6.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2802,7 +3058,7 @@
             {
               "hn": 3,
               "pop": 7,
-              "odds": 12.3,
+              "odds": 12.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2826,7 +3082,7 @@
             {
               "hn": 5,
               "pop": 6,
-              "odds": 8.7,
+              "odds": 8.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2837,8 +3093,8 @@
             },
             {
               "hn": 6,
-              "pop": 3,
-              "odds": 5.1,
+              "pop": 4,
+              "odds": 6.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2849,8 +3105,8 @@
             },
             {
               "hn": 7,
-              "pop": 4,
-              "odds": 5.2,
+              "pop": 2,
+              "odds": 4.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2861,8 +3117,8 @@
             },
             {
               "hn": 8,
-              "pop": 1,
-              "odds": 3.7,
+              "pop": 3,
+              "odds": 6.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2873,12 +3129,12 @@
             },
             {
               "hn": 9,
-              "pop": 2,
-              "odds": 5.1,
+              "pop": 1,
+              "odds": 3.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "5.1",
+              "jockey": "3.3",
               "sire": "モズアスコット",
               "broodmareSire": "アフリート",
               "trainer": "小久智"
@@ -2888,15 +3144,15 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 11,
           "entries": [
             {
               "hn": 1,
-              "pop": 9,
-              "odds": 35.9,
+              "pop": 8,
+              "odds": 18.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2907,8 +3163,8 @@
             },
             {
               "hn": 2,
-              "pop": 5,
-              "odds": 8.4,
+              "pop": 6,
+              "odds": 8.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2920,7 +3176,7 @@
             {
               "hn": 3,
               "pop": 11,
-              "odds": 78.7,
+              "odds": 83.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2931,8 +3187,8 @@
             },
             {
               "hn": 4,
-              "pop": 6,
-              "odds": 11.0,
+              "pop": 4,
+              "odds": 7.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2943,8 +3199,8 @@
             },
             {
               "hn": 5,
-              "pop": 3,
-              "odds": 5.1,
+              "pop": 2,
+              "odds": 6.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2956,11 +3212,11 @@
             {
               "hn": 6,
               "pop": 12,
-              "odds": 103.3,
+              "odds": 104.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "103.3",
+              "jockey": "104.9",
               "sire": "バゴ",
               "broodmareSire": "ブライアンズタイム",
               "trainer": "冨田敏"
@@ -2968,7 +3224,7 @@
             {
               "hn": 7,
               "pop": 1,
-              "odds": 3.1,
+              "odds": 2.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -2980,19 +3236,19 @@
             {
               "hn": 8,
               "pop": 7,
-              "odds": 11.5,
+              "odds": 14.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "11.5",
+              "jockey": "14.3",
               "sire": "ディスクリートキャット",
               "broodmareSire": "サウスヴィグラス",
               "trainer": "吉田正"
             },
             {
               "hn": 9,
-              "pop": 8,
-              "odds": 27.1,
+              "pop": 9,
+              "odds": 21.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3003,12 +3259,12 @@
             },
             {
               "hn": 10,
-              "pop": 2,
-              "odds": 4.6,
+              "pop": 5,
+              "odds": 8.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "4.6",
+              "jockey": "8.0",
               "sire": "シルバーステート",
               "broodmareSire": "デザートキング",
               "trainer": "小久智"
@@ -3016,7 +3272,7 @@
             {
               "hn": 11,
               "pop": 10,
-              "odds": 51.6,
+              "odds": 44.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3027,12 +3283,12 @@
             },
             {
               "hn": 12,
-              "pop": 4,
-              "odds": 8.1,
+              "pop": 3,
+              "odds": 7.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "8.1",
+              "jockey": "7.1",
               "sire": "ザファクター",
               "broodmareSire": "サンデーサイレンス",
               "trainer": "野口孝"
@@ -3042,15 +3298,15 @@
           "weather": "曇",
           "distance": 800,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 12,
           "entries": [
             {
               "hn": 1,
-              "pop": 2,
-              "odds": 4.4,
+              "pop": 3,
+              "odds": 6.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3061,8 +3317,8 @@
             },
             {
               "hn": 2,
-              "pop": 7,
-              "odds": 14.7,
+              "pop": 6,
+              "odds": 14.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3073,8 +3329,8 @@
             },
             {
               "hn": 3,
-              "pop": 6,
-              "odds": 12.7,
+              "pop": 7,
+              "odds": 15.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3086,7 +3342,7 @@
             {
               "hn": 4,
               "pop": 8,
-              "odds": 23.2,
+              "odds": 20.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3098,7 +3354,7 @@
             {
               "hn": 5,
               "pop": 9,
-              "odds": 26.5,
+              "odds": 27.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3109,12 +3365,12 @@
             },
             {
               "hn": 6,
-              "pop": 3,
-              "odds": 6.0,
+              "pop": 2,
+              "odds": 3.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "6.0",
+              "jockey": "3.7",
               "sire": "レインボーライン",
               "broodmareSire": "シンボリクリスエス",
               "trainer": "小林真"
@@ -3122,7 +3378,7 @@
             {
               "hn": 7,
               "pop": 1,
-              "odds": 3.0,
+              "odds": 3.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3133,12 +3389,12 @@
             },
             {
               "hn": 8,
-              "pop": 4,
-              "odds": 7.6,
+              "pop": 5,
+              "odds": 11.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "7.6",
+              "jockey": "11.8",
               "sire": "サンダースノー",
               "broodmareSire": "パイロ",
               "trainer": "川島豊"
@@ -3146,7 +3402,7 @@
             {
               "hn": 9,
               "pop": 11,
-              "odds": 28.8,
+              "odds": 37.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3158,19 +3414,19 @@
             {
               "hn": 10,
               "pop": 10,
-              "odds": 27.0,
+              "odds": 33.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "27.0",
+              "jockey": "33.1",
               "sire": "ホッコータルマエ",
               "broodmareSire": "ハードスパン",
               "trainer": "冨田敏"
             },
             {
               "hn": 11,
-              "pop": 5,
-              "odds": 11.6,
+              "pop": 4,
+              "odds": 7.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -3182,11 +3438,11 @@
             {
               "hn": 12,
               "pop": 12,
-              "odds": 69.8,
+              "odds": 71.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "69.8",
+              "jockey": "71.0",
               "sire": "レーヴミストラル",
               "broodmareSire": "タニノギムレット",
               "trainer": "佐々清"
@@ -3196,7 +3452,7 @@
           "weather": "曇",
           "distance": 2000,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         }
       ]
     },
@@ -3332,7 +3588,7 @@
           "weather": "晴",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -3492,7 +3748,7 @@
           "weather": "晴",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -3592,7 +3848,7 @@
           "weather": "晴",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -3744,7 +4000,7 @@
           "weather": "晴",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -3928,7 +4184,7 @@
           "weather": "晴",
           "distance": 1230,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -4088,7 +4344,7 @@
           "weather": "晴",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -4248,7 +4504,7 @@
           "weather": "晴",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -4372,7 +4628,7 @@
           "weather": "晴",
           "distance": 1700,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00",
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
           "payouts": {
             "単勝": [
               {
@@ -4402,10 +4658,10 @@
             {
               "hn": 1,
               "pop": 1,
-              "odds": 1.3,
+              "odds": 1.8,
               "weight": 436,
               "weightDiff": -5,
-              "pos": null,
+              "pos": 1,
               "jockey": "山本咲",
               "sire": "バゴ",
               "broodmareSire": "ステイゴールド",
@@ -4413,11 +4669,11 @@
             },
             {
               "hn": 2,
-              "pop": 5,
-              "odds": 26.3,
+              "pop": 4,
+              "odds": 13.7,
               "weight": 468,
               "weightDiff": -8,
-              "pos": null,
+              "pos": 3,
               "jockey": "塩津璃",
               "sire": "ラニ",
               "broodmareSire": "ディープスカイ",
@@ -4425,8 +4681,8 @@
             },
             {
               "hn": 3,
-              "pop": 9,
-              "odds": 91.6,
+              "pop": 10,
+              "odds": 147.3,
               "weight": 504,
               "weightDiff": 1,
               "pos": null,
@@ -4437,8 +4693,8 @@
             },
             {
               "hn": 4,
-              "pop": 8,
-              "odds": 47.4,
+              "pop": 7,
+              "odds": 28.9,
               "weight": 460,
               "weightDiff": -6,
               "pos": null,
@@ -4449,8 +4705,8 @@
             },
             {
               "hn": 5,
-              "pop": 7,
-              "odds": 41.3,
+              "pop": 6,
+              "odds": 26.4,
               "weight": 445,
               "weightDiff": -5,
               "pos": null,
@@ -4461,8 +4717,8 @@
             },
             {
               "hn": 6,
-              "pop": 10,
-              "odds": 197.0,
+              "pop": 9,
+              "odds": 131.4,
               "weight": 445,
               "weightDiff": -4,
               "pos": null,
@@ -4474,7 +4730,7 @@
             {
               "hn": 7,
               "pop": 3,
-              "odds": 8.6,
+              "odds": 8.0,
               "weight": 476,
               "weightDiff": -4,
               "pos": null,
@@ -4485,20 +4741,20 @@
             },
             {
               "hn": 8,
-              "pop": 6,
-              "odds": 39.2,
+              "pop": 8,
+              "odds": 51.9,
               "weight": 490,
               "weightDiff": 3,
               "pos": null,
-              "jockey": "39.2",
+              "jockey": "51.9",
               "sire": "キングリオ",
               "broodmareSire": "フサイチコンコルド",
               "trainer": "尾林二"
             },
             {
               "hn": 9,
-              "pop": 4,
-              "odds": 17.8,
+              "pop": 5,
+              "odds": 16.6,
               "weight": 480,
               "weightDiff": -2,
               "pos": null,
@@ -4510,11 +4766,11 @@
             {
               "hn": 10,
               "pop": 2,
-              "odds": 5.1,
+              "odds": 2.9,
               "weight": 520,
               "weightDiff": -5,
-              "pos": null,
-              "jockey": "5.1",
+              "pos": 2,
+              "jockey": "2.9",
               "sire": "コパノリッキー",
               "broodmareSire": "フレンチデピュティ",
               "trainer": "飯田良"
@@ -4524,15 +4780,45 @@
           "weather": "晴",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "180円",
+                "payout": 1
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "100円",
+                "payout": 1
+              },
+              {
+                "horses": "110円",
+                "payout": 2
+              },
+              {
+                "horses": "230円",
+                "payout": 5
+              },
+              {
+                "horses": "240円",
+                "payout": 1
+              },
+              {
+                "horses": "250円",
+                "payout": 1
+              }
+            ]
+          }
         },
         {
           "raceNo": 10,
           "entries": [
             {
               "hn": 1,
-              "pop": 8,
-              "odds": 54.1,
+              "pop": 7,
+              "odds": 75.9,
               "weight": 545,
               "weightDiff": -1,
               "pos": null,
@@ -4555,11 +4841,11 @@
             },
             {
               "hn": 3,
-              "pop": 4,
-              "odds": 31.7,
+              "pop": 2,
+              "odds": 7.2,
               "weight": 464,
               "weightDiff": null,
-              "pos": null,
+              "pos": 2,
               "jockey": "小牧太",
               "sire": "ドレフォン",
               "broodmareSire": "ハーツクライ",
@@ -4567,11 +4853,11 @@
             },
             {
               "hn": 4,
-              "pop": 5,
-              "odds": 32.4,
+              "pop": 6,
+              "odds": 46.2,
               "weight": 450,
               "weightDiff": -5,
-              "pos": null,
+              "pos": 1,
               "jockey": "川原正",
               "sire": "ジャスタウェイ",
               "broodmareSire": "Distorted Humor",
@@ -4579,8 +4865,8 @@
             },
             {
               "hn": 5,
-              "pop": 3,
-              "odds": 28.6,
+              "pop": 8,
+              "odds": 190.7,
               "weight": 440,
               "weightDiff": -10,
               "pos": null,
@@ -4591,8 +4877,8 @@
             },
             {
               "hn": 6,
-              "pop": 6,
-              "odds": 34.8,
+              "pop": 4,
+              "odds": 28.8,
               "weight": 471,
               "weightDiff": -6,
               "pos": null,
@@ -4604,7 +4890,7 @@
             {
               "hn": 7,
               "pop": 9,
-              "odds": 66.4,
+              "odds": 212.7,
               "weight": 494,
               "weightDiff": -7,
               "pos": null,
@@ -4616,22 +4902,22 @@
             {
               "hn": 8,
               "pop": 10,
-              "odds": 208.8,
+              "odds": 378.9,
               "weight": 458,
               "weightDiff": null,
               "pos": null,
-              "jockey": "208.8",
+              "jockey": "378.9",
               "sire": "ディープブリランテ",
               "broodmareSire": "ティンバーカントリー",
               "trainer": "三宅直"
             },
             {
               "hn": 9,
-              "pop": 7,
-              "odds": 41.7,
+              "pop": 5,
+              "odds": 33.9,
               "weight": 475,
               "weightDiff": -5,
-              "pos": null,
+              "pos": 3,
               "jockey": "小谷哲",
               "sire": "ダノンレジェンド",
               "broodmareSire": "リンカーン",
@@ -4639,12 +4925,12 @@
             },
             {
               "hn": 10,
-              "pop": 2,
-              "odds": 20.5,
+              "pop": 3,
+              "odds": 14.1,
               "weight": 495,
               "weightDiff": null,
               "pos": null,
-              "jockey": "20.5",
+              "jockey": "14.1",
               "sire": "インカンテーション",
               "broodmareSire": "メイショウオウドウ",
               "trainer": "吉見真"
@@ -4654,17 +4940,47 @@
           "weather": "晴",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "4,620円",
+                "payout": 6
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "590円",
+                "payout": 5
+              },
+              {
+                "horses": "220円",
+                "payout": 2
+              },
+              {
+                "horses": "370円",
+                "payout": 4
+              },
+              {
+                "horses": "6,150円",
+                "payout": 10
+              },
+              {
+                "horses": "5,880円",
+                "payout": 12
+              }
+            ]
+          }
         },
         {
           "raceNo": 11,
           "entries": [
             {
               "hn": 1,
-              "pop": 9,
-              "odds": 70.5,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 97.9,
+              "weight": 517,
+              "weightDiff": 9,
               "pos": null,
               "jockey": "吉村智",
               "sire": "モンテロッソ",
@@ -4673,10 +4989,10 @@
             },
             {
               "hn": 2,
-              "pop": 4,
-              "odds": 15.9,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 5,
+              "odds": 52.5,
+              "weight": 484,
+              "weightDiff": 2,
               "pos": null,
               "jockey": "永井孝",
               "sire": "モーリス",
@@ -4685,10 +5001,10 @@
             },
             {
               "hn": 3,
-              "pop": 6,
-              "odds": 31.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 9,
+              "odds": 173.5,
+              "weight": 486,
+              "weightDiff": -2,
               "pos": null,
               "jockey": "福原杏",
               "sire": "エスケンデレヤ",
@@ -4698,9 +5014,9 @@
             {
               "hn": 4,
               "pop": 3,
-              "odds": 4.5,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 5.3,
+              "weight": 552,
+              "weightDiff": -9,
               "pos": null,
               "jockey": "廣瀬航",
               "sire": "キズナ",
@@ -4710,10 +5026,10 @@
             {
               "hn": 5,
               "pop": 2,
-              "odds": 4.3,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "odds": 5.2,
+              "weight": 506,
+              "weightDiff": 13,
+              "pos": 3,
               "jockey": "笹田知",
               "sire": "ロードカナロア",
               "broodmareSire": "スペシャルウィーク",
@@ -4722,10 +5038,10 @@
             {
               "hn": 6,
               "pop": 1,
-              "odds": 1.6,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "odds": 1.2,
+              "weight": 495,
+              "weightDiff": -6,
+              "pos": 1,
               "jockey": "下原理",
               "sire": "ニューイヤーズデイ",
               "broodmareSire": "サウスヴィグラス",
@@ -4733,11 +5049,11 @@
             },
             {
               "hn": 7,
-              "pop": 7,
-              "odds": 54.2,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 4,
+              "odds": 44.8,
+              "weight": 491,
+              "weightDiff": -8,
+              "pos": 2,
               "jockey": "田野豊",
               "sire": "スピルバーグ",
               "broodmareSire": "Any Given Saturday",
@@ -4745,10 +5061,10 @@
             },
             {
               "hn": 8,
-              "pop": 5,
-              "odds": 20.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 8,
+              "odds": 106.4,
+              "weight": 546,
+              "weightDiff": 3,
               "pos": null,
               "jockey": "佐々世",
               "sire": "マジェスティックウォリアー",
@@ -4757,12 +5073,12 @@
             },
             {
               "hn": 9,
-              "pop": 8,
-              "odds": 68.8,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 6,
+              "odds": 69.1,
+              "weight": 482,
+              "weightDiff": -7,
               "pos": null,
-              "jockey": "68.8",
+              "jockey": "69.1",
               "sire": "プリサイスエンド",
               "broodmareSire": "アグネスタキオン",
               "trainer": "渡瀬寛"
@@ -4772,17 +5088,47 @@
           "weather": "晴",
           "distance": 1700,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "120円",
+                "payout": 1
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "100円",
+                "payout": 1
+              },
+              {
+                "horses": "200円",
+                "payout": 4
+              },
+              {
+                "horses": "120円",
+                "payout": 2
+              },
+              {
+                "horses": "1,540円",
+                "payout": 4
+              },
+              {
+                "horses": "1,500円",
+                "payout": 4
+              }
+            ]
+          }
         },
         {
           "raceNo": 12,
           "entries": [
             {
               "hn": 1,
-              "pop": 4,
-              "odds": 8.7,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 6,
+              "odds": 50.9,
+              "weight": 461,
+              "weightDiff": -8,
               "pos": null,
               "jockey": "廣瀬航",
               "sire": "ダノンレジェンド",
@@ -4791,10 +5137,10 @@
             },
             {
               "hn": 2,
-              "pop": 9,
-              "odds": 40.5,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 10,
+              "odds": 124.1,
+              "weight": 487,
+              "weightDiff": 1,
               "pos": null,
               "jockey": "下原理",
               "sire": "ヒルノダムール",
@@ -4803,10 +5149,10 @@
             },
             {
               "hn": 3,
-              "pop": 10,
-              "odds": 52.3,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 8,
+              "odds": 75.7,
+              "weight": 491,
+              "weightDiff": 21,
               "pos": null,
               "jockey": "笹田知",
               "sire": "トウケイヘイロー",
@@ -4815,10 +5161,10 @@
             },
             {
               "hn": 4,
-              "pop": 3,
-              "odds": 5.5,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 5,
+              "odds": 13.3,
+              "weight": 464,
+              "weightDiff": -2,
               "pos": null,
               "jockey": "塩津璃",
               "sire": "ファインニードル",
@@ -4828,10 +5174,10 @@
             {
               "hn": 5,
               "pop": 2,
-              "odds": 4.6,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "odds": 3.7,
+              "weight": 470,
+              "weightDiff": -9,
+              "pos": 2,
               "jockey": "吉村智",
               "sire": "カリフォルニアクローム",
               "broodmareSire": "D'wildcat",
@@ -4839,22 +5185,22 @@
             },
             {
               "hn": 6,
-              "pop": 6,
-              "odds": 12.9,
-              "weight": null,
+              "pop": 4,
+              "odds": 10.4,
+              "weight": 469,
               "weightDiff": null,
-              "pos": null,
-              "jockey": "12.9",
+              "pos": 3,
+              "jockey": "10.4",
               "sire": "エピカリス",
               "broodmareSire": "ファスリエフ",
               "trainer": "田中道"
             },
             {
               "hn": 7,
-              "pop": 11,
-              "odds": 89.7,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 69.0,
+              "weight": 429,
+              "weightDiff": 3,
               "pos": null,
               "jockey": "小谷哲",
               "sire": "ドレフォン",
@@ -4863,22 +5209,22 @@
             },
             {
               "hn": 8,
-              "pop": 8,
-              "odds": 29.9,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 9,
+              "odds": 105.4,
+              "weight": 519,
+              "weightDiff": -4,
               "pos": null,
-              "jockey": "29.9",
+              "jockey": "105.4",
               "sire": "ドレフォン",
               "broodmareSire": "ゼンノロブロイ",
               "trainer": "岡田利"
             },
             {
               "hn": 9,
-              "pop": 7,
-              "odds": 26.1,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 12,
+              "odds": 454.2,
+              "weight": 458,
+              "weightDiff": -7,
               "pos": null,
               "jockey": "渡瀬和",
               "sire": "マインドユアビスケッツ",
@@ -4887,22 +5233,22 @@
             },
             {
               "hn": 10,
-              "pop": 5,
-              "odds": 9.1,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 3,
+              "odds": 8.0,
+              "weight": 451,
+              "weightDiff": 2,
               "pos": null,
-              "jockey": "9.1",
+              "jockey": "8.0",
               "sire": "モズアスコット",
               "broodmareSire": "キングカメハメハ",
               "trainer": "土屋洋"
             },
             {
               "hn": 11,
-              "pop": 12,
-              "odds": 125.6,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 11,
+              "odds": 291.1,
+              "weight": 500,
+              "weightDiff": -4,
               "pos": null,
               "jockey": "小谷周",
               "sire": "ヴィクトワールピサ",
@@ -4912,11 +5258,11 @@
             {
               "hn": 12,
               "pop": 1,
-              "odds": 2.3,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
-              "jockey": "2.3",
+              "odds": 1.6,
+              "weight": 461,
+              "weightDiff": -4,
+              "pos": 1,
+              "jockey": "1.6",
               "sire": "シニスターミニスター",
               "broodmareSire": "ロックオブジブラルタル",
               "trainer": "永島太"
@@ -4926,7 +5272,37 @@
           "weather": "晴",
           "distance": 820,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "160円",
+                "payout": 1
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "110円",
+                "payout": 1
+              },
+              {
+                "horses": "120円",
+                "payout": 2
+              },
+              {
+                "horses": "130円",
+                "payout": 3
+              },
+              {
+                "horses": "250円",
+                "payout": 1
+              },
+              {
+                "horses": "290円",
+                "payout": 1
+              }
+            ]
+          }
         }
       ]
     },
@@ -4940,9 +5316,9 @@
             {
               "hn": 1,
               "pop": 3,
-              "odds": 5.9,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 15.2,
+              "weight": 475,
+              "weightDiff": -2,
               "pos": null,
               "jockey": "飛田愛",
               "sire": "エスポワールシチー",
@@ -4952,10 +5328,10 @@
             {
               "hn": 2,
               "pop": 2,
-              "odds": 4.3,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "odds": 2.9,
+              "weight": 444,
+              "weightDiff": -2,
+              "pos": 2,
               "jockey": "後藤武",
               "sire": "レイデオロ",
               "broodmareSire": "サンデーサイレンス",
@@ -4963,10 +5339,10 @@
             },
             {
               "hn": 3,
-              "pop": 8,
-              "odds": 47.8,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 5,
+              "odds": 39.9,
+              "weight": 386,
+              "weightDiff": -5,
               "pos": null,
               "jockey": "小松丈",
               "sire": "サトノクラウン",
@@ -4975,10 +5351,10 @@
             },
             {
               "hn": 4,
-              "pop": 6,
-              "odds": 37.9,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 59.2,
+              "weight": 492,
+              "weightDiff": 6,
               "pos": null,
               "jockey": "中山蓮",
               "sire": "ゴールドシップ",
@@ -4987,11 +5363,11 @@
             },
             {
               "hn": 5,
-              "pop": 4,
-              "odds": 6.1,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 6,
+              "odds": 46.9,
+              "weight": 477,
+              "weightDiff": 4,
+              "pos": 1,
               "jockey": "石川慎",
               "sire": "パイロ",
               "broodmareSire": "マンハッタンカフェ",
@@ -5000,10 +5376,10 @@
             {
               "hn": 6,
               "pop": 8,
-              "odds": 47.8,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "odds": 78.0,
+              "weight": 453,
+              "weightDiff": 5,
+              "pos": 3,
               "jockey": "金山昇",
               "sire": "アドマイヤムーン",
               "broodmareSire": "ハービンジャー",
@@ -5011,10 +5387,10 @@
             },
             {
               "hn": 7,
-              "pop": 7,
-              "odds": 45.4,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 9,
+              "odds": 271.4,
+              "weight": 423,
+              "weightDiff": -14,
               "pos": null,
               "jockey": "田中純",
               "sire": "バンブーエール",
@@ -5024,9 +5400,9 @@
             {
               "hn": 8,
               "pop": 1,
-              "odds": 1.9,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 1.4,
+              "weight": 464,
+              "weightDiff": 8,
               "pos": null,
               "jockey": "山田貴",
               "sire": "ビーチパトロール",
@@ -5035,12 +5411,12 @@
             },
             {
               "hn": 9,
-              "pop": 5,
-              "odds": 11.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 4,
+              "odds": 16.7,
+              "weight": 447,
+              "weightDiff": -2,
               "pos": null,
-              "jockey": "11.0",
+              "jockey": "16.7",
               "sire": "アドミラブル",
               "broodmareSire": "フジキセキ",
               "trainer": "東美義"
@@ -5050,7 +5426,37 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "4,690円",
+                "payout": 6
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "420円",
+                "payout": 6
+              },
+              {
+                "horses": "210円",
+                "payout": 2
+              },
+              {
+                "horses": "690円",
+                "payout": 8
+              },
+              {
+                "horses": "2,720円",
+                "payout": 9
+              },
+              {
+                "horses": "2,140円",
+                "payout": 8
+              }
+            ]
+          }
         },
         {
           "raceNo": 2,
@@ -5058,10 +5464,10 @@
             {
               "hn": 1,
               "pop": 2,
-              "odds": 3.9,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "odds": 3.6,
+              "weight": 467,
+              "weightDiff": 1,
+              "pos": 3,
               "jockey": "山口勲",
               "sire": "シュヴァルグラン",
               "broodmareSire": "Bernstein",
@@ -5070,9 +5476,9 @@
             {
               "hn": 2,
               "pop": 9,
-              "odds": 57.2,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 109.1,
+              "weight": 420,
+              "weightDiff": 6,
               "pos": null,
               "jockey": "椿聡太",
               "sire": "マクフィ",
@@ -5081,10 +5487,10 @@
             },
             {
               "hn": 3,
-              "pop": 12,
-              "odds": 744.8,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 10,
+              "odds": 287.8,
+              "weight": 418,
+              "weightDiff": -14,
               "pos": null,
               "jockey": "川島拓",
               "sire": "デクラレーションオブウォー",
@@ -5093,10 +5499,10 @@
             },
             {
               "hn": 4,
-              "pop": 6,
-              "odds": 24.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 4,
+              "odds": 16.0,
+              "weight": 494,
+              "weightDiff": -4,
               "pos": null,
               "jockey": "石川慎",
               "sire": "ダンカーク",
@@ -5106,9 +5512,9 @@
             {
               "hn": 5,
               "pop": 11,
-              "odds": 148.9,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 339.1,
+              "weight": 400,
+              "weightDiff": -4,
               "pos": null,
               "jockey": "金山昇",
               "sire": "モーリス",
@@ -5117,23 +5523,23 @@
             },
             {
               "hn": 6,
-              "pop": 3,
-              "odds": 7.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 6,
+              "odds": 18.1,
+              "weight": 540,
+              "weightDiff": 14,
               "pos": null,
-              "jockey": "7.0",
+              "jockey": "18.1",
               "sire": "クリソベリル",
               "broodmareSire": "キングカメハメハ",
               "trainer": "飯田祐"
             },
             {
               "hn": 7,
-              "pop": 4,
-              "odds": 9.9,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "pop": 3,
+              "odds": 5.8,
+              "weight": 506,
+              "weightDiff": 4,
+              "pos": 1,
               "jockey": "森田誠",
               "sire": "ヴァンゴッホ",
               "broodmareSire": "エンパイアメーカー",
@@ -5142,11 +5548,11 @@
             {
               "hn": 8,
               "pop": 7,
-              "odds": 26.6,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 18.5,
+              "weight": 484,
+              "weightDiff": -2,
               "pos": null,
-              "jockey": "26.6",
+              "jockey": "18.5",
               "sire": "ルーラーシップ",
               "broodmareSire": "キンシャサノキセキ",
               "trainer": "藤野健"
@@ -5154,8 +5560,8 @@
             {
               "hn": 9,
               "pop": 8,
-              "odds": 53.2,
-              "weight": null,
+              "odds": 108.0,
+              "weight": 454,
               "weightDiff": null,
               "pos": null,
               "jockey": "山田貴",
@@ -5165,12 +5571,12 @@
             },
             {
               "hn": 10,
-              "pop": 10,
-              "odds": 93.1,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 12,
+              "odds": 566.5,
+              "weight": 446,
+              "weightDiff": 7,
               "pos": null,
-              "jockey": "93.1",
+              "jockey": "566.5",
               "sire": "モーニン",
               "broodmareSire": "デザートキング",
               "trainer": "山田徹"
@@ -5179,9 +5585,9 @@
               "hn": 11,
               "pop": 1,
               "odds": 1.8,
-              "weight": null,
-              "weightDiff": null,
-              "pos": null,
+              "weight": 468,
+              "weightDiff": 10,
+              "pos": 2,
               "jockey": "飛田愛",
               "sire": "リアルスティール",
               "broodmareSire": "タニノギムレット",
@@ -5190,11 +5596,11 @@
             {
               "hn": 12,
               "pop": 5,
-              "odds": 11.8,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 17.6,
+              "weight": 505,
+              "weightDiff": 3,
               "pos": null,
-              "jockey": "11.8",
+              "jockey": "17.6",
               "sire": "エピカリス",
               "broodmareSire": "サウスヴィグラス",
               "trainer": "柴田卓"
@@ -5204,7 +5610,37 @@
           "weather": "曇",
           "distance": 1860,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00",
+          "payouts": {
+            "単勝": [
+              {
+                "horses": "580円",
+                "payout": 3
+              }
+            ],
+            "複勝": [
+              {
+                "horses": "140円",
+                "payout": 3
+              },
+              {
+                "horses": "100円",
+                "payout": 1
+              },
+              {
+                "horses": "120円",
+                "payout": 2
+              },
+              {
+                "horses": "310円",
+                "payout": 1
+              },
+              {
+                "horses": "460円",
+                "payout": 2
+              }
+            ]
+          }
         },
         {
           "raceNo": 3,
@@ -5212,9 +5648,9 @@
             {
               "hn": 1,
               "pop": 5,
-              "odds": 9.8,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 7.4,
+              "weight": 454,
+              "weightDiff": 3,
               "pos": null,
               "jockey": "赤岡修",
               "sire": "ストロングリターン",
@@ -5224,9 +5660,9 @@
             {
               "hn": 2,
               "pop": 10,
-              "odds": 98.6,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 242.2,
+              "weight": 412,
+              "weightDiff": -17,
               "pos": null,
               "jockey": "後藤武",
               "sire": "ミッキーアイル",
@@ -5236,8 +5672,8 @@
             {
               "hn": 3,
               "pop": 11,
-              "odds": 114.6,
-              "weight": null,
+              "odds": 398.8,
+              "weight": 478,
               "weightDiff": null,
               "pos": null,
               "jockey": "長谷蓮",
@@ -5248,9 +5684,9 @@
             {
               "hn": 4,
               "pop": 12,
-              "odds": 118.4,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 608.2,
+              "weight": 458,
+              "weightDiff": 19,
               "pos": null,
               "jockey": "川島拓",
               "sire": "ケイムホーム",
@@ -5260,9 +5696,9 @@
             {
               "hn": 5,
               "pop": 6,
-              "odds": 10.2,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 19.2,
+              "weight": 433,
+              "weightDiff": -11,
               "pos": null,
               "jockey": "飛田愛",
               "sire": "エイシンフラッシュ",
@@ -5271,22 +5707,22 @@
             },
             {
               "hn": 6,
-              "pop": 4,
-              "odds": 6.9,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 3,
+              "odds": 5.3,
+              "weight": 418,
+              "weightDiff": 8,
               "pos": null,
-              "jockey": "6.9",
+              "jockey": "5.3",
               "sire": "ニューイヤーズデイ",
               "broodmareSire": "Bated Breath",
               "trainer": "吉村圭"
             },
             {
               "hn": 7,
-              "pop": 7,
-              "odds": 22.9,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 9,
+              "odds": 125.2,
+              "weight": 487,
+              "weightDiff": 10,
               "pos": null,
               "jockey": "田中直",
               "sire": "ミスチヴィアスアレックス",
@@ -5295,22 +5731,22 @@
             },
             {
               "hn": 8,
-              "pop": 9,
-              "odds": 86.6,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 8,
+              "odds": 117.9,
+              "weight": 459,
+              "weightDiff": 4,
               "pos": null,
-              "jockey": "86.6",
+              "jockey": "117.9",
               "sire": "ネロ",
               "broodmareSire": "アドマイヤムーン",
               "trainer": "真島正"
             },
             {
               "hn": 9,
-              "pop": 3,
-              "odds": 5.5,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 2,
+              "odds": 3.9,
+              "weight": 467,
+              "weightDiff": -3,
               "pos": null,
               "jockey": "團野大",
               "sire": "ナムラタイタン",
@@ -5319,22 +5755,22 @@
             },
             {
               "hn": 10,
-              "pop": 2,
-              "odds": 3.5,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 1,
+              "odds": 2.2,
+              "weight": 509,
+              "weightDiff": 9,
               "pos": null,
-              "jockey": "3.5",
+              "jockey": "2.2",
               "sire": "アレスバローズ",
               "broodmareSire": "ケイムホーム",
               "trainer": "谷　潔"
             },
             {
               "hn": 11,
-              "pop": 8,
-              "odds": 28.1,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 43.7,
+              "weight": 487,
+              "weightDiff": 3,
               "pos": null,
               "jockey": "金山昇",
               "sire": "ネロ",
@@ -5343,12 +5779,12 @@
             },
             {
               "hn": 12,
-              "pop": 1,
-              "odds": 3.0,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 4,
+              "odds": 7.3,
+              "weight": 497,
+              "weightDiff": -1,
               "pos": null,
-              "jockey": "3.0",
+              "jockey": "7.3",
               "sire": "ケイムホーム",
               "broodmareSire": "クロフネ",
               "trainer": "野口寛"
@@ -5358,17 +5794,17 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 4,
           "entries": [
             {
               "hn": 1,
-              "pop": 3,
-              "odds": 5.8,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 4,
+              "odds": 6.7,
+              "weight": 534,
+              "weightDiff": 13,
               "pos": null,
               "jockey": "出水拓",
               "sire": "コパノリッキー",
@@ -5377,10 +5813,10 @@
             },
             {
               "hn": 2,
-              "pop": 10,
-              "odds": 23.2,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 11,
+              "odds": 64.4,
+              "weight": 480,
+              "weightDiff": 8,
               "pos": null,
               "jockey": "川島拓",
               "sire": "ベストウォーリア",
@@ -5390,9 +5826,9 @@
             {
               "hn": 3,
               "pop": 6,
-              "odds": 15.4,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 17.5,
+              "weight": 469,
+              "weightDiff": -3,
               "pos": null,
               "jockey": "長谷蓮",
               "sire": "ロードカナロア",
@@ -5401,10 +5837,10 @@
             },
             {
               "hn": 4,
-              "pop": 1,
-              "odds": 3.8,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 3,
+              "odds": 4.7,
+              "weight": 476,
+              "weightDiff": 12,
               "pos": null,
               "jockey": "中山蓮",
               "sire": "ダンカーク",
@@ -5413,10 +5849,10 @@
             },
             {
               "hn": 5,
-              "pop": 6,
-              "odds": 15.4,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 21.4,
+              "weight": 428,
+              "weightDiff": 1,
               "pos": null,
               "jockey": "小松丈",
               "sire": "フォーウィールドライブ",
@@ -5425,10 +5861,10 @@
             },
             {
               "hn": 6,
-              "pop": 5,
-              "odds": 9.2,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 9,
+              "odds": 38.6,
+              "weight": 425,
+              "weightDiff": -5,
               "pos": null,
               "jockey": "田中純",
               "sire": "ゴールドシップ",
@@ -5437,22 +5873,22 @@
             },
             {
               "hn": 7,
-              "pop": 3,
-              "odds": 5.8,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 2,
+              "odds": 4.4,
+              "weight": 448,
+              "weightDiff": 20,
               "pos": null,
-              "jockey": "5.8",
+              "jockey": "4.4",
               "sire": "ダノンバラード",
               "broodmareSire": "Dunkirk",
               "trainer": "石川浩"
             },
             {
               "hn": 8,
-              "pop": 2,
-              "odds": 5.1,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 1,
+              "odds": 3.0,
+              "weight": 432,
+              "weightDiff": -1,
               "pos": null,
               "jockey": "飛田愛",
               "sire": "リアルスティール",
@@ -5461,12 +5897,12 @@
             },
             {
               "hn": 9,
-              "pop": 6,
-              "odds": 15.4,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 7,
+              "odds": 21.4,
+              "weight": 471,
+              "weightDiff": 1,
               "pos": null,
-              "jockey": "15.4",
+              "jockey": "21.4",
               "sire": "ウインブライト",
               "broodmareSire": "チーフベアハート",
               "trainer": "土井道"
@@ -5474,9 +5910,9 @@
             {
               "hn": 10,
               "pop": 10,
-              "odds": 23.2,
-              "weight": null,
-              "weightDiff": null,
+              "odds": 48.3,
+              "weight": 472,
+              "weightDiff": 5,
               "pos": null,
               "jockey": "田中直",
               "sire": "ダノンバラード",
@@ -5485,12 +5921,12 @@
             },
             {
               "hn": 11,
-              "pop": 6,
-              "odds": 15.4,
-              "weight": null,
-              "weightDiff": null,
+              "pop": 5,
+              "odds": 7.8,
+              "weight": 405,
+              "weightDiff": 7,
               "pos": null,
-              "jockey": "15.4",
+              "jockey": "7.8",
               "sire": "モーニン",
               "broodmareSire": "ロードカナロア",
               "trainer": "九日光"
@@ -5500,7 +5936,7 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 5,
@@ -5508,7 +5944,7 @@
             {
               "hn": 1,
               "pop": 10,
-              "odds": 87.2,
+              "odds": 53.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5519,8 +5955,8 @@
             },
             {
               "hn": 2,
-              "pop": 4,
-              "odds": 8.7,
+              "pop": 9,
+              "odds": 14.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5531,8 +5967,8 @@
             },
             {
               "hn": 3,
-              "pop": 6,
-              "odds": 17.4,
+              "pop": 5,
+              "odds": 12.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5543,8 +5979,8 @@
             },
             {
               "hn": 4,
-              "pop": 8,
-              "odds": 43.6,
+              "pop": 3,
+              "odds": 6.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5556,7 +5992,7 @@
             {
               "hn": 5,
               "pop": 11,
-              "odds": 0.0,
+              "odds": 80.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5567,8 +6003,8 @@
             },
             {
               "hn": 6,
-              "pop": 4,
-              "odds": 8.7,
+              "pop": 5,
+              "odds": 12.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5579,20 +6015,20 @@
             },
             {
               "hn": 7,
-              "pop": 1,
-              "odds": 2.7,
+              "pop": 2,
+              "odds": 4.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "2.7",
+              "jockey": "4.0",
               "sire": "ウインバリアシオン",
               "broodmareSire": "ローレルゲレイロ",
               "trainer": "大島静"
             },
             {
               "hn": 8,
-              "pop": 3,
-              "odds": 5.4,
+              "pop": 4,
+              "odds": 7.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5603,20 +6039,20 @@
             },
             {
               "hn": 9,
-              "pop": 8,
-              "odds": 43.6,
+              "pop": 5,
+              "odds": 12.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "43.6",
+              "jockey": "12.3",
               "sire": "ビッグアーサー",
               "broodmareSire": "ウォーエンブレム",
               "trainer": "九日光"
             },
             {
               "hn": 10,
-              "pop": 7,
-              "odds": 21.8,
+              "pop": 8,
+              "odds": 13.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5627,7 +6063,7 @@
             },
             {
               "hn": 11,
-              "pop": 2,
+              "pop": 1,
               "odds": 3.2,
               "weight": null,
               "weightDiff": null,
@@ -5642,15 +6078,15 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 6,
           "entries": [
             {
               "hn": 1,
-              "pop": 6,
-              "odds": 10.1,
+              "pop": 3,
+              "odds": 8.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5661,8 +6097,8 @@
             },
             {
               "hn": 2,
-              "pop": 5,
-              "odds": 7.9,
+              "pop": 2,
+              "odds": 6.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5686,7 +6122,7 @@
             {
               "hn": 4,
               "pop": 1,
-              "odds": 3.3,
+              "odds": 3.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5697,8 +6133,8 @@
             },
             {
               "hn": 5,
-              "pop": 2,
-              "odds": 6.4,
+              "pop": 3,
+              "odds": 8.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5709,8 +6145,8 @@
             },
             {
               "hn": 6,
-              "pop": 8,
-              "odds": 14.2,
+              "pop": 10,
+              "odds": 16.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5721,8 +6157,8 @@
             },
             {
               "hn": 7,
-              "pop": 8,
-              "odds": 14.2,
+              "pop": 5,
+              "odds": 9.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5733,20 +6169,20 @@
             },
             {
               "hn": 8,
-              "pop": 3,
-              "odds": 7.1,
+              "pop": 5,
+              "odds": 9.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "7.1",
+              "jockey": "9.0",
               "sire": "レイデオロ",
               "broodmareSire": "ゼンノロブロイ",
               "trainer": "山田義"
             },
             {
               "hn": 9,
-              "pop": 7,
-              "odds": 11.8,
+              "pop": 8,
+              "odds": 14.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5757,12 +6193,12 @@
             },
             {
               "hn": 10,
-              "pop": 3,
-              "odds": 7.1,
+              "pop": 7,
+              "odds": 10.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "7.1",
+              "jockey": "10.0",
               "sire": "バンブーエール",
               "broodmareSire": "キングカメハメハ",
               "trainer": "柳井宏"
@@ -5772,15 +6208,15 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 7,
           "entries": [
             {
               "hn": 1,
-              "pop": 9,
-              "odds": 24.2,
+              "pop": 10,
+              "odds": 46.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5791,8 +6227,8 @@
             },
             {
               "hn": 2,
-              "pop": 7,
-              "odds": 21.5,
+              "pop": 9,
+              "odds": 42.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5803,8 +6239,8 @@
             },
             {
               "hn": 3,
-              "pop": 5,
-              "odds": 7.4,
+              "pop": 4,
+              "odds": 11.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5816,7 +6252,7 @@
             {
               "hn": 4,
               "pop": 6,
-              "odds": 19.3,
+              "odds": 27.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5827,8 +6263,8 @@
             },
             {
               "hn": 5,
-              "pop": 9,
-              "odds": 24.2,
+              "pop": 10,
+              "odds": 46.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5839,20 +6275,20 @@
             },
             {
               "hn": 6,
-              "pop": 9,
-              "odds": 24.2,
+              "pop": 12,
+              "odds": 52.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "24.2",
+              "jockey": "52.0",
               "sire": "キンシャサノキセキ",
               "broodmareSire": "メイショウサムソン",
               "trainer": "中川竜"
             },
             {
               "hn": 7,
-              "pop": 7,
-              "odds": 21.5,
+              "pop": 8,
+              "odds": 39.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5863,20 +6299,20 @@
             },
             {
               "hn": 8,
-              "pop": 12,
-              "odds": 27.6,
+              "pop": 7,
+              "odds": 31.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "27.6",
+              "jockey": "31.2",
               "sire": "ダイワメジャー",
               "broodmareSire": "Tale of Ekati",
               "trainer": "東眞市"
             },
             {
               "hn": 9,
-              "pop": 3,
-              "odds": 5.5,
+              "pop": 5,
+              "odds": 13.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5887,20 +6323,20 @@
             },
             {
               "hn": 10,
-              "pop": 1,
-              "odds": 3.7,
+              "pop": 3,
+              "odds": 8.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "3.7",
+              "jockey": "8.0",
               "sire": "アニマルキングダム",
               "broodmareSire": "タイキシャトル",
               "trainer": "中川竜"
             },
             {
               "hn": 11,
-              "pop": 4,
-              "odds": 6.9,
+              "pop": 1,
+              "odds": 1.6,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5912,11 +6348,11 @@
             {
               "hn": 12,
               "pop": 2,
-              "odds": 4.6,
+              "odds": 6.1,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "4.6",
+              "jockey": "6.1",
               "sire": "エイシンヒカリ",
               "broodmareSire": "King's Best",
               "trainer": "大島静"
@@ -5926,7 +6362,7 @@
           "weather": "曇",
           "distance": 1300,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 8,
@@ -5934,7 +6370,7 @@
             {
               "hn": 1,
               "pop": 3,
-              "odds": 7.3,
+              "odds": 31.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5946,7 +6382,7 @@
             {
               "hn": 2,
               "pop": 11,
-              "odds": 54.0,
+              "odds": 176.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5958,7 +6394,7 @@
             {
               "hn": 3,
               "pop": 12,
-              "odds": 67.6,
+              "odds": 309.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5970,7 +6406,7 @@
             {
               "hn": 4,
               "pop": 5,
-              "odds": 12.8,
+              "odds": 35.3,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5981,8 +6417,8 @@
             },
             {
               "hn": 5,
-              "pop": 8,
-              "odds": 33.8,
+              "pop": 6,
+              "odds": 112.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -5993,12 +6429,12 @@
             },
             {
               "hn": 6,
-              "pop": 7,
-              "odds": 30.0,
+              "pop": 6,
+              "odds": 112.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "30.0",
+              "jockey": "112.5",
               "sire": "スズカコーズウェイ",
               "broodmareSire": "アドマイヤムーン",
               "trainer": "中川竜"
@@ -6006,7 +6442,7 @@
             {
               "hn": 7,
               "pop": 1,
-              "odds": 1.7,
+              "odds": 1.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6018,11 +6454,11 @@
             {
               "hn": 8,
               "pop": 2,
-              "odds": 6.7,
+              "odds": 25.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "6.7",
+              "jockey": "25.7",
               "sire": "ホッコータルマエ",
               "broodmareSire": "フレンチデピュティ",
               "trainer": "鮫島克"
@@ -6030,7 +6466,7 @@
             {
               "hn": 9,
               "pop": 4,
-              "odds": 7.7,
+              "odds": 33.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6041,12 +6477,12 @@
             },
             {
               "hn": 10,
-              "pop": 8,
-              "odds": 33.8,
+              "pop": 9,
+              "odds": 123.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "33.8",
+              "jockey": "123.7",
               "sire": "シュヴァルグラン",
               "broodmareSire": "タイキシャトル",
               "trainer": "井樋明"
@@ -6054,7 +6490,7 @@
             {
               "hn": 11,
               "pop": 6,
-              "odds": 27.0,
+              "odds": 112.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6065,12 +6501,12 @@
             },
             {
               "hn": 12,
-              "pop": 8,
-              "odds": 33.8,
+              "pop": 10,
+              "odds": 137.5,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "33.8",
+              "jockey": "137.5",
               "sire": "バンブーエール",
               "broodmareSire": "ステイゴールド",
               "trainer": "川田孝"
@@ -6080,7 +6516,7 @@
           "weather": "曇",
           "distance": 1300,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 9,
@@ -6088,7 +6524,7 @@
             {
               "hn": 1,
               "pop": 7,
-              "odds": 13.8,
+              "odds": 18.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6099,8 +6535,8 @@
             },
             {
               "hn": 2,
-              "pop": 1,
-              "odds": 2.9,
+              "pop": 3,
+              "odds": 4.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6112,7 +6548,7 @@
             {
               "hn": 3,
               "pop": 5,
-              "odds": 12.4,
+              "odds": 11.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6123,8 +6559,8 @@
             },
             {
               "hn": 4,
-              "pop": 4,
-              "odds": 11.3,
+              "pop": 6,
+              "odds": 12.0,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6135,8 +6571,8 @@
             },
             {
               "hn": 5,
-              "pop": 5,
-              "odds": 12.4,
+              "pop": 4,
+              "odds": 9.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6147,8 +6583,8 @@
             },
             {
               "hn": 6,
-              "pop": 7,
-              "odds": 13.8,
+              "pop": 8,
+              "odds": 26.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6159,8 +6595,8 @@
             },
             {
               "hn": 7,
-              "pop": 9,
-              "odds": 17.8,
+              "pop": 8,
+              "odds": 26.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6171,8 +6607,8 @@
             },
             {
               "hn": 8,
-              "pop": 3,
-              "odds": 5.4,
+              "pop": 2,
+              "odds": 3.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6183,12 +6619,12 @@
             },
             {
               "hn": 9,
-              "pop": 2,
-              "odds": 3.5,
+              "pop": 1,
+              "odds": 2.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "3.5",
+              "jockey": "2.9",
               "sire": "エイシンヒカリ",
               "broodmareSire": "ハーツクライ",
               "trainer": "渡辺博"
@@ -6198,15 +6634,15 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         },
         {
           "raceNo": 10,
           "entries": [
             {
               "hn": 1,
-              "pop": 2,
-              "odds": 6.4,
+              "pop": 3,
+              "odds": 7.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6218,7 +6654,7 @@
             {
               "hn": 2,
               "pop": 12,
-              "odds": 38.8,
+              "odds": 47.7,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6229,8 +6665,8 @@
             },
             {
               "hn": 3,
-              "pop": 6,
-              "odds": 19.4,
+              "pop": 7,
+              "odds": 25.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6242,7 +6678,7 @@
             {
               "hn": 4,
               "pop": 4,
-              "odds": 6.9,
+              "odds": 10.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6253,8 +6689,8 @@
             },
             {
               "hn": 5,
-              "pop": 5,
-              "odds": 17.0,
+              "pop": 6,
+              "odds": 14.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6265,12 +6701,12 @@
             },
             {
               "hn": 6,
-              "pop": 6,
-              "odds": 19.4,
+              "pop": 5,
+              "odds": 13.4,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "19.4",
+              "jockey": "13.4",
               "sire": "ゴールドシップ",
               "broodmareSire": "ヴィクトワールピサ",
               "trainer": "大島静"
@@ -6278,7 +6714,7 @@
             {
               "hn": 7,
               "pop": 10,
-              "odds": 34.0,
+              "odds": 35.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6289,12 +6725,12 @@
             },
             {
               "hn": 8,
-              "pop": 3,
-              "odds": 6.6,
+              "pop": 2,
+              "odds": 6.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "6.6",
+              "jockey": "6.9",
               "sire": "ダンカーク",
               "broodmareSire": "マジェスティックウォリアー",
               "trainer": "手島勝"
@@ -6302,7 +6738,7 @@
             {
               "hn": 9,
               "pop": 1,
-              "odds": 2.1,
+              "odds": 1.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6314,19 +6750,19 @@
             {
               "hn": 10,
               "pop": 9,
-              "odds": 24.7,
+              "odds": 26.8,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "24.7",
+              "jockey": "26.8",
               "sire": "ハッピースプリント",
               "broodmareSire": "シンボリクリスエス",
               "trainer": "三小幸"
             },
             {
               "hn": 11,
-              "pop": 10,
-              "odds": 34.0,
+              "pop": 11,
+              "odds": 42.9,
               "weight": null,
               "weightDiff": null,
               "pos": null,
@@ -6337,12 +6773,12 @@
             },
             {
               "hn": 12,
-              "pop": 6,
-              "odds": 19.4,
+              "pop": 7,
+              "odds": 25.2,
               "weight": null,
               "weightDiff": null,
               "pos": null,
-              "jockey": "19.4",
+              "jockey": "25.2",
               "sire": "リオンディーズ",
               "broodmareSire": "ハーツクライ",
               "trainer": "山田徹"
@@ -6352,7 +6788,7 @@
           "weather": "曇",
           "distance": 1400,
           "surface": "ダート",
-          "oddsUpdatedAt": "2026-07-16T14:41:54.938107+09:00"
+          "oddsUpdatedAt": "2026-07-16T16:53:23.373642+09:00"
         }
       ]
     }
